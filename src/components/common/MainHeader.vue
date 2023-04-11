@@ -4,7 +4,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-3">
-          <div class="logo"><router-link :to="{name: 'Home'}" @click="moveToMain"><img src="@/assets/images/common/logo.png"></router-link></div>
+          <div class="logo"><router-link :to="{name: 'Home'}" @click="moveToMain">
+            <!-- <img src="@/assets/images/common/logo.png"> -->
+            <div class="logo1">Meta<div class="logo2">MungMung<img src="@/assets/images/common/icons8-dog-heart-64.png"></div></div>
+            </router-link></div>
         </div>
         <div class="col-md-9">
           <div class="menu_text">
@@ -97,3 +100,19 @@ export default ({
   }
 })
 </script>
+
+<style>
+.logo1{
+  font-size: 35px;
+  font-weight: 600;
+  color: white;
+  position: absolute;
+}
+.logo2{
+  padding: 0;
+  margin: 0;
+  left: 60px;
+  top: -55px;
+  position: relative;
+}
+</style>
