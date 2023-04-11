@@ -7,7 +7,7 @@
         </div>
         <button @click="openModalFunc" class="custom-btn btn-12 modal-button" style="position: absolute; z-index: 2; bottom: 5%; right: 5%"><span>클릭하세요!</span><span>모임생성</span></button>
         <div class="current-location">
-          <button @click="moveToCurrentLocation" id="current-location-btn" style="background-color: transparent;"><img src="@/assets/images/offMeeting/current-location.png" alt=""></button>
+          <button id="current-location-btn" style="background-color: transparent;"><img src="@/assets/images/offMeeting/current-location.png" alt=""></button>
         </div>
       </div>
     </div>
@@ -120,6 +120,10 @@ export default {
     },
     loadMap () {
       const container = document.getElementById('map')
+      const currentBtn = document.getElementById('current-location-btn');
+      let lat = 0;
+      let lon = 0;
+
       const option = {
         center: new kakao.maps.LatLng(33.450701, 126.570667),
         level: 3
@@ -127,27 +131,7 @@ export default {
       const map = new kakao.maps.Map(container, option)
 
       geolocationFunc();
-      // // HTML5의 지오로케이션으로 사용할 수 있는 지 확인
-      // if (navigator.geolocation) {
-      //   // GeoLocation을 이용해서 접속 위치를 얻어옴
-      //   navigator.geolocation.getCurrentPosition(function (position) {
-      //     const lat = position.coords.latitude // 위도
 
-      //     const lon = position.coords.longitude // 경도
-
-      //     const locPosition = new kakao.maps.LatLng(lat, lon)
-      //     console.log(typeof lat)
-      //     const message = '<div style="padding:5px;">여기에 계신가요?</div>' // 인포윈도우에 표시될 내용
-
-      //     // 마커와 인포윈도우를 표시한다.
-      //     displayMarker(locPosition, message)
-      //   })
-      // } else {
-      //   var locPostion = new kakao.maps.LatLng(33.450701, 126.570667)
-      //   var message = '현재위치를 찾을 수 없습니다.'
-
-      //   displayMarker(locPostion, message)
-      // }
       // 지도에 마커와 인포윈도우를 표시하는 함수
       function displayMarker (locPosition, message) {
         const marker = new kakao.maps.Marker({
@@ -166,16 +150,20 @@ export default {
         map.setCenter(locPosition)
       }
 
+      // 현재위치로 지도 이동
+      function changeDisplayWithNoMarker (locPosition) {
+        map.setCenter(locPosition)
+      }
+
       function geolocationFunc () {
         if (navigator.geolocation) {
           // GeoLocation을 이용해서 접속 위치를 얻어옴
           navigator.geolocation.getCurrentPosition(function (position) {
-            const lat = position.coords.latitude // 위도
+            lat = position.coords.latitude // 위도
 
-            const lon = position.coords.longitude // 경도
+            lon = position.coords.longitude // 경도
 
             const locPosition = new kakao.maps.LatLng(lat, lon)
-            console.log(typeof lat)
             const message = '<div style="padding:5px;">여기에 계신가요?</div>' // 인포윈도우에 표시될 내용
 
             // 마커와 인포윈도우를 표시한다.
@@ -189,13 +177,11 @@ export default {
         }
       }
 
-
- // 추가!!!!!!!!!!!!!!!!!!!!!!!!!
-      const currentBtn = document.querySelector('current-location-btn');
-
-      kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
-        geolocationFunc();
-      });
+      /* 내 위치 찾기 버튼 클릭 시 현재 위치로 지도 이동하는 코드 start */
+        currentBtn.addEventListener('click', function(event) {
+          const locPosition = new kakao.maps.LatLng(lat, lon)
+          map.setCenter(locPosition)
+        });
 
       // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
       kakao.maps.event.addListener(map, 'center_changed', function() {
