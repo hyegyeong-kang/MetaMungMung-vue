@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../pages/index.vue'
-import Map from '../pages/meeting/offMeeting/index.vue'
+import OffMeeting from '../pages/meeting/offMeeting/index.vue'
 import Meeting from '../pages/meeting/onMeeting/index.vue'
 
 const router = createRouter({
@@ -12,9 +12,9 @@ const router = createRouter({
       component: Home
     },
     {
-      path: '/map',
-      name: 'Map',
-      component: Map
+      path: '/offMeeting',
+      name: 'OffMeeting',
+      component: OffMeeting
     },
     {
       path: '/meeting',
