@@ -4,7 +4,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-3">
-          <div class="logo"><router-link :to="{name: 'Home'}"><img src="@/assets/images/logo.png"></router-link></div>
+          <div class="logo"><router-link :to="{name: 'Home'}"><img src="@/assets/images/common/logo.png"></router-link></div>
         </div>
         <div class="col-md-9">
           <div class="menu_text">
@@ -14,7 +14,7 @@
                   <div class="padding_left0"><a href="#">Register</a>
                   <span class="padding_left0"><a href="#">Login</a></span></div>
                 </div>
-                <div class="shoping_bag"><img src="@/assets/images/search-icon.png"></div>
+                <div class="shoping_bag"><img src="@/assets/images/common/search-icon.png"></div>
               </div>
               <div id="myNav" class="overlay">
               <a href="javascript:void(0)" class="closebtn" @click="closeNav" >&times;</a>
@@ -28,7 +28,7 @@
               </div>
               </div>
               <span class="navbar-toggler-icon"></span>
-              <span @click="openNav"><img src="@/assets/images/toggle-icon.png" class="toggle_menu"></span>
+              <span @click="openNav"><img src="@/assets/images/common/toggle-icon.png" class="toggle_menu"></span>
             </ul>
           </div>
         </div>
@@ -41,13 +41,13 @@
           <div class="col-sm-5">
             <h1 class="banner_taital_1">메타멍멍 ☺︎</h1>
             <p class="banner_text">Adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim</p>
-            <div class="contact_bt"><a href="contact.html">CONTACT US<span class="contact_padding"><img src="@/assets/images/contact-icon.png"></span></a></div>
+            <div class="contact_bt"><a href="contact.html">CONTACT US<span class="contact_padding"><img src="@/assets/images/common/contact-icon.png"></span></a></div>
           </div>
           <div class="col-sm-2">
-            <div class="play_icon"><a href="#"><img src="@/assets/images/play-icon.png"></a></div>
+            <div class="play_icon"><a href="#"><img src="@/assets/images/common/play-icon.png"></a></div>
           </div>
           <div class="col-sm-5">
-            <div><img src="@/assets/images/img-1.png" class="image_1"></div>
+            <div><img src="@/assets/images/common/img-1.png" class="image_1"></div>
           </div>
         </div>
       </div>
