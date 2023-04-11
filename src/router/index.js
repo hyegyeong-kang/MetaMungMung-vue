@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../pages/index.vue'
-import Map from '../pages/map/index.vue'
+import Map from '../pages/meeting/offMeeting/index.vue'
 
 const router = createRouter({
   history: createWebHistory(),
