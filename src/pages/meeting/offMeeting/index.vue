@@ -11,6 +11,7 @@
 
 <script>
 import KakaoMap from '@/components/meeting/offMeeting/KakaoMap.vue'
+
 export default {
   name: 'Service',
   components: {
