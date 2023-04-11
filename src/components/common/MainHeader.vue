@@ -112,7 +112,7 @@ export default ({
   padding: 0;
   margin: 0;
   left: 60px;
-  top: -55px;
+  top: -35px;
   position: relative;
 }
 </style>
