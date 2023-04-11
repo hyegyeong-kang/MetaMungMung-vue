@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import MainHeader from '@/components/MainHeader.vue'
-import MainFooter from '@/components/MainFooter.vue'
+import MainHeader from '@/components/common/MainHeader.vue'
+import MainFooter from '@/components/common/MainFooter.vue'
 
 export default ({
   name: 'App',
