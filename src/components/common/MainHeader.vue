@@ -11,8 +11,8 @@
             <ul>
               <div class="togle_3">
                 <div class="menu_main">
-                  <div class="padding_left0"><a href="#">Register</a>
-                  <span class="padding_left0"><a href="#">Login</a></span></div>
+                  <div class="padding_left0"><router-link :to="{name: 'Signup'}" @click="moveToPage">Signup</router-link>
+                  <span class="padding_left0"><router-link :to="{name: 'Login'}" @click="moveToPage">Login</router-link></span></div>
                 </div>
                 <div class="shoping_bag"><img src="@/assets/images/common/search-icon.png"></div>
               </div>
