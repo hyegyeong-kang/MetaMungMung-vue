@@ -16,12 +16,12 @@
                 </div>
                 <div class="shoping_bag"><img src="@/assets/images/common/search-icon.png"></div>
               </div>
-              <div id="myNav" class="overlay">
+              <div id="myNav" class="overlay" style="z-index:1000;">
               <a href="javascript:void(0)" class="closebtn" @click="closeNav" >&times;</a>
               <div class="overlay-content">
                 <router-link :to="{name: 'Home'}" @click="moveToMain">Home</router-link>
                 <router-link :to="{name: 'Meeting'}" @click="moveToPage">Meeting</router-link>
-                <router-link :to="{name: 'Map'}" @click="moveToPage">Map</router-link>
+                <router-link :to="{name: 'OffMeeting'}" @click="moveToPage">Map</router-link>
               </div>
               </div>
               <span class="navbar-toggler-icon"></span>
