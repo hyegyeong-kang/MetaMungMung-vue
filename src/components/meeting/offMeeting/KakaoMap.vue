@@ -173,10 +173,6 @@ export default {
 
 
       //강혜경
-      /**
-       * 
-       * 
-       */
       selectCategory();
 
       function selectCategory() {
@@ -186,12 +182,6 @@ export default {
           markers = [], // 마커를 담을 배열입니다
           currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다
 
-        if (map === undefined) {
-          console.log("undefineD!!");
-        } else {
-          console.log("un 11");
-        }
-        console.log(`map## ${map}`)
         // 장소 검색 객체를 생성합니다
         var ps = new kakao.maps.services.Places(map); 
 
@@ -211,7 +201,6 @@ export default {
 
         // 각 카테고리에 클릭 이벤트를 등록합니다
         addCategoryClickEvent();
-
 
         // 엘리먼트에 이벤트 핸들러를 등록하는 함수입니다
         function addEventHandle(target, type, callback) {
@@ -359,9 +348,7 @@ export default {
       function onClickCategory() {
           var id = this.id,
               className = this.className;
-
-          console.log(`@@@@ ${id}`);
-
+              
           placeOverlay.setMap(null);
 
           if (className === 'on') {
