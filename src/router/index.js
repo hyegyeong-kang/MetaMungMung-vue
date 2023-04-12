@@ -1,6 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../pages/index.vue'
+<<<<<<< HEAD
+import Signup from '../pages/member/signup.vue'
+import Login from '../pages/member/login.vue'
+import Modify from '../pages/member/modify.vue'
 import Map from '../pages/meeting/offMeeting/index.vue'
+=======
+import OffMeeting from '../pages/meeting/offMeeting/index.vue'
+>>>>>>> main
 import Meeting from '../pages/meeting/onMeeting/index.vue'
 
 const router = createRouter({
@@ -12,9 +19,9 @@ const router = createRouter({
       component: Home
     },
     {
-      path: '/map',
-      name: 'Map',
-      component: Map
+      path: '/offMeeting',
+      name: 'OffMeeting',
+      component: OffMeeting
     },
     {
       path: '/meeting',
