@@ -1,69 +1,106 @@
 <template>
   <div>
-    <div class="map_wrap" style="position: relative;">
+    <div class="map_wrap" style="position: relative">
       <div id="map">
         <div class="center-marker">
-          <img src="@/assets/images/offMeeting/center-marker.png" alt="">
+          <img src="@/assets/images/offMeeting/center-marker.png" alt="" />
         </div>
         <div class="current-location">
-          <button id="current-location-btn" style="background-color: transparent;"><img src="@/assets/images/offMeeting/current-location.png" alt=""></button>
+          <button
+            id="current-location-btn"
+            style="background-color: transparent"
+          >
+            <img src="@/assets/images/offMeeting/current-location.png" alt="" />
+          </button>
         </div>
       </div>
-      <OffMeetingModal :currentLocation='currentLocation' :currentLat='this.currentLat' :currentLng='this.currentLng'></OffMeetingModal>
+      <OffMeetingModal
+        :currentLocation="currentLocation"
+        :currentLat="this.currentLat"
+        :currentLng="this.currentLng"
+      ></OffMeetingModal>
+      <DetailModal />
     </div>
-    <div>{{this.currentLocation}}</div>
-    <div>{{this.currentLat}}</div>
-    <div>{{this.currentLng}}</div>
+    <div>{{ this.currentLocation }}</div>
+    <div>{{ this.currentLat }}</div>
+    <div>{{ this.currentLng }}</div>
   </div>
 </template>
 
 <script>
-import OffMeetingModal from '@/components/meeting/offMeeting/modal/modal.vue';
+import OffMeetingModal from "@/components/meeting/offMeeting/modal/createModal.vue";
+import DetailModal from "@/components/meeting/offMeeting/modal/detailModal.vue";
 // import {ref} from 'vue';
 
 export default {
-  name: 'KakaoMap',
+  name: "KakaoMap",
   components: {
-    OffMeetingModal
+    OffMeetingModal,
+    DetailModal,
   },
-  data () {
+  data() {
     return {
-      currentLocation: '',
-      currentLat: '',
-      currentLng: ''
-    }
+      currentLocation: "",
+      currentLat: "",
+      currentLng: "",
+      boardDetails: [
+        {
+          title: "첫게시글!!!!",
+          host: "손정아",
+          addr: "헤이그카페",
+          latitude: 37.25974040657983,
+          longitude: 127.14262381993633,
+          limit: "5",
+          date: "2023-04-13",
+          startTime: "18:00",
+          content:
+            "여기서 모여요~ 여기 카페 음식도 맛있고, 강아지들 잘 놀아요!!!!!",
+        },
+        {
+          title: "두번째 게시글!!!!",
+          host: "홍길동",
+          addr: "스타벅스",
+          latitude: 37.25967098625983,
+          longitude: 127.1422826831307,
+          limit: "4",
+          date: "2023-04-15",
+          startTime: "12:00",
+          content: "카페는 역시 스타벅스죠~~~~~ 여기 어떠세요????!!!!!",
+        },
+      ],
+    };
   },
-  mounted () {
+  mounted() {
     // api 스크립트 소스 불러오기 및 지도 출력
     if (window.kakao && window.kakao.maps) {
-      this.loadMap()
+      this.loadMap();
     } else {
-      this.loadScript()
+      this.loadScript();
     }
   },
   methods: {
-    loadScript () {
-      const script = document.createElement('script')
+    loadScript() {
+      const script = document.createElement("script");
       script.src =
-        '//dapi.kakao.com/v2/maps/sdk.js?appkey=331e2b8989b90b725f0ab6a607cf49f9&autoload=false&libraries=services'
-      script.onload = () => window.kakao.maps.load(this.loadMap)
+        "//dapi.kakao.com/v2/maps/sdk.js?appkey=331e2b8989b90b725f0ab6a607cf49f9&autoload=false&libraries=services";
+      script.onload = () => window.kakao.maps.load(this.loadMap);
 
-      document.head.appendChild(script)
+      document.head.appendChild(script);
     },
-    loadMap () {
-      const container = document.getElementById('map')
-      const currentBtn = document.getElementById('current-location-btn');
+    loadMap() {
+      const container = document.getElementById("map");
+      const currentBtn = document.getElementById("current-location-btn");
       let lat = 0;
       let lon = 0;
-      let locationAddress= '';
+      let locationAddress = "";
 
       const option = {
         center: new kakao.maps.LatLng(33.450701, 126.570667),
-        level: 3
-      }
+        level: 3,
+      };
 
       /* 지도 생성 코드 */
-      const map = new kakao.maps.Map(container, option)
+      const map = new kakao.maps.Map(container, option);
 
       // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
       var zoomControl = new kakao.maps.ZoomControl();
@@ -72,56 +109,56 @@ export default {
       geolocationFunc();
 
       // 지도에 마커와 인포윈도우를 표시하는 함수
-      function displayMarker (locPosition, message) {
+      function displayMarker(locPosition, message) {
         const marker = new kakao.maps.Marker({
           map: map,
-          position: locPosition
-        })
-        const iwContent = message // 인포윈도우에 표시할 내용
-        const iwRemovaable = true
+          position: locPosition,
+        });
+        const iwContent = message; // 인포윈도우에 표시할 내용
+        const iwRemovaable = true;
         // 인포 윈도우 생성
         var infowindow = new kakao.maps.InfoWindow({
           content: iwContent,
-          removavle: iwRemovaable
-        })
-        infowindow.open(map, marker)
+          removavle: iwRemovaable,
+        });
+        infowindow.open(map, marker);
 
-        map.setCenter(locPosition)
+        map.setCenter(locPosition);
       }
 
-      function geolocationFunc () {
+      function geolocationFunc() {
         if (navigator.geolocation) {
           // GeoLocation을 이용해서 접속 위치를 얻어옴
           navigator.geolocation.getCurrentPosition(function (position) {
-            lat = position.coords.latitude // 위도
+            lat = position.coords.latitude; // 위도
 
-            lon = position.coords.longitude // 경도
+            lon = position.coords.longitude; // 경도
 
-            const locPosition = new kakao.maps.LatLng(lat, lon)
-            const message = '<div style="padding:5px;">여기에 계신가요?</div>' // 인포윈도우에 표시될 내용
+            const locPosition = new kakao.maps.LatLng(lat, lon);
+            const message = '<div style="padding:5px;">여기에 계신가요?</div>'; // 인포윈도우에 표시될 내용
 
             // 마커와 인포윈도우를 표시한다.
-            displayMarker(locPosition, message)
-          })
+            displayMarker(locPosition, message);
+          });
         } else {
-          var locPostion = new kakao.maps.LatLng(33.450701, 126.570667)
-          var message = '현재위치를 찾을 수 없습니다.'
+          var locPostion = new kakao.maps.LatLng(33.450701, 126.570667);
+          var message = "현재위치를 찾을 수 없습니다.";
 
-          displayMarker(locPostion, message)
+          displayMarker(locPostion, message);
         }
       }
 
       /* 내 위치 찾기 버튼 클릭 시 현재 위치로 지도 이동하는 코드 start */
-        currentBtn.addEventListener('click', function(event) {
-          const locPosition = new kakao.maps.LatLng(lat, lon)
-          map.setCenter(locPosition)
-        });
+      currentBtn.addEventListener("click", function (event) {
+        const locPosition = new kakao.maps.LatLng(lat, lon);
+        map.setCenter(locPosition);
+      });
 
       let base = this;
 
       /* 지도 중심좌표 찾는 코드 start */
       // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
-      kakao.maps.event.addListener(map, 'center_changed', function() {
+      kakao.maps.event.addListener(map, "center_changed", function () {
         // 지도의 중심좌표를 얻어옵니다
         var latlng = map.getCenter();
 
@@ -132,31 +169,45 @@ export default {
         base.currentLng = longitude;
 
         /* 주소 얻어오기 */
-        getAddr(latitude,longitude);
+        getAddr(latitude, longitude);
 
-        function getAddr(lat,lon){
-            /* 주소-좌표 변환 객체 생성 */
-            let geocoder = new kakao.maps.services.Geocoder();
+        function getAddr(lat, lon) {
+          /* 주소-좌표 변환 객체 생성 */
+          let geocoder = new kakao.maps.services.Geocoder();
 
-            let coord = new kakao.maps.LatLng(lat, lon);
-            let callback = function(result, status) {
-                if (status === kakao.maps.services.Status.OK) {
-                  locationAddress = result[0].address.address_name;
-                  // console.log(locationAddress);
-                  base.currentLocation = locationAddress;
-                  // console.log('ssssss'+base.currentLocation)
-                }
+          let coord = new kakao.maps.LatLng(lat, lon);
+          let callback = function (result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+              locationAddress = result[0].address.address_name;
+              // console.log(locationAddress);
+              base.currentLocation = locationAddress;
+              // console.log('ssssss'+base.currentLocation)
             }
-            geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+          };
+          geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
         }
-
-            // var message = '';
-            // message += '중심 좌표는 위도 ' + latlng.getLat() + ', 경도 ' + latlng.getLng() + '입니다';
-            // console.log(message);
       });
-    }
-  }
-}
+
+      addBoardMarker();
+
+      /* 게시물 좌표 마커 생성 */
+      function addBoardMarker() {
+        let boardMarkerPosition = 0;
+        for (let i = 0; i < base.boardDetails.length; i++) {
+          boardMarkerPosition = new kakao.maps.LatLng(
+            base.boardDetails[i].latitude,
+            base.boardDetails[i].longitude
+          );
+          const boardMarker = new kakao.maps.Marker({
+            position: boardMarkerPosition,
+          });
+
+          boardMarker.setMap(map);
+        }
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
