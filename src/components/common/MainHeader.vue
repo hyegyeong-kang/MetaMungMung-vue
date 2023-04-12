@@ -11,12 +11,12 @@
             <ul>
               <div class="togle_3">
                 <div class="menu_main">
-                  <div class="padding_left0"><a href="#">Register</a>
-                  <span class="padding_left0"><a href="#">Login</a></span></div>
+                  <div class="padding_left0"><router-link :to="{name: 'Signup'}" @click="moveToPage">Signup</router-link>
+                  <span class="padding_left0"><router-link :to="{name: 'Login'}" @click="moveToPage">Login</router-link></span></div>
                 </div>
                 <div class="shoping_bag"><img src="@/assets/images/common/search-icon.png"></div>
               </div>
-              <div id="myNav" class="overlay" style="z-index:1000;">
+              <div id="myNav" class="overlay">
               <a href="javascript:void(0)" class="closebtn" @click="closeNav" >&times;</a>
               <div class="overlay-content">
                 <router-link :to="{name: 'Home'}" @click="moveToMain">Home</router-link>

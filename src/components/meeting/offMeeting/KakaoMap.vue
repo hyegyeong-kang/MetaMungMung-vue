@@ -28,11 +28,11 @@
           <button id="current-location-btn" style="background-color: transparent;"><img src="@/assets/images/offMeeting/current-location.png" alt=""></button>
         </div>
       </div>
-      <OffMeetingModal/>
+      <OffMeetingModal :currentLocation='currentLocation' :currentLat='this.currentLat' :currentLng='this.currentLng'></OffMeetingModal>
     </div>
     <div>{{this.currentLocation}}</div>
-
-    <div style="display: none;">{{this.currentLocation}}</div>
+    <div>{{this.currentLat}}</div>
+    <div>{{this.currentLng}}</div>
   </div>
 </template>
 
@@ -48,10 +48,10 @@ export default {
   data () {
     return {
       currentLocation: '',
+      currentLat: '',
+      currentLng: ''
     }
   },
-  setup () {},
-  created () {},
   mounted () {
     // api 스크립트 소스 불러오기 및 지도 출력
     if (window.kakao && window.kakao.maps) {
@@ -60,7 +60,6 @@ export default {
       this.loadScript()
     }
   },
-  unmounted () {},
   methods: {
     loadScript () {
       const script = document.createElement('script')
@@ -148,6 +147,9 @@ export default {
         const latitude = latlng.getLat();
         const longitude = latlng.getLng();
 
+        base.currentLat = latitude;
+        base.currentLng = longitude;
+
         /* 주소 얻어오기 */
         getAddr(latitude,longitude);
 
@@ -159,7 +161,7 @@ export default {
             let callback = function(result, status) {
                 if (status === kakao.maps.services.Status.OK) {
                   locationAddress = result[0].address.address_name;
-                  console.log(locationAddress);
+                  // console.log(locationAddress);
                   base.currentLocation = locationAddress;
                   // console.log('ssssss'+base.currentLocation)
                 }
@@ -471,4 +473,3 @@ export default {
 <style scoped>
 @import "@/assets/css/meeting/offMeeting/kakaomap.css";
 </style>
-
