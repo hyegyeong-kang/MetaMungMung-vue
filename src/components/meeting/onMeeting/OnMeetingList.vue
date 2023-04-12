@@ -271,7 +271,7 @@
         </ul>
 
     
-            <div class="sectionOptionBox  -positionBottom">
+            <div class="sectionOptionBox  -positionBottom" v-if="more">
                 <a href="/discover" class="btnOption  gMat7">
                     <span class="optionText">모두보기 ></span>
                 </a>
@@ -281,8 +281,15 @@
 </template>
 
 <script>
+import {ref} from 'vue';
 export default {
+    setup(){
+        const more = ref('true');
 
+        return{
+            more
+        }
+    }
 }
 </script>
 

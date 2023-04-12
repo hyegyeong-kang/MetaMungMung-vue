@@ -35,7 +35,7 @@ export default {
     -webkit-box-pack: justify;
     justify-content: space-between;
     max-width: 1034px;
-    height: 50px;
+    height: 70px;
     margin: 0 0 35px 0;
 }
 </style>
