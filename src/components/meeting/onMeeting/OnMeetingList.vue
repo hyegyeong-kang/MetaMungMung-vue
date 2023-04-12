@@ -287,6 +287,10 @@ export default {
 </script>
 
 <style scoped>
+button, dd, dl, dt, fieldset, ol, p, ul {
+    margin: 0;
+    padding: 0;
+}
 .createBand+.discoverBandList, .createBand+.openBandList {
     background: rgba(0,0,0,0.03);
 }
@@ -321,10 +325,10 @@ export default {
     justify-content: space-between;
     flex-wrap: wrap;
 }
-.howBand .cCoverList .cCoverItem:nth-child(odd), .mainWrap .cCoverList .cCoverItem:nth-child(odd) {
+.cCoverList .cCoverItem:nth-child(odd), .mainWrap .cCoverList .cCoverItem:nth-child(odd) {
     padding-right: 20px;
 }
-.howBand .cCoverList .cCoverItem, .mainWrap .cCoverList .cCoverItem {
+.cCoverList .cCoverItem, .mainWrap .cCoverList .cCoverItem {
     width: 50%;
 }
 .cCoverList .cCoverItem {

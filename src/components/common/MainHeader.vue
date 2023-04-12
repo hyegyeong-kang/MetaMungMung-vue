@@ -23,7 +23,7 @@
               <a href="javascript:void(0)" class="closebtn" @click="closeNav" >&times;</a>
               <div class="overlay-content">
                 <router-link :to="{name: 'Home'}" @click="moveToMain">Home</router-link>
-                <router-link :to="{name: 'Meeting'}" @click="moveToPage">Meeting</router-link>
+                <router-link :to="{name: 'OnMeeting'}" @click="moveToPage">Meeting</router-link>
                 <router-link :to="{name: 'OffMeeting'}" @click="moveToPage">Map</router-link>
               </div>
               </div>

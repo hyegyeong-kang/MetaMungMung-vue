@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import MeetingHeader from '../../../components/meeting/onMeeting/MeetingHeader.vue';
+import MeetingHeader from '../../../components/meeting/onMeeting/OnMeetingHeader.vue';
 import MyOnMeetingList from '../../../components/meeting/onMeeting/MyOnMeetingList.vue'
 import OnMeetingList from '../../../components/meeting/onMeeting/OnMeetingList.vue'
 

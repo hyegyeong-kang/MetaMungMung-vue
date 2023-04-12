@@ -45,9 +45,6 @@ export default {
 </script>
 
 <style scoped>
-.headerWidgetArea .widgetItem.-positionR {
-    position: relative;
-}
 .btnMySetting {
     display: -webkit-box;
     display: flex;
@@ -59,6 +56,8 @@ export default {
     float: left;
     width: 95px;
     /* margin-bottom: 30px; */
+    margin-top: 20px;
+    margin-left: 20px;
 }
 .btnMySetting.active:after {
     -webkit-transform: rotate(180deg);
@@ -83,13 +82,13 @@ export default {
 .btnMySetting.active~.menuModalLayer {
     display: block!important;
 }
-/* .menuModalLayer {
-    top: 225px;
-    left: 120px;
-} */
+.menuModalLayer {
+    top: 46px;
+    left: 100px;
+}
 .menuModalLayer {
     display: none;
-    /* position: absolute; */
+    position: absolute;
     /* min-width: 158px; */
     /* padding: 12px 0; */
     border-radius: 16px;

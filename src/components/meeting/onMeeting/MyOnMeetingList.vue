@@ -80,6 +80,9 @@ export default {
 </script>
 
 <style scoped>
+.homeMyBandList{
+    padding: 35px 0 20px 0;
+}
 h2{
     font-size: 30px;
     font-weight: 800;
@@ -93,7 +96,7 @@ h2{
     padding-bottom: 35px;
     margin-top: 20px;
 }
-.sMyHomePage .mainWrap {
+.mainWrap {
     position: relative;
     width: 1034px;
     margin: 0 auto;
