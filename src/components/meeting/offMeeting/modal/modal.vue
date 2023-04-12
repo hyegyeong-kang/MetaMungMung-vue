@@ -1,7 +1,7 @@
 <template>
     <button @click="openModalFunc" class="custom-btn btn-12 modal-button" style="position: absolute; z-index: 2; bottom: 5%; right: 5%"><span>클릭하세요!</span><span>모임생성</span></button>
 
-    <form @submit.prevent="submitOffMeetingZ">
+    <form @submit.prevent="submitOffMeeting">
         <!-- 모임생성 모달 start -->
         <div id="myModal" class="modal">
             <!-- Modal content -->
@@ -14,13 +14,21 @@
                 <form action="" class="modal-form">
                 <div class="form-row">
                     <label for="">제목</label>
-                    <input type="text" placeholder="제목을 입력해주세요." v-model="title">
+                    <input type="text" placeholder="제목을 입력해주세요." v-model ="title"> {{title}}
                 </div>
                 <div class="form-row">
                     <label for="">위치</label>
                     <input type="text" :value="currentLocation" disabled>
                 </div>
-                <div class="form-row" style="display:none;"></div>
+                <div class="form-row" style="display: none">
+                    <label for="">위도</label>
+                    <input type="text" :value="currentLat" disabled>
+                </div>
+                <div class="form-row" style="display: none">
+                    <label for="">경도</label>
+                    <input type="text" :value="currentLng" disabled>
+                </div>
+
                 <!-- <div class="form-row">
                     <label for="iduser">인원수</label>
                     <select class="user-select" name="user-name" id="user">
@@ -30,7 +38,7 @@
                 </div> -->
                 <div class="form-row">
                     <label for="iduser">제한인원</label>
-                    <input type="number" id="usernumber" :value="2" name="usernumber" min="2" max="1000">
+                    <input type="number" id="usernumber" value="2" name="usernumber" min="2" max="1000">
                 </div>
                 <div class="form-row">
                     <label for="">날짜</label>
@@ -38,7 +46,7 @@
                 </div>
                 <div class="form-row">
                     <label for="">시작시간</label>
-                    <input type="time" v-model="time">
+                    <input type="time" v-model="startTime">
                 </div>
                 <div class="form-row">
                     <label for="">내용</label>
@@ -47,7 +55,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="button good" value="Save">
+                <button type="submit" class="btn btn-primary">Save</button>
             </div>
             </div>
         </div>
@@ -56,25 +64,43 @@
 </template>
 
 <script>
+import axios from 'axios';
+
   export default {
     name: 'OffMeetingModal',
-    props: ['currentLocation'],
+    props: [
+        'currentLocation',
+        'currentLat',
+        'currentLng'
+        ],
+    data () {
+        return {
+            title:'',
+            date: '',
+            startTime: '',
+            content: ''
+        }
+    },
     setup () {
-        const modal = document.getElementsByClassName('modal')
-        const clickable = document.querySelectorAll('.clickable')
+        const modal = document.getElementsByClassName('modal');
+        const clickable = document.querySelectorAll('.clickable');
 
         const openModal = () => {
-        console.log(modal[0]);
-        modal[0].style.display = "block"
+            modal[0].style.display = "block"
         }
+
         const closeModal = () => {
             modal[0].style.display = "none"
         }
         const openModalFunc = () => {
-        openModal();
+            openModal();
         }
         const closeModalFunc = () => {
-        closeModal();
+            closeModal();
+        }
+
+        const submitOffMeeting = () => {
+            console.log("제목!!!!!!" );
         }
 
         for (let i = 0; i < clickable.length; i++) {
@@ -87,8 +113,9 @@
         }
         }
         return {
-        openModalFunc,
-        closeModalFunc
+            openModalFunc,
+            closeModalFunc,
+            submitOffMeeting
         }
     }
   }
