@@ -5,7 +5,7 @@
         <ul id="category">
             <!-- <li id="BK9" data-order="0">  -->
             <li id="HP8" data-order="0"> 
-                <span class="category_bg bank"></span>
+                <span class="category_bg hospital"></span>
                 동물병원
             </li>   
             <li id="CE7" data-order="4"> 
@@ -13,13 +13,9 @@
                 애견카페
             </li>  
             <li id="FD6" data-order="4"> 
-                <span class="category_bg cafe"></span>
-                애견식당
-            </li>
-            <li id="AD5" data-order="4"> 
-                <span class="category_bg cafe"></span>
-                애견펜션
-            </li>     
+                <span class="category_bg life"></span>
+                편의시설
+            </li>    
           </ul>
         <div class="center-marker">
           <img src="@/assets/images/offMeeting/center-marker.png" alt="">
@@ -239,9 +235,6 @@ export default {
         // 장소 검색 객체를 생성합니다
         var ps = new kakao.maps.services.Places(map); 
 
-        console.log("$$$$$")
-        console.log(`map22## ${ps}`)
-
         // 지도에 idle 이벤트를 등록합니다
         kakao.maps.event.addListener(map, 'idle', searchPlaces);
 
@@ -281,8 +274,7 @@ export default {
             // 지도에 표시되고 있는 마커를 제거합니다
             removeMarker();
 
-               // ps.categorySearch(currCategory, placesSearchCB, {useMapBounds:true});
-            // HP8: 동물병원 CE7: 애견카페
+            // HP8: 동물병원/ CE7: 애견카페 / FD6: 편의시설
             switch(currCategory) {
               case "HP8": {
                 ps.keywordSearch('동물병원', placesSearchCB, {
@@ -302,17 +294,9 @@ export default {
                 });
                 break;
               }
-              case "AD5": {
-                ps.keywordSearch('애견', placesSearchCB, {
-                    location: new kakao.maps.LatLng(lat, lon)
-                });
-                break;
-              }
             }
 
-            
-            
-           //  ps.keywordSearch('애견', placesSearchCB);
+            //ps.categorySearch(currCategory, placesSearchCB, {useMapBounds:true});
         }
 
         // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
@@ -445,23 +429,6 @@ export default {
               el.className = 'on';
           } 
       } 
-
-
-      // const markHospitals = () => {
-
-        console.log(`여기야여기`);
-        //geolocationFunc();
-        // 쿨독동물병원 test 
-        var markerPosition = new kakao.maps.LatLng(210468.408293066, 443882.442726704);
-        
-        // var marker2 = new kakao.maps.Marker({
-        //     map: map,
-        //     position: markerPosition
-        // });
-
-        //console.log(`위도: ${JSON.stringify(marker2, null, 2)}`)
-      //  marker2.setMap(map);
-
       }
 
       // ----강혜경 끝
