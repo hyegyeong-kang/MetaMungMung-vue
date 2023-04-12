@@ -9,7 +9,7 @@
           <button id="current-location-btn" style="background-color: transparent;"><img src="@/assets/images/offMeeting/current-location.png" alt=""></button>
         </div>
       </div>
-      <OffMeetingModal/>
+      <OffMeetingModal :currentLocation='currentLocation'></OffMeetingModal>
     </div>
     <div>{{this.currentLocation}}</div>
 
@@ -28,11 +28,9 @@ export default {
   },
   data () {
     return {
-      currentLocation: '',
+      currentLocation: ''
     }
   },
-  setup () {},
-  created () {},
   mounted () {
     // api 스크립트 소스 불러오기 및 지도 출력
     if (window.kakao && window.kakao.maps) {
@@ -41,7 +39,6 @@ export default {
       this.loadScript()
     }
   },
-  unmounted () {},
   methods: {
     loadScript () {
       const script = document.createElement('script')

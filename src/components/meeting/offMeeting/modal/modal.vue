@@ -16,9 +16,9 @@
                     <label for="">제목</label>
                     <input type="text" placeholder="제목을 입력해주세요." v-model="title">
                 </div>
-                <div class="form-row" style="display:none;">
+                <div class="form-row">
                     <label for="">위치</label>
-                    <input type="text" v-model="location" disabled>
+                    <input type="text" :value="currentLocation" disabled>
                 </div>
                 <div class="form-row" style="display:none;"></div>
                 <!-- <div class="form-row">
@@ -58,8 +58,8 @@
 <script>
   export default {
     name: 'OffMeetingModal',
+    props: ['currentLocation'],
     setup () {
-
         const modal = document.getElementsByClassName('modal')
         const clickable = document.querySelectorAll('.clickable')
 
