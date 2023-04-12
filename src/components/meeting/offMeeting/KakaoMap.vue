@@ -307,8 +307,8 @@ export default {
                 break;
               }
             }
+
             
-             
             
            //  ps.keywordSearch('애견', placesSearchCB);
         }
