@@ -43,7 +43,7 @@ export default {
     loadScript () {
       const script = document.createElement('script')
       script.src =
-        '//dapi.kakao.com/v2/maps/sdk.js?appkey=331e2b8989b90b725f0ab6a607cf49f9&autoload=false'
+        '//dapi.kakao.com/v2/maps/sdk.js?appkey=331e2b8989b90b725f0ab6a607cf49f9&autoload=false&libraries=services'
       script.onload = () => window.kakao.maps.load(this.loadMap)
 
       document.head.appendChild(script)
@@ -53,12 +53,20 @@ export default {
       const currentBtn = document.getElementById('current-location-btn');
       let lat = 0;
       let lon = 0;
+      let locationAddress='';
+
 
       const option = {
         center: new kakao.maps.LatLng(33.450701, 126.570667),
         level: 3
       }
+
+      /* 지도 생성 코드 */
       const map = new kakao.maps.Map(container, option)
+
+      // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+      var zoomControl = new kakao.maps.ZoomControl();
+      map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
       geolocationFunc();
 
@@ -77,11 +85,6 @@ export default {
         })
         infowindow.open(map, marker)
 
-        map.setCenter(locPosition)
-      }
-
-      // 현재위치로 지도 이동
-      function changeDisplayWithNoMarker (locPosition) {
         map.setCenter(locPosition)
       }
 
@@ -113,27 +116,36 @@ export default {
           map.setCenter(locPosition)
         });
 
+      /* 지도 중심좌표 찾는 코드 start */
       // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
       kakao.maps.event.addListener(map, 'center_changed', function() {
+      // 지도의 중심좌표를 얻어옵니다
+      var latlng = map.getCenter();
 
-          // 지도의  레벨을 얻어옵니다
-          var level = map.getLevel();
+      lat = latlng.getLat();
+      lon = latlng.getLng();
 
-          // 지도의 중심좌표를 얻어옵니다
-          var latlng = map.getCenter();
+      /* 주소 얻어오기 */
+      getAddr(lat,lon);
 
-          var message = '';
-          message += '중심 좌표는 위도 ' + latlng.getLat() + ', 경도 ' + latlng.getLng() + '입니다';
+      function getAddr(lat,lon){
+          /* 주소-좌표 변환 객체 생성 */
+          let geocoder = new kakao.maps.services.Geocoder();
 
-          var resultDiv = document.getElementsByClassName('result');
-          resultDiv.innerHTML = message;
+          let coord = new kakao.maps.LatLng(lat, lon);
+          let callback = function(result, status) {
+              if (status === kakao.maps.services.Status.OK) {
+                locationAddress = result[0].address.address_name;
+                  // console.log(locationAddress);
+              }
+          }
+          geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+      }
 
+          // var message = '';
+          // message += '중심 좌표는 위도 ' + latlng.getLat() + ', 경도 ' + latlng.getLng() + '입니다';
           // console.log(message);
       });
-
-      // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
-      var zoomControl = new kakao.maps.ZoomControl();
-      map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
     }
   }
 }
