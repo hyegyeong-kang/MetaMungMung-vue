@@ -1,7 +1,7 @@
 <template>
     <button @click="openModalFunc" class="custom-btn btn-12 modal-button" style="position: absolute; z-index: 2; bottom: 5%; right: 5%"><span>클릭하세요!</span><span>모임생성</span></button>
 
-    <form @submit.prevent="submitOffMeeting">
+    <form @submit.prevent="submitOffMeetingForm">
         <!-- 모임생성 모달 start -->
         <div id="myModal" class="modal">
             <!-- Modal content -->
@@ -14,7 +14,7 @@
                 <form action="" class="modal-form">
                 <div class="form-row">
                     <label for="">제목</label>
-                    <input type="text" placeholder="제목을 입력해주세요." v-model ="title"> {{title}}
+                    <input type="text" placeholder="제목을 입력해주세요." v-model ="title">
                 </div>
                 <div class="form-row">
                     <label for="">위치</label>
@@ -38,7 +38,7 @@
                 </div> -->
                 <div class="form-row">
                     <label for="iduser">제한인원</label>
-                    <input type="number" id="usernumber" value="2" name="usernumber" min="2" max="1000">
+                    <input type="number" id="usernumber" :value="limit" name="usernumber" min="2" max="1000">
                 </div>
                 <div class="form-row">
                     <label for="">날짜</label>
@@ -65,6 +65,7 @@
 
 <script>
 import axios from 'axios';
+import {ref} from 'vue';
 
   export default {
     name: 'OffMeetingModal',
@@ -74,16 +75,23 @@ import axios from 'axios';
         'currentLng'
         ],
     data () {
-        return {
-            title:'',
-            date: '',
-            startTime: '',
-            content: ''
-        }
+        // return {
+        //     title:'',
+        //     date: '',
+        //     startTime: '',
+        //     content: ''
+        // }
     },
-    setup () {
+    setup (props) {
+        const title = ref('');
+        const date = ref('');
+        const startTime = ref('');
+        const content = ref('');
+        const limit = ref('2');
+
         const modal = document.getElementsByClassName('modal');
         const clickable = document.querySelectorAll('.clickable');
+
 
         const openModal = () => {
             modal[0].style.display = "block"
@@ -99,8 +107,13 @@ import axios from 'axios';
             closeModal();
         }
 
-        const submitOffMeeting = () => {
-            console.log("제목!!!!!!" );
+        const submitOffMeetingForm = () => {
+            console.log("제목!!! " + title.value);
+            console.log("제한인원!!!  " + limit.value);
+            console.log("날짜!!! " + date.value);
+            console.log("모임시작시간!!! " + startTime.value);
+            console.log("내용!!! " + content.value);
+            console.log(props.currentLat);
         }
 
         for (let i = 0; i < clickable.length; i++) {
@@ -115,7 +128,12 @@ import axios from 'axios';
         return {
             openModalFunc,
             closeModalFunc,
-            submitOffMeeting
+            submitOffMeetingForm,
+            title,
+            date,
+            startTime,
+            content,
+            limit
         }
     }
   }
