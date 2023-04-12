@@ -2,6 +2,16 @@
   <div>
     <div class="map_wrap" style="position: relative;">
       <div id="map">
+        <ul id="category">
+            <li id="BK9" data-order="0"> 
+                <span class="category_bg bank"></span>
+                동물병원
+            </li>         
+            <li id="CE7" data-order="4"> 
+                <span class="category_bg cafe"></span>
+                애견카페
+            </li>       
+          </ul>
         <div class="center-marker">
           <img src="@/assets/images/offMeeting/center-marker.png" alt="">
         </div>
