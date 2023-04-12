@@ -39,7 +39,9 @@
       <div class="container">
         <div class="row">
           <div class="col-sm-5">
-            <h1 class="banner_taital_1">메타멍멍 ☺︎</h1>
+            <h1 class="banner_taital_1">메타멍멍 ☺︎
+              <!-- <img src="@/assets/images/common/paw.png" class="image-small"> -->
+            </h1>
             <p class="banner_text">Adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim</p>
             <div class="contact_bt"><a href="contact.html">CONTACT US<span class="contact_padding"><img src="@/assets/images/common/contact-icon.png"></span></a></div>
           </div>
@@ -47,7 +49,10 @@
             <div class="play_icon"><a href="#"><img src="@/assets/images/common/play-icon.png"></a></div>
           </div>
           <div class="col-sm-5">
-            <div><img src="@/assets/images/common/img-1.png" class="image_1"></div>
+            <div>
+              <img src="@/assets/images/common/paw.png" class="image_1">
+              <!-- <img src="@/assets/images/common/free-sticker-play-with-pet-7449880.png" class="image_1"> -->
+            </div>
           </div>
         </div>
       </div>
