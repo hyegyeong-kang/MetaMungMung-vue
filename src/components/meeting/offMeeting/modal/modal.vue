@@ -73,21 +73,13 @@ import {ref} from 'vue';
         'currentLocation',
         'currentLat',
         'currentLng'
-        ],
-    data () {
-        // return {
-        //     title:'',
-        //     date: '',
-        //     startTime: '',
-        //     content: ''
-        // }
-    },
+    ],
     setup (props) {
-        const title = ref('');
-        const date = ref('');
-        const startTime = ref('');
-        const content = ref('');
-        const limit = ref('2');
+        let title = ref('');
+        let date = ref('');
+        let startTime = ref('');
+        let content = ref('');
+        let limit = ref('2');
 
         const modal = document.getElementsByClassName('modal');
         const clickable = document.querySelectorAll('.clickable');
@@ -117,13 +109,13 @@ import {ref} from 'vue';
         }
 
         for (let i = 0; i < clickable.length; i++) {
-        clickable[i].openModalFunc;
+            clickable[i].openModalFunc;
         }
 
         window.onclick = function(event) {
-        if (event.target == modal[0]) {
-            modal[0].style.display = "none"
-        }
+            if (event.target == modal[0]) {
+                modal[0].style.display = "none"
+            }
         }
         return {
             openModalFunc,
