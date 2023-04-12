@@ -2,6 +2,7 @@
     <div class="services_section layout_padding">
         <div class="container">
             <MeetingHeader/>
+            <hr>
             <MyOnMeetingList/>
             <hr>
             <OnMeetingList/>
