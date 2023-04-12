@@ -11,11 +11,15 @@
       </div>
       <OffMeetingModal/>
     </div>
+    <div>{{this.currentLocation}}</div>
+
+    <div style="display: none;">{{this.currentLocation}}</div>
   </div>
 </template>
 
 <script>
-import OffMeetingModal from '@/components/meeting/offMeeting/modal/modal.vue'
+import OffMeetingModal from '@/components/meeting/offMeeting/modal/modal.vue';
+// import {ref} from 'vue';
 
 export default {
   name: 'KakaoMap',
@@ -24,8 +28,7 @@ export default {
   },
   data () {
     return {
-      // map 객체 설정
-      map: null
+      currentLocation: '',
     }
   },
   setup () {},
@@ -53,8 +56,7 @@ export default {
       const currentBtn = document.getElementById('current-location-btn');
       let lat = 0;
       let lon = 0;
-      let locationAddress='';
-
+      let locationAddress= '';
 
       const option = {
         center: new kakao.maps.LatLng(33.450701, 126.570667),
@@ -116,35 +118,39 @@ export default {
           map.setCenter(locPosition)
         });
 
+      let base = this;
+
       /* 지도 중심좌표 찾는 코드 start */
       // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
       kakao.maps.event.addListener(map, 'center_changed', function() {
-      // 지도의 중심좌표를 얻어옵니다
-      var latlng = map.getCenter();
+        // 지도의 중심좌표를 얻어옵니다
+        var latlng = map.getCenter();
 
-      lat = latlng.getLat();
-      lon = latlng.getLng();
+        const latitude = latlng.getLat();
+        const longitude = latlng.getLng();
 
-      /* 주소 얻어오기 */
-      getAddr(lat,lon);
+        /* 주소 얻어오기 */
+        getAddr(latitude,longitude);
 
-      function getAddr(lat,lon){
-          /* 주소-좌표 변환 객체 생성 */
-          let geocoder = new kakao.maps.services.Geocoder();
+        function getAddr(lat,lon){
+            /* 주소-좌표 변환 객체 생성 */
+            let geocoder = new kakao.maps.services.Geocoder();
 
-          let coord = new kakao.maps.LatLng(lat, lon);
-          let callback = function(result, status) {
-              if (status === kakao.maps.services.Status.OK) {
-                locationAddress = result[0].address.address_name;
-                  // console.log(locationAddress);
-              }
-          }
-          geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
-      }
+            let coord = new kakao.maps.LatLng(lat, lon);
+            let callback = function(result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                  locationAddress = result[0].address.address_name;
+                  console.log(locationAddress);
+                  base.currentLocation = locationAddress;
+                  // console.log('ssssss'+base.currentLocation)
+                }
+            }
+            geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+        }
 
-          // var message = '';
-          // message += '중심 좌표는 위도 ' + latlng.getLat() + ', 경도 ' + latlng.getLng() + '입니다';
-          // console.log(message);
+            // var message = '';
+            // message += '중심 좌표는 위도 ' + latlng.getLat() + ', 경도 ' + latlng.getLng() + '입니다';
+            // console.log(message);
       });
     }
   }
@@ -154,3 +160,4 @@ export default {
 <style scoped>
 @import "@/assets/css/meeting/offMeeting/kakaomap.css";
 </style>
+
