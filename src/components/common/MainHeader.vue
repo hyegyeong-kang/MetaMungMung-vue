@@ -22,6 +22,7 @@
                 <router-link :to="{name: 'Home'}" @click="moveToMain">Home</router-link>
                 <router-link :to="{name: 'Meeting'}" @click="moveToPage">Meeting</router-link>
                 <router-link :to="{name: 'OffMeeting'}" @click="moveToPage">Map</router-link>
+                <router-link :to="{name: 'RegisterModal'}"  @click="moveToPage">KANG-ONMEETING</router-link>
               </div>
               </div>
               <span class="navbar-toggler-icon"></span>
