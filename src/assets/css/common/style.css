@@ -289,7 +289,7 @@ button {
 .menu_text {
     float: right;
     width: 30%;
-    padding-top: 15px;
+    padding-top: 27px;
 }
 .search_icon{ width: 100%; float: left; }
 .padding_left_40{
@@ -918,7 +918,7 @@ textarea#comment::placeholder {
     float: left;
     background: #89cbeb;
     height: auto;
-    padding: 15px 0px;
+    padding: 15px 0px 30px;
 }
 .images_main_1{
     width: 100%;
