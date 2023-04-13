@@ -5,7 +5,7 @@ import Login from '../pages/member/login.vue'
 import Modify from '../pages/member/modify.vue'
 import OffMeeting from '../pages/meeting/offMeeting/index.vue'
 import OnMeeting from '../pages/meeting/onMeeting/index.vue'
-import OnMeetingSearch from '../pages/meeting/onMeeting/search.vue'
+import OnMeetingSearch from '../pages/meeting/onMeeting/search/index.vue'
 
 const router = createRouter({
   history: createWebHistory(),

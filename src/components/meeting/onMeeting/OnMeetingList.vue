@@ -3,7 +3,7 @@
         <div class="mainWrap">
             <div class="sectionTitleArea gMab19">
                 <h2 class="sectionTitle" v-if="isMain">이런 모임은 어때요</h2>
-                <h2 class="sectionTitle" v-else-if="isViewAll">검색 결과 {{ searchResultCnt }}개</h2>
+                <h2 class="sectionTitle" v-else-if="isSearch">검색 결과 {{ searchResultCnt }}개</h2>
             </div>
 
             <ul data-viewname="DDiscoverRecommendBandListView" class="cCoverList">
@@ -37,24 +37,25 @@
                 </li>
             </ul>
 
-            <div class="sectionOptionBox  -positionBottom" v-if="isShowMore" @click="viewAll">
-                <a href="/discover" class="btnOption  gMat7">
-                    <router-link :to="{name: 'OnMeetingSearch'}"><span class="optionText">모두보기 ></span></router-link>
-                </a>
+            <div class="sectionOptionBox  -positionBottom" v-if="isMain" @click="viewAll">
+                <span class="optionText">모두보기 ></span>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import {ref} from 'vue';
+import {ref} from 'vue'
+import {useRouter} from 'vue-router'
+
 export default {
     props: {
-        isShowMore: Boolean,
-        isMain: Boolean
+        isMain: Boolean,
+        isSearch: Boolean
     },
     emits: ['send-type'],
     setup(props, {emit}){
+        const router = useRouter();
         const searchResultCnt = ref(0);
         const onMeetingList = ref([
             {onMeetingIdx: 1, onMeetName: '그려', category: '그림쟁이', introduction: '할 거 없는 그림러들끼리 놀아요', thumbnail: 'https://coresos-phinf.pstatic.net/a/35ahg5/g_1biUd018svcl03cix5xm5dp_p2f6yk.jpg?type=cover_s276', isPublic: '1', onMeetingAddr: '', memberCnt: 4815, hostName: '윤철종'},
@@ -69,7 +70,8 @@ export default {
         ]);
 
         const viewAll = () => {
-            emit('send-type', 'viewAll');
+            emit("send-type", "viewAll");
+            // router.push({name: "OnMeetingSearch"});
         }
         
         return{

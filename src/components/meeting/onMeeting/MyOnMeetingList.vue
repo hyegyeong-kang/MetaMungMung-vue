@@ -98,7 +98,7 @@ h2{
 }
 .mainWrap {
     position: relative;
-    width: 1034px;
+    max-width: 1034px;
     margin: 0 auto;
 }
 .uCover .bandCover .bandName {
