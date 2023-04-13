@@ -1,12 +1,4 @@
 <template>
-  <button
-    @click="openDetailModalFunc"
-    class="custom-btn btn-12 detail-modal-btn"
-    style="position: absolute; z-index: 2; bottom: 15%; right: 5%"
-  >
-    <span>클릭하세요!</span><span>모임상세</span>
-  </button>
-
   <!-- 모임상세 모달 start -->
   <div id="myModal" class="detailModal">
     <!-- Modal content -->
@@ -61,7 +53,7 @@
 
 <script>
 import axios from "axios";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 export default {
   name: "OffMeetingModal",
@@ -78,18 +70,14 @@ export default {
     const modal = document.getElementsByClassName("detailModal");
     const clickable = document.querySelectorAll(".clickable");
 
-    const openDetailModalFunc = () => {
+    const openDetailModalFunc = (selectedMarker) => {
       modal[0].style.display = "block";
 
-      // console.log("props로 받은 title값 : " + props.selectedMarker.getTitle());
+      console.log("props로 받은 title값 : " + selectedMarker.getTitle());
 
       try {
         for (let i = 0; i < props.boardDetails.length; i++) {
-          if (props.selectedMarker.getTitle() == props.boardDetails[i].idx) {
-            console.log(props.boardDetails[i].title);
-            console.log(typeof props.boardDetails[i].title);
-            console.log(typeof title.value);
-
+          if (selectedMarker.getTitle() == props.boardDetails[i].idx) {
             title.value = props.boardDetails[i].title;
             host.value = props.boardDetails[i].host;
             location.value = props.boardDetails[i].addr;
@@ -97,12 +85,6 @@ export default {
             startTime.value = props.boardDetails[i].startTime;
             content.value = props.boardDetails[i].content;
             limit.value = props.boardDetails[i].limit;
-
-            console.log("제목잘들어왔니 " + title.value);
-
-            // title.value = props.boardDetails[i].title;
-            // console.log(props.boardDetails);
-            // title.value = props.boardDetails[i].title;
           }
         }
       } catch (err) {
@@ -110,12 +92,8 @@ export default {
       }
     };
 
-    const closeModal = () => {
-      modal[0].style.display = "none";
-    };
-
     const closeDetailModalFunc = () => {
-      closeModal();
+      modal[0].style.display = "none";
     };
 
     for (let i = 0; i < clickable.length; i++) {
