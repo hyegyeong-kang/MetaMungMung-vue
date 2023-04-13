@@ -6,7 +6,7 @@
         <div class="col-md-3">
           <div class="logo"><router-link :to="{name: 'Home'}" @click="moveToMain">
             <!-- <img src="@/assets/images/common/logo.png"> -->
-            <div class="logo1">Meta<div class="logo2">MungMung<img src="@/assets/images/common/icons8-dog-heart-64.png"></div></div>
+            <div class="logo1 ex-table">Meta<div class="logo2 ex-table-row"><div class="ex-table-cell">MungMung</div><div class="ex-table-cell"><img src="@/assets/images/common/icons8-dog-heart-64.png"></div></div></div>
             </router-link></div>
         </div>
         <div class="col-md-9">
@@ -25,7 +25,7 @@
                 <router-link :to="{name: 'Home'}" @click="moveToMain">Home</router-link>
                 <router-link :to="{name: 'OnMeeting'}" @click="moveToPage">Meeting</router-link>
                 <router-link :to="{name: 'OffMeeting'}" @click="moveToPage">Map</router-link>
-                <router-link :to="{name: 'RegisterModal'}"  @click="moveToPage">KANG-ONMEETING</router-link>
+                <!-- <router-link :to="{name: 'RegisterModal'}"  @click="moveToPage">KANG-ONMEETING</router-link> -->
               </div>
               </div>
               <span class="navbar-toggler-icon"></span>
@@ -120,5 +120,14 @@ export default ({
   left: 60px;
   top: -35px;
   position: relative;
+}
+.ex-table{
+  display: table;
+}
+.ex-table-row{
+  display: table-row;
+}
+.ex-table-cell{
+  display: table-cell;
 }
 </style>
