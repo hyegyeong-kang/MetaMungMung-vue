@@ -10,7 +10,7 @@
                 
                 <div>아이디</div>
                 <div>
-                <input type="text" v-model="member.userId">
+                <input type="text" v-model="member.memberId">
                 </div>
             </div>
 
@@ -40,35 +40,34 @@ export default {
     const route = useRoute();
     const router = useRouter();
     const member = ref({
-      userId: '',
+      memberId: '',
       password: '',
     });
 
     const loginForm = async() => {
       try {
         console.log(member.value);
+
         const res = await axios.post('/members/login', {
-          userId: member.value.userId,
+          memberId: member.value.memberId,
           password: member.value.password
         });
 
-        if (res.status === 200) {
-          const member = res.data.member;
-          sessionStorage.setItem('sessionId', JSON.stringify(member));
-          alert("로그인 성공")
-          location.href = '/';
-        } else {
-          console.error("로그인 실패");
-        }
+        sessionStorage.setItem("memberId", res.data.memberId);
+        sessionStorage.setItem("authority", res.data.authority);
+        sessionStorage.setItem("memberInfo", JSON.stringify(res.data));
+        
+        alert(res.data.memberName + " 님 메타멍멍에 오신 것을 환영합니다!");
+        router.push({ name: 'Home' });
         
       } catch (error) {
           console.log(error);
           router.push({ name: 'Login' });
-          alert("잘못된 로그인입니다.")
+          alert("잘못된 로그인 정보입니다.")
           
       } 
         
-        console.log(member.value);
+        // console.log(member.value);
     };
 
     return {

@@ -106,8 +106,6 @@ export default {
       try {
         console.log(member.value);
 
-
-
         const res = await axios.post('/members/signup', {
           memberId: member.value.memberId,
           password: member.value.password,
@@ -119,6 +117,7 @@ export default {
           address1: member.value.address1,
           address2: member.value.address2
         });
+        
         console.log(res.data);
         console.log(member.value);
         router.push({ name: 'Login' });
