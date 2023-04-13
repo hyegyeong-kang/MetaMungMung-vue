@@ -18,43 +18,41 @@
         <h2>모임상세</h2>
       </div>
       <div class="modal-body">
-        <form action="" class="modal-form">
-          <div class="form-row">
-            <label for="">제목</label>
-            <div v-bind="title">{{ title }}</div>
-          </div>
-          <div class="form-row">
-            <label for="">호스트</label>
-            <div v-bind="host">{{ host }}</div>
-          </div>
-          <div class="form-row">
-            <label for="">위치</label>
-            <div v-bind="location">{{ location }}</div>
-          </div>
-          <div class="form-row">
-            <label for="iduser">제한인원</label>
-            <div v-bind="limit">{{ limit }}</div>
-          </div>
-          <div class="form-row">
-            <label for="">날짜</label>
-            <div v-bind="date">{{ date }}</div>
-          </div>
-          <div class="form-row">
-            <label for="">시작시간</label>
-            <div v-bind="startTime">{{ startTime }}</div>
-          </div>
-          <div class="form-row">
-            <label for="">내용</label>
-            <div v-bind="content">{{ content }}</div>
-          </div>
-        </form>
+        <div class="form-row">
+          <label for="">제목</label>
+          <input v-model="title" disabled />
+        </div>
+        <div class="form-row">
+          <label for="">호스트</label>
+          <input v-model="host" disabled />
+        </div>
+        <div class="form-row">
+          <label for="">위치</label>
+          <input v-model="location" disabled />
+        </div>
+        <div class="form-row">
+          <label for="iduser">제한인원</label>
+          <input v-model="limit" disabled />
+        </div>
+        <div class="form-row">
+          <label for="">날짜</label>
+          <input v-model="date" disabled />
+        </div>
+        <div class="form-row">
+          <label for="">시작시간</label>
+          <input v-model="startTime" disabled />
+        </div>
+        <div class="form-row">
+          <label for="">내용</label>
+          <textarea v-model="content" disabled />
+        </div>
       </div>
       <div class="modal-footer">
-        <button @click="closeDetailModalFunc" class="btn btn-danger">
+        <button @click="closeDetailModalFunc" class="btn btn-warning">
           닫기
         </button>
+        <button class="btn btn-danger">삭제</button>
         <button class="btn btn-primary">수정</button>
-        <button class="btn btn-warning">삭제</button>
       </div>
     </div>
   </div>
@@ -91,7 +89,17 @@ export default {
             console.log(props.boardDetails[i].title);
             console.log(typeof props.boardDetails[i].title);
             console.log(typeof title.value);
-            title.value = props.boardDetails[0].title;
+
+            title.value = props.boardDetails[i].title;
+            host.value = props.boardDetails[i].host;
+            location.value = props.boardDetails[i].addr;
+            date.value = props.boardDetails[i].date;
+            startTime.value = props.boardDetails[i].startTime;
+            content.value = props.boardDetails[i].content;
+            limit.value = props.boardDetails[i].limit;
+
+            console.log("제목잘들어왔니 " + title.value);
+
             // title.value = props.boardDetails[i].title;
             // console.log(props.boardDetails);
             // title.value = props.boardDetails[i].title;
