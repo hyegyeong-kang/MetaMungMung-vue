@@ -3,29 +3,36 @@
         <label class="gSrOnly">모임 검색</label>
         <input type="text" id="input_search_view62" class="inputBandSearch _gnbInputSearch" role="search" title="모임 검색" placeholder="모임 검색" autocomplete="off" v-model="searchKeyword">
 
-        <router-link :to="{name: 'OnMeetingSearch', query: {keywords: searchKeyword}}"><button type="submit" class="btnSearch" id="btn_search"><span class="gSrOnly">검색</span></button></router-link>
+        <button type="submit" class="btnSearch" id="btn_search" @click="checkInputText"><span class="gSrOnly">검색</span></button>
     </div>
 </template>
 
 <script>
 import {ref} from 'vue'
-import {useRoute} from 'vue-router'
+import {useRoute, useRouter} from 'vue-router'
 
 export default {
     setup() {
         const route = useRoute();
+        const router = useRouter();
         const searchKeyword = ref('');
 
         const init = () => {
-            if(route.query.keywords != null){
-                searchKeyword.value = route.query.keywords;
-            }
+            searchKeyword.value = route.query.keywords;
         }
 
         init();
 
+        const checkInputText = () => {
+            if(searchKeyword.value != null){
+                router.push({name: 'OnMeetingSearch', query: {keywords: searchKeyword.value}, params: {pageType: 'search'}});
+            }
+            return false;
+        }
+
         return {
-            searchKeyword
+            searchKeyword,
+            checkInputText
         }
     }
 }

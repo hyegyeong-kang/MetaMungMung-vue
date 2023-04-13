@@ -5,7 +5,7 @@
             <hr>
             <MyOnMeetingList/>
             <hr>
-            <OnMeetingList :isMain="true" :isShowMore="true" />
+            <OnMeetingList :isMain="true" :isShowMore="true"/>
         </div>
     </div>
 </template>
