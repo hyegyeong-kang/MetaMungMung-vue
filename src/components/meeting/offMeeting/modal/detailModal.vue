@@ -21,40 +21,31 @@
         <form action="" class="modal-form">
           <div class="form-row">
             <label for="">제목</label>
-            <div></div>
+            <div v-bind="title">{{ title }}</div>
           </div>
           <div class="form-row">
             <label for="">호스트</label>
-            <div></div>
+            <div v-bind="host">{{ host }}</div>
           </div>
           <div class="form-row">
             <label for="">위치</label>
-            <div></div>
+            <div v-bind="location">{{ location }}</div>
           </div>
-          <div class="form-row" style="display: none">
-            <label for="">위도</label>
-            <div></div>
-          </div>
-          <div class="form-row" style="display: none">
-            <label for="">경도</label>
-            <div></div>
-          </div>
-
           <div class="form-row">
             <label for="iduser">제한인원</label>
-            <div></div>
+            <div v-bind="limit">{{ limit }}</div>
           </div>
           <div class="form-row">
             <label for="">날짜</label>
-            <div></div>
+            <div v-bind="date">{{ date }}</div>
           </div>
           <div class="form-row">
             <label for="">시작시간</label>
-            <div></div>
+            <div v-bind="startTime">{{ startTime }}</div>
           </div>
           <div class="form-row">
             <label for="">내용</label>
-            <div></div>
+            <div v-bind="content">{{ content }}</div>
           </div>
         </form>
       </div>
@@ -76,26 +67,45 @@ import { ref } from "vue";
 
 export default {
   name: "OffMeetingModal",
-  setup() {
+  props: ["selectedMarker", "boardDetails"],
+  setup(props) {
     let title = ref("");
+    let host = ref("");
+    let location = ref("");
     let date = ref("");
     let startTime = ref("");
     let content = ref("");
-    let limit = ref("2");
+    let limit = ref("");
 
     const modal = document.getElementsByClassName("detailModal");
     const clickable = document.querySelectorAll(".clickable");
 
-    const openModal = () => {
+    const openDetailModalFunc = () => {
       modal[0].style.display = "block";
+
+      // console.log("props로 받은 title값 : " + props.selectedMarker.getTitle());
+
+      try {
+        for (let i = 0; i < props.boardDetails.length; i++) {
+          if (props.selectedMarker.getTitle() == props.boardDetails[i].idx) {
+            console.log(props.boardDetails[i].title);
+            console.log(typeof props.boardDetails[i].title);
+            console.log(typeof title.value);
+            title.value = props.boardDetails[0].title;
+            // title.value = props.boardDetails[i].title;
+            // console.log(props.boardDetails);
+            // title.value = props.boardDetails[i].title;
+          }
+        }
+      } catch (err) {
+        console.log("err!!!!" + err);
+      }
     };
 
     const closeModal = () => {
       modal[0].style.display = "none";
     };
-    const openDetailModalFunc = () => {
-      openModal();
-    };
+
     const closeDetailModalFunc = () => {
       closeModal();
     };
@@ -117,6 +127,8 @@ export default {
       startTime,
       content,
       limit,
+      host,
+      location,
     };
   },
 };

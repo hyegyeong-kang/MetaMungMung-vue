@@ -78,7 +78,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary">등록</button>
         </div>
       </div>
     </div>
@@ -112,9 +112,11 @@ export default {
     const closeModal = () => {
       modal[0].style.display = "none";
     };
+
     const openModalFunc = () => {
       openModal();
     };
+
     const closeModalFunc = () => {
       closeModal();
     };

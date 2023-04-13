@@ -19,7 +19,11 @@
         :currentLat="this.currentLat"
         :currentLng="this.currentLng"
       ></OffMeetingModal>
-      <DetailModal />
+      <DetailModal
+        :selectedMarker="selectedMarker"
+        :boardDetails="boardDetails"
+        ref="detailModal"
+      />
     </div>
     <div>{{ this.currentLocation }}</div>
     <div>{{ this.currentLat }}</div>
@@ -43,8 +47,12 @@ export default {
       currentLocation: "",
       currentLat: "",
       currentLng: "",
+      openIt: null,
+      selectedMarker: null,
+      boardMarkers: [],
       boardDetails: [
         {
+          idx: 1,
           title: "첫게시글!!!!",
           host: "손정아",
           addr: "헤이그카페",
@@ -57,6 +65,7 @@ export default {
             "여기서 모여요~ 여기 카페 음식도 맛있고, 강아지들 잘 놀아요!!!!!",
         },
         {
+          idx: 2,
           title: "두번째 게시글!!!!",
           host: "홍길동",
           addr: "스타벅스",
@@ -67,9 +76,50 @@ export default {
           startTime: "12:00",
           content: "카페는 역시 스타벅스죠~~~~~ 여기 어떠세요????!!!!!",
         },
+        {
+          idx: 3,
+          title: "세번째 게시글!!!!",
+          host: "박길동",
+          addr: "경찰병원역 스타벅스",
+          latitude: 37.494784448894926,
+          longitude: 127.12194168816411,
+          limit: "4",
+          date: "2023-04-15",
+          startTime: "12:00",
+          content: "카페는 역시 스타벅스죠~~~~~ 여기 어떠세요????!!!!!",
+        },
+        {
+          idx: 4,
+          title: "네번째 게시글!!!!",
+          host: "박길동",
+          addr: "우불식당",
+          latitude: 37.495170738242564,
+          longitude: 127.12086238052915,
+          limit: "4",
+          date: "2023-04-15",
+          startTime: "12:00",
+          content: "카페는 역시 스타벅스죠~~~~~ 여기 어떠세요????!!!!!",
+        },
+        {
+          idx: 5,
+          title: "다섯번째 게시글!!!!",
+          host: "박길동",
+          addr: "빽다방",
+          latitude: 37.49481084427134,
+          longitude: 127.1203642409428,
+          limit: "4",
+          date: "2023-04-15",
+          startTime: "12:00",
+          content: "카페는 역시 스타벅스죠~~~~~ 여기 어떠세요????!!!!!",
+        },
       ],
     };
   },
+  // created() {
+  //   let base = this;
+  //   //비동기적으로 selectedMarker를 업데이트
+
+  // },
   mounted() {
     // api 스크립트 소스 불러오기 및 지도 출력
     if (window.kakao && window.kakao.maps) {
@@ -77,6 +127,13 @@ export default {
     } else {
       this.loadScript();
     }
+
+    let base = this;
+
+    base.openIt = this.$refs.detailModal.openDetailModalFunc;
+
+    console.log("asdfasdfasdfasdf");
+    console.log(base.openIt + "asdfasdfasdfasdf");
   },
   methods: {
     loadScript() {
@@ -188,23 +245,95 @@ export default {
         }
       });
 
+      // // 커스텀 오버레이에 표시할 컨텐츠 입니다
+      // // 커스텀 오버레이는 아래와 같이 사용자가 자유롭게 컨텐츠를 구성하고 이벤트를 제어할 수 있기 때문에
+      // // 별도의 이벤트 메소드를 제공하지 않습니다
+      // var content =
+      //   '<div class="wrap">' +
+      //   '    <div class="info">' +
+      //   '        <div class="title">' +
+      //   "            카카오 스페이스닷원" +
+      //   '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' +
+      //   "        </div>" +
+      //   '        <div class="body">' +
+      //   '            <div class="img">' +
+      //   '                <img src="" width="73" height="70">' +
+      //   "           </div>" +
+      //   '            <div class="desc">' +
+      //   '                <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>' +
+      //   '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' +
+      //   '                <div><a href="https://www.kakaocorp.com/main" target="_blank" class="link">홈페이지</a></div>' +
+      //   "            </div>" +
+      //   "        </div>" +
+      //   "    </div>" +
+      //   "    <button>버튼</button>";
+      // ("</div>");
+
+      // let overlay = new Object();
+      // createCustomOverlay();
       addBoardMarker();
 
       /* 게시물 좌표 마커 생성 */
       function addBoardMarker() {
         let boardMarkerPosition = 0;
+        let cnt = 1;
         for (let i = 0; i < base.boardDetails.length; i++) {
           boardMarkerPosition = new kakao.maps.LatLng(
             base.boardDetails[i].latitude,
             base.boardDetails[i].longitude
           );
+
           const boardMarker = new kakao.maps.Marker({
             position: boardMarkerPosition,
+            title: cnt + i,
           });
 
           boardMarker.setMap(map);
+
+          base.boardMarkers.push(boardMarker);
+
+          kakao.maps.event.addListener(boardMarker, "click", function () {
+            if (base.selectedMarker || base.selectedMarker !== boardMarker) {
+              base.selectedMarker = boardMarker;
+              console.log(
+                "선택된 마커 : " +
+                  base.selectedMarker.getTitle() +
+                  ", 위도경도는" +
+                  base.selectedMarker.getPosition()
+              );
+              base.openIt();
+            }
+          });
+
+          // // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
+          // kakao.maps.event.addListener(boardMarker, "click", function () {
+          //   overlay.setMap(map);
+          // });
+
+          // // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다
+          // function closeOverlay() {
+          //   overlay.setMap(null);
+          // }
         }
       }
+
+      // // 마커 위에 커스텀오버레이를 표시합니다
+      // // 마커를 중심으로 커스텀 오버레이를 표시하기위해 CSS를 이용해 위치를 설정했습니다
+      // function createCustomOverlay() {
+      //   let boardMarkerPosition = 0;
+
+      //   for (let i = 0; i < base.boardDetails.length; i++) {
+      //     boardMarkerPosition = new kakao.maps.LatLng(
+      //       base.boardDetails[i].latitude,
+      //       base.boardDetails[i].longitude
+      //     );
+      //     overlay = new kakao.maps.CustomOverlay({
+      //       content: content,
+      //       map: map,
+      //       position: boardMarkerPosition,
+      //     });
+      //   }
+      // }
     },
   },
 };
@@ -212,4 +341,97 @@ export default {
 
 <style scoped>
 @import "@/assets/css/meeting/offMeeting/kakaomap.css";
+
+.wrap {
+  position: absolute;
+  left: 0;
+  bottom: 40px;
+  width: 288px;
+  height: 132px;
+  margin-left: -144px;
+  text-align: left;
+  overflow: hidden;
+  font-size: 12px;
+  font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
+  line-height: 1.5;
+}
+.wrap * {
+  padding: 0;
+  margin: 0;
+}
+.wrap .info {
+  width: 286px;
+  height: 120px;
+  border-radius: 5px;
+  border-bottom: 2px solid #ccc;
+  border-right: 1px solid #ccc;
+  overflow: hidden;
+  background: #fff;
+}
+.wrap .info:nth-child(1) {
+  border: 0;
+  box-shadow: 0px 1px 2px #888;
+}
+.info .title {
+  padding: 5px 0 0 10px;
+  height: 30px;
+  background: #eee;
+  border-bottom: 1px solid #ddd;
+  font-size: 18px;
+  font-weight: bold;
+}
+.info .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #888;
+  width: 17px;
+  height: 17px;
+  background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png");
+}
+.info .close:hover {
+  cursor: pointer;
+}
+.info .body {
+  position: relative;
+  overflow: hidden;
+}
+.info .desc {
+  position: relative;
+  margin: 13px 0 0 90px;
+  height: 75px;
+}
+.desc .ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.desc .jibun {
+  font-size: 11px;
+  color: #888;
+  margin-top: -2px;
+}
+.info .img {
+  position: absolute;
+  top: 6px;
+  left: 5px;
+  width: 73px;
+  height: 71px;
+  border: 1px solid #ddd;
+  color: #888;
+  overflow: hidden;
+}
+.info:after {
+  content: "";
+  position: absolute;
+  margin-left: -12px;
+  left: 50%;
+  bottom: 0;
+  width: 22px;
+  height: 12px;
+  background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png");
+}
+.info .link {
+  color: #5085bb;
+}
 </style>
