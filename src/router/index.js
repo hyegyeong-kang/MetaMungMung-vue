@@ -4,7 +4,8 @@ import Signup from '../pages/member/signup.vue'
 import Login from '../pages/member/login.vue'
 import Modify from '../pages/member/modify.vue'
 import OffMeeting from '../pages/meeting/offMeeting/index.vue'
-import Meeting from '../pages/meeting/onMeeting/index.vue'
+import OnMeeting from '../pages/meeting/onMeeting/index.vue'
+import OnMeetingSearch from '../pages/meeting/onMeeting/search.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -35,9 +36,14 @@ const router = createRouter({
       component: OffMeeting
     },
     {
-      path: '/meeting',
-      name: 'Meeting',
-      component: Meeting
+      path: '/onMeeting',
+      name: 'OnMeeting',
+      component: OnMeeting
+    },
+    {
+      path: '/onMeeting/search',
+      name: 'OnMeetingSearch',
+      component: OnMeetingSearch
     }
   ]
 })

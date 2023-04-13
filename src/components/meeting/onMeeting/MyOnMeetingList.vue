@@ -1,6 +1,6 @@
 <template>
     <div class="homeMyBandList gMat20 gPab35 _myBandListWrap" style="">
-        <h1>나의 모임</h1>
+        <h2>나의 모임</h2>
         <div class="mainWrap  _bandListRegion">
             <ul data-viewname="DBandCollectionView" class="bandCardList gMab25">
 
@@ -79,9 +79,14 @@ export default {
 }
 </script>
 
-<style>
-h1{
+<style scoped>
+.homeMyBandList{
+    padding: 35px 0 20px 0;
+}
+h2{
+    font-size: 30px;
     font-weight: 800;
+    display: inline-block;
 }
 .bandCardList {
     display: -webkit-box;
@@ -91,7 +96,7 @@ h1{
     padding-bottom: 35px;
     margin-top: 20px;
 }
-.sMyHomePage .mainWrap {
+.mainWrap {
     position: relative;
     width: 1034px;
     margin: 0 auto;
