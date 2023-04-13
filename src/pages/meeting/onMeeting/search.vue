@@ -5,7 +5,7 @@
             <hr>
             <OnMeetingCategory/>
             <hr>
-            <OnMeetingList/>
+            <OnMeetingList :isMain="false" :isShowMore="false" />
         </div>
     </div>
 </template>

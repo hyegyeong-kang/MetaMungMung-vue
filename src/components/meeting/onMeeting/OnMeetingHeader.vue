@@ -1,6 +1,6 @@
 <template>
     <div class="pageHeader">
-        <div class="pageTitle">모임</div>
+        <router-link :to="{name: 'OnMeeting'}"><div class="pageTitle">모임</div></router-link>
         <SearchLocationBtn/>
         <OnMeetingSearchBar/>
     </div>
