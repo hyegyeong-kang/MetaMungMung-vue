@@ -4,7 +4,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-3">
-          <div class="logo"><router-link :to="{name: 'Home'}" @click="moveToMain"><img src="@/assets/images/common/logo.png"></router-link></div>
+          <div class="logo"><router-link :to="{name: 'Home'}" @click="moveToMain">
+            <!-- <img src="@/assets/images/common/logo.png"> -->
+            <div class="logo1">Meta<div class="logo2">MungMung<img src="@/assets/images/common/icons8-dog-heart-64.png"></div></div>
+            </router-link></div>
         </div>
         <div class="col-md-9">
           <div class="menu_text">
@@ -20,7 +23,7 @@
               <a href="javascript:void(0)" class="closebtn" @click="closeNav" >&times;</a>
               <div class="overlay-content">
                 <router-link :to="{name: 'Home'}" @click="moveToMain">Home</router-link>
-                <router-link :to="{name: 'Meeting'}" @click="moveToPage">Meeting</router-link>
+                <router-link :to="{name: 'OnMeeting'}" @click="moveToPage">Meeting</router-link>
                 <router-link :to="{name: 'OffMeeting'}" @click="moveToPage">Map</router-link>
                 <router-link :to="{name: 'RegisterModal'}"  @click="moveToPage">KANG-ONMEETING</router-link>
               </div>
@@ -37,7 +40,9 @@
       <div class="container">
         <div class="row">
           <div class="col-sm-5">
-            <h1 class="banner_taital_1">메타멍멍 ☺︎</h1>
+            <h1 class="banner_taital_1">메타멍멍 ☺︎
+              <!-- <img src="@/assets/images/common/paw.png" class="image-small"> -->
+            </h1>
             <p class="banner_text">Adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim</p>
             <div class="contact_bt"><a href="contact.html">CONTACT US<span class="contact_padding"><img src="@/assets/images/common/contact-icon.png"></span></a></div>
           </div>
@@ -45,7 +50,10 @@
             <div class="play_icon"><a href="#"><img src="@/assets/images/common/play-icon.png"></a></div>
           </div>
           <div class="col-sm-5">
-            <div><img src="@/assets/images/common/img-1.png" class="image_1"></div>
+            <div>
+              <img src="@/assets/images/common/paw.png" class="image_1">
+              <!-- <img src="@/assets/images/common/free-sticker-play-with-pet-7449880.png" class="image_1"> -->
+            </div>
           </div>
         </div>
       </div>
@@ -98,3 +106,19 @@ export default ({
   }
 })
 </script>
+
+<style>
+.logo1{
+  font-size: 35px;
+  font-weight: 600;
+  color: white;
+  position: absolute;
+}
+.logo2{
+  padding: 0;
+  margin: 0;
+  left: 60px;
+  top: -35px;
+  position: relative;
+}
+</style>
