@@ -8,15 +8,19 @@
 </template>
 
 <script>
-import {ref} from 'vue'
+import {ref, watchEffect} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 
 export default {
     emits: ['send-type'],
+    props: {
+        isMain: Boolean
+    },
     setup(props, {emit}) {
         const route = useRoute();
         const router = useRouter();
         const searchKeyword = ref('');
+        const isMain = ref(true);
 
         const init = () => {
             searchKeyword.value = route.query.keywords;
@@ -27,11 +31,18 @@ export default {
         const checkInputText = () => {
             if(searchKeyword.value != null){
                 emit('send-type', 'search');
-                // router.push({name: 'OnMeetingSearch', query: {keywords: searchKeyword.value}});
+                router.push({name: 'OnMeeting', query: {keywords: searchKeyword.value}});
             }
             return false;
         }
 
+        watchEffect(() => {
+            // isMain: props.isMain;
+            if(props.isMain){
+                console.log("메인화면이니" + props.isMain);
+                searchKeyword.value = '';
+            }
+        });
 
         return {
             searchKeyword,

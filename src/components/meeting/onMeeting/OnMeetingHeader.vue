@@ -2,7 +2,7 @@
     <div class="pageHeader">
         <router-link :to="{name: 'OnMeeting'}" @click="moveToPage"><div class="pageTitle">모임</div></router-link>
         <SearchLocationBtn/>
-        <OnMeetingSearchBar @send-type="sendType"/>
+        <OnMeetingSearchBar @send-type="sendType" :isMain="isMain"/>
     </div>
 </template>
 
@@ -13,6 +13,9 @@ import {useRouter} from 'vue-router'
 import {ref} from 'vue';
 
 export default {
+    props: {
+        isMain: Boolean
+    },
     components: {
         SearchLocationBtn,
         OnMeetingSearchBar

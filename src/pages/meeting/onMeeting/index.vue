@@ -1,7 +1,7 @@
 <template>
     <div class="services_section layout_padding">
         <div class="container">
-            <MeetingHeader @send-type="sendType"/>
+            <MeetingHeader @send-type="sendType" :isMain="isMain"/>
             <hr>
             <MyOnMeetingList v-if="isMain"/>
             <OnMeetingCategory v-else />

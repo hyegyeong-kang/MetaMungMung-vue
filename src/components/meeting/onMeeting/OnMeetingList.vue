@@ -251,6 +251,7 @@ b, strong {
     position: absolute;
     right: 0;
     top: 4px;
+    cursor: pointer;
 }
 .sectionOptionBox {
     display: -webkit-box;
