@@ -1,6 +1,12 @@
 /* member style */
-.membership-signup > form, .membership-login > form {
-    width: 580px;
+.membership-signup > form {
+    max-width: 580px;
+    margin: 0 auto;
+    border: solid #565656;
+    border-radius: 10px;
+}
+.membership-login > form {
+    max-width: 500px;
     margin: 0 auto;
     border: solid #565656;
     border-radius: 10px;
@@ -36,13 +42,13 @@
     border-color: #565656;
 }
 #btnLogin, #btnSave {
-    width: 80%;
+    width: 60%;
     border-radius: 8px;
     background-color: #b7e0f0;
     font-weight: bold;
-    margin-left: 60px;
     margin-top: 10px;
     margin-bottom: 30px;
+    margin-left: 20%;
 }
 
 #form-id {
