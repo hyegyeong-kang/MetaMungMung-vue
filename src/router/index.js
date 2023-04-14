@@ -5,7 +5,8 @@ import Login from '../pages/member/login.vue'
 import Modify from '../pages/member/modify.vue'
 import OffMeeting from '../pages/meeting/offMeeting/index.vue'
 import OnMeeting from '../pages/meeting/onMeeting/index.vue'
-import OnMeetingSearch from '../pages/meeting/onMeeting/search/index.vue'
+import OnMeetingSearch from '../pages/meeting/onMeeting/search.vue'
+import RegisterModal from '../pages/meeting/onMeeting/board/index.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -44,6 +45,11 @@ const router = createRouter({
       path: '/onMeeting/search',
       name: 'OnMeetingSearch',
       component: OnMeetingSearch
+    },
+    {
+      path: '/onMeeting/board',
+      name: 'RegisterModal',
+      component: RegisterModal
     }
   ]
 })
