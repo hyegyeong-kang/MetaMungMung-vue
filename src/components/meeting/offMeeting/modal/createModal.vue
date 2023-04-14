@@ -41,13 +41,6 @@
               <input type="text" :value="currentLng" disabled />
             </div>
 
-            <!-- <div class="form-row">
-                    <label for="iduser">인원수</label>
-                    <select class="user-select" name="user-name" id="user">
-                    <option value="" selected disabled>인원수를 선택해주세요.</option>
-                    <option value="">1명</option>
-                    </select>
-                </div> -->
             <div class="form-row">
               <label for="iduser">제한인원</label>
               <input
@@ -122,16 +115,15 @@ export default {
     };
 
     const submitOffMeetingForm = () => {
-      console.log("제목!!! " + title.value);
-      console.log("위치!!!   " + props.currentLocation);
-      console.log("제한인원!!!  " + limit.value);
-      console.log("날짜!!! " + date.value);
-      console.log("모임시작시간!!! " + startTime.value);
-      console.log("내용!!! " + content.value);
-      console.log("위도 " + props.currentLat);
-      console.log("경도 " + props.currentLng);
+      // console.log("제목!!! " + title.value);
+      // console.log("위치!!!   " + props.currentLocation);
+      // console.log("제한인원!!!  " + limit.value);
+      // console.log("날짜!!! " + date.value);
+      // console.log("모임시작시간!!! " + startTime.value);
+      // console.log("내용!!! " + content.value);
+      // console.log("위도 " + props.currentLat);
+      // console.log("경도 " + props.currentLng);
 
-      // closeModal();
       router.go();
     };
 
