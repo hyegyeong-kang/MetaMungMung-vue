@@ -1,4 +1,4 @@
-._3Te07yM0Z_ {
+/* ._3Te07yM0Z_ {
   position: relative;
 }
 
@@ -19,6 +19,29 @@
 
 #categoryList {
   margin-left: 50px;
+}
+
+/*----------------카카오------------------*/
+
+/*  폰트 적용 */
+@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+html {
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+/* 노말라이즈 */
+body,
+ul,
+li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 /* 라이브러리 */
@@ -95,6 +118,19 @@
   z-index: 15;
 }
 
+/* 고정형 레이아웃 용 */
+.con {
+  width: 1180px;
+}
+
+.con-min-width {
+  min-width: 1180px;
+}
+
+.mobile-con {
+  min-width: 275px;
+}
+
 /* 반응형 레이아웃 용 */
 /* 모바일 770px  */
 /* 일반메뉴(X), 모바일메뉴(O) */
@@ -125,7 +161,7 @@
   }
   .slider .top-text,
   .main-text {
-    color: white !important;
+    color: white;
     text-align: left;
   }
   .slider .slide-text .main-text {
@@ -403,19 +439,6 @@
   }
 }
 
-/* 고정형 레이아웃 용 */
-.con {
-  width: 1180px;
-}
-
-.con-min-width {
-  min-width: 1180px;
-}
-
-.mobile-con {
-  min-width: 275px;
-}
-
 /* 일반  */
 /* 일반메뉴(O), 모바일메뉴(X) */
 
@@ -424,6 +447,10 @@
   .mobile-search-bg {
     display: none;
   }
+}
+
+/*모바일 커스텀*/
+.mobile-top-line {
 }
 
 .mobile-top {
@@ -521,7 +548,8 @@
   transform: translatey(-50%);
   padding-left: 50px;
 }
-ㄴ #mobile-search-bar form > input {
+
+#mobile-search-bar form > input {
   border: none;
   font-size: 16px;
   font-weight: bold;
@@ -1567,6 +1595,7 @@
   line-height: 0;
   padding: 10px 5px;
 }
+
 .carousel-1 .owl-dots > .owl-dot > span {
   width: 10px;
   height: 10px;
@@ -1818,7 +1847,69 @@
   vertical-align: top;
 }
 
+/*풋터*/
+.foot {
+  background-color: #2e2e2e;
+  padding-bottom: 50px;
+  border-top: 0;
+}
+
+@media (min-width: 770px) {
+  .foot {
+    min-width: 1180px;
+  }
+  .foot .inner-footer {
+    width: 1080px;
+    margin: 0 auto;
+    padding: 22px 0 0 0;
+  }
+}
+
+.foot .inner-footer .info {
+  padding: 28px 0 34px;
+}
+
+.foot .inner-footer .info > a {
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  display: inline-block;
+  font-size: 16px;
+  line-height: 19px;
+  vertical-align: top;
+}
+
+.foot .inner-footer .info > a:not(:first-child) {
+  position: relative;
+  margin-left: 10px;
+  padding-left: 22px;
+}
+
+.foot .inner-footer .text-copy {
+  display: block;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.foot .inner-footer .corp {
+  display: inline-block;
+  padding-top: 49px;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 18px;
+  color: #c9c9c9;
+  vertical-align: top;
+}
+
 html.left-side-bar-visible,
 html.left-side-bar-visible > body {
   overflow-y: hidden;
 }
+
+#product-card {
+  object-fit: cover;
+  height: 251.7px;
+}
+
+/*스크롤 바 효과???*/
