@@ -20,7 +20,7 @@
         />
       </div>
       <div class="modal-footer">
-        <button @click="$emit('close')" class="btn btn-warning" >
+        <button @click="$emit('close')" class="btn btn-submit" >
           게시
         </button>
         <button class="btn btn-file">파일</button>
