@@ -1,19 +1,40 @@
 <template>
     <div class="pageHeader">
-        <router-link :to="{name: 'OnMeeting'}"><div class="pageTitle">모임</div></router-link>
+        <router-link :to="{name: 'OnMeeting'}" @click="moveToPage"><div class="pageTitle">모임</div></router-link>
         <SearchLocationBtn/>
-        <OnMeetingSearchBar/>
+        <OnMeetingSearchBar @send-type="sendType" :isMain="isMain"/>
     </div>
 </template>
 
 <script>
 import SearchLocationBtn from './SearchLocationBtn.vue'
 import OnMeetingSearchBar from './OnMeetingSearchBar.vue'
+import {useRouter} from 'vue-router'
+import {ref} from 'vue';
 
 export default {
+    props: {
+        isMain: Boolean
+    },
     components: {
         SearchLocationBtn,
         OnMeetingSearchBar
+    },
+    setup(props, {emit}){
+        const router = useRouter();
+
+        const sendType = () => {
+            emit('send-type', 'search');
+        }
+
+        const moveToPage = () => {
+            emit('send-type');
+        }
+
+        return{
+            sendType,
+            moveToPage
+        }
     }
 }
 </script>
