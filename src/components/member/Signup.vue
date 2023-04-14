@@ -29,7 +29,7 @@
 
                 <div>
                     <div>비밀번호 확인</div>
-                    <input id="passwordCheck" type="password" placeholder="비밀번호 확인" required>
+                    <input id="passwordCheck" v-model="member.passwordCheck" type="passwordCheck" placeholder="비밀번호 확인" required>
                 </div>
 
                 <div>
@@ -67,7 +67,7 @@
                     <input name="address2" v-model="member.address2" type="text" placeholder="상세 주소지 입력" required>
                 </div>
 
-                <button type="submit" class="btnSignup">가입하기</button>
+                <button type="submit" id="btnSignup">가입하기</button>
                 </div>
 
                 </form>
@@ -121,30 +121,26 @@ export default {
         console.log(res.data);
         console.log(member.value);
         router.push({ name: 'Login' });
-        //location.href = '/members/login';
+        alert("회원가입이 완료되었습니다!")
 
         } catch (error) {
             console.log(error.message);
             console.log(member.value);
-            alert("잘못된 입력입니다.")
+            alert("잘못된 입력입니다.");
         } 
-        
-        // console.log(member.value);
     };
 
-    const idCheck = async() => {
-      await axios.get('/members/idCheck/' + member.value.memberId)
-      .then(res => {
-        if(res.data.exists) {
-            this.message = '사용 불가능한 아이디입니다.';
-        } else {
-            this.message = '사용 가능한 아이디입니다.';
+    const idCheck = async () => {
+        try {
+            const res = await axios.post('/members/idCheck', { memberId: member.value.memberId });
+            if (res.data === 0) {
+                alert("사용 가능한 아이디입니다.");
+            } else {
+                alert("이미 존재하는 아이디입니다.");
+            }
+        } catch (error) {
+            console.error(error);
         }
-      })
-      .catch(error => {
-        console.error(error);
-      });
-
     };
 
     return {
