@@ -2,10 +2,11 @@
 <div>
     <div>
         <span><strong>지도 첨부</strong></span>
-        <span><button> X </button></span>
+        <span @click="$emit('close')" class="close" id="closeModal"
+          >&times;</span>
     </div>
     <div class="map_wrap" style="position: relative;">
-      <div id="map">
+      <div id="map2">
         <div class="hAddr">
             <span class="title">지도중심기준 행정동 주소정보</span>
             <span id="centerAddr"></span>
@@ -48,7 +49,7 @@ export default {
             document.head.appendChild(script)
             },
         loadMap () {
-            const container = document.getElementById('map')
+            const container = document.getElementById('map2')
             const currentBtn = document.getElementById('current-location-btn');
             let lat = 0;
             let lon = 0;
@@ -274,6 +275,6 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 @import "@/assets/css/meeting/offMeeting/map-modal.css";
 </style>
