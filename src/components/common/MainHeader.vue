@@ -4,10 +4,20 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-3">
-          <div class="logo"><router-link :to="{name: 'Home'}" @click="moveToMain">
-            <!-- <img src="@/assets/images/common/logo.png"> -->
-            <div class="logo1 ex-table">Meta<div class="logo2 ex-table-row"><div class="ex-table-cell">MungMung</div><div class="ex-table-cell"><img src="@/assets/images/common/icons8-dog-heart-64.png"></div></div></div>
-            </router-link></div>
+          <div class="logo">
+            <router-link :to="{ name: 'Home' }" @click="moveToMain">
+              <!-- <img src="@/assets/images/common/logo.png"> -->
+              <div class="logo1 ex-table">
+                Meta
+                <div class="logo2 ex-table-row">
+                  <div class="ex-table-cell">MungMung</div>
+                  <div class="ex-table-cell">
+                    <img src="@/assets/images/common/icons8-dog-heart-64.png" />
+                  </div>
+                </div>
+              </div>
+            </router-link>
+          </div>
         </div>
         <div class="col-md-9">
           <div class="menu_text">
@@ -43,7 +53,11 @@
                   <router-link :to="{ name: 'OffMeeting' }" @click="moveToPage"
                     >Map</router-link
                   >
-                  <router-link :to="{name: 'RegisterModal'}"  @click="moveToPage">KANG-ONMEETING</router-link>
+                  <router-link
+                    :to="{ name: 'RegisterModal' }"
+                    @click="moveToPage"
+                    >KANG-ONMEETING</router-link
+                  >
                   <router-link :to="{ name: 'ProductList' }" @click="moveToPage"
                     >Store</router-link
                   >
@@ -113,34 +127,34 @@ export default {
       if (headerSection == null) {
         headerSection = document.getElementsByClassName("header_section")[0];
       }
-    }
+    };
 
     const openNav = () => {
       check();
       overlay.style.width = "100%";
-    }
+    };
     const closeNav = () => {
       check();
       overlay.style.width = "0%";
-    }
+    };
     const moveToMain = () => {
       closeNav();
       headerSection.classList.remove("background_bg");
       document.getElementById("bannerDiv").style.display = "block";
-    }
+    };
     const moveToPage = () => {
       closeNav();
       headerSection.classList.add("background_bg");
       document.getElementById("bannerDiv").style.display = "none";
-    }
+    };
     return {
       openNav,
       closeNav,
       moveToMain,
       moveToPage,
-    }
-  }
-}
+    };
+  },
+};
 </script>
 
 <style>
@@ -157,13 +171,13 @@ export default {
   top: -35px;
   position: relative;
 }
-.ex-table{
+.ex-table {
   display: table;
 }
-.ex-table-row{
+.ex-table-row {
   display: table-row;
 }
-.ex-table-cell{
+.ex-table-cell {
   display: table-cell;
 }
 </style>
