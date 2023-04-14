@@ -1,21 +1,26 @@
 <template>
     <div class="topInputSearch _searchBox">
         <label class="gSrOnly">모임 검색</label>
-        <input type="text" id="input_search_view62" class="inputBandSearch _gnbInputSearch" role="search" title="모임 검색" placeholder="모임 검색" autocomplete="off" v-model="searchKeyword">
+        <input :type="text" id="input_search_view62" class="inputBandSearch _gnbInputSearch" role="search" title="모임 검색" placeholder="모임 검색" autocomplete="off" v-model="searchKeyword">
 
         <button type="submit" class="btnSearch" id="btn_search" @click="checkInputText"><span class="gSrOnly">검색</span></button>
     </div>
 </template>
 
 <script>
-import {ref} from 'vue'
+import {ref, watchEffect} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 
 export default {
-    setup() {
+    emits: ['send-type'],
+    props: {
+        isMain: Boolean
+    },
+    setup(props, {emit}) {
         const route = useRoute();
         const router = useRouter();
         const searchKeyword = ref('');
+        // const isMain = ref(true);
 
         const init = () => {
             searchKeyword.value = route.query.keywords;
@@ -24,11 +29,20 @@ export default {
         init();
 
         const checkInputText = () => {
-            if(searchKeyword.value != null){
-                router.push({name: 'OnMeetingSearch', query: {keywords: searchKeyword.value}, params: {pageType: 'search'}});
+            if(searchKeyword.value !== ''){
+                emit('send-type', 'search');
+                router.push({name: 'OnMeeting', query: {keywords: searchKeyword.value}});
             }
             return false;
         }
+
+        watchEffect(() => {
+            // isMain: props.isMain;
+            if(props.isMain){
+                console.log("메인화면이니" + props.isMain);
+                searchKeyword.value = '';
+            }
+        });
 
         return {
             searchKeyword,

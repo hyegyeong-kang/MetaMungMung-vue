@@ -23,7 +23,19 @@
                             </div>
                             <div class="makeType">
                                 <h2 class="title">모임 공개</h2>
-                                <div class="bandType">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        비공개
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        공개
+                                    </label>
+                                </div>
+                                <!-- <div class="bandType">
                                     <div class="bandTypeListWrap gBoxShadow">
                                         <ul class="typeList ">
                                             <li class="typeListItem">
@@ -33,7 +45,6 @@
                                                     <span class="shape"></span>
                                                     <span class="text">
                                                         <strong>비공개</strong>
-                                                        <!-- <span class="msg">게시글은 멤버만 볼 수 있습니다.</span> -->
                                                     </span>
                                                 </span>
 
@@ -46,14 +57,13 @@
                                                         <span class="shape"></span>
                                                         <span class="text">
                                                             <strong>공개</strong>
-                                                            <!-- <span class="msg">누구나 게시글을 볼 수 있습니다.</span> -->
                                                         </span>
                                                     </span>
                                                 </label>
                                             </li>
                                         </ul>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="coverList">
                                 <h3 class="title">커버사진</h3>
@@ -299,7 +309,7 @@ img {
     content: '';
 }
 .bandMake .makeCover .coverSelect .coverList {
-    padding-top: 100px;
+    padding-top: 142px;
 }
 /* .bandMake .makeCover .coverSelect .coverList .head h3 {
     height: 23px;

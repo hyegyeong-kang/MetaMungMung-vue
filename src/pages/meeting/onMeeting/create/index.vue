@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import CreateOnMeeting from '../../../components/meeting/onMeeting/CreateOnMeeting.vue'
+import CreateOnMeeting from '../../../../components/meeting/onMeeting/CreateOnMeeting.vue';
 
 export default {
     components: {

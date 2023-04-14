@@ -7,7 +7,7 @@
                 <li class="bandCardItem">
                     <div class="uCover -main -notCover">
                         <div class="bandInner">
-                            <a href="/band-create" class="bandCreate  _link">
+                            <router-link :to="{name: 'OnMeetingCreate'}" class="bandCreate  _link">
                                 <div class="cover">
                                     <span class="iconBg">
                                         <span class="uIconBandCreate">+</span>
@@ -16,7 +16,7 @@
                                 <div class="bandName">
                                     <span class="uriText">만들기</span>
                                 </div>
-                            </a>
+                            </router-link>
                         </div>
                     </div>
                 </li>
@@ -98,7 +98,7 @@ h2{
 }
 .mainWrap {
     position: relative;
-    width: 1034px;
+    max-width: 1034px;
     margin: 0 auto;
 }
 .uCover .bandCover .bandName {
