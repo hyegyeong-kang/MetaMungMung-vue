@@ -119,7 +119,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-@import "@/assets/css/meeting/offMeeting/off-meeting-modal.css";
-</style>
