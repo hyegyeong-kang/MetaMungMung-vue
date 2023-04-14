@@ -20,11 +20,14 @@
           <div class="viewHeader">
             <!-- 상품이미지 -->
             <div class="productImg">
-              <!-- <img v-bind:src="productDetail.img_url" alt="" /> -->
+              <img
+                src="https://images-dev.wefluffy.co.kr/product-option/8149/1000011210_detail_069.webp"
+                alt=""
+              />
             </div>
             <!-- 상품 설명 -->
             <div class="productInfo">
-              <h3>ggg</h3>
+              <h1 style="font-weight: bold">펫밀크</h1>
               <div class="price">
                 <span class="sale">20<span>%</span></span>
                 <span class="cost-price">15,000원</span>
@@ -50,7 +53,7 @@
               <div class="all-price">총 상품금액 <span> 24,000 </span>원</div>
               <div class="btn">
                 <a href="">장바구니</a>
-                <a href="">구매하기</a>
+                <a style="background-color: #7ecbeb" href="">구매하기</a>
               </div>
             </div>
           </div>
@@ -73,6 +76,10 @@
             <!-- 탭부분 끝 -->
             <!-- 상품정보 -->
             <table class="tproduct-info active">
+              <img
+                src="https://images-dev.wefluffy.co.kr/product-detail/1000011210/82608_detail1.webp"
+                alt=""
+              />
               <tr>
                 <td>제품명</td>
                 <td>배고파?</td>
