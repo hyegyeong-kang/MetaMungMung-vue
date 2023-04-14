@@ -9,7 +9,7 @@
 
   <form @submit.prevent="submitOffMeetingForm">
     <!-- 모임생성 모달 start -->
-    <div id="myModal" class="modal">
+    <div id="myModal" class="modal" style="overflow: visible">
       <!-- Modal content -->
       <div class="modal-content slideDown">
         <div class="modal-header">
@@ -142,6 +142,3 @@ export default {
 };
 </script>
 
-<style scoped>
-@import "@/assets/css/meeting/offMeeting/off-meeting-modal.css";
-</style>

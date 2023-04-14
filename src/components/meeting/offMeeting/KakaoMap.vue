@@ -149,12 +149,9 @@ export default {
     } else {
       this.loadScript();
     }
-
     let base = this;
-
     base.openCreateModal = this.$refs.createModal.openCreateModalFunc;
     base.openDetailModal = this.$refs.detailModal.openDetailModalFunc;
-
     console.log(base.openCreateModal);
     console.log(base.openDetailModal);
   },
@@ -167,7 +164,6 @@ export default {
       script.src =
         "//dapi.kakao.com/v2/maps/sdk.js?appkey=331e2b8989b90b725f0ab6a607cf49f9&autoload=false&libraries=services";
       script.onload = () => window.kakao.maps.load(this.loadMap);
-
       document.head.appendChild(script);
     },
     loadMap() {
@@ -177,21 +173,16 @@ export default {
       let lon = 0;
       let locationAddress = "";
       let base = this;
-
       const option = {
         center: new kakao.maps.LatLng(33.450701, 126.570667),
         level: 3,
       };
-
       /* 지도 생성 코드 */
       const map = new kakao.maps.Map(container, option);
-
       // 지도 확대 축소를 제어할 수 있는 줌 컨트롤을 생성합니다
       var zoomControl = new kakao.maps.ZoomControl();
       map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-
       geolocationFunc();
-
       /* 지도에 마커와 인포윈도우를 표시하는 함수 */
       function displayMarker(locPosition, message) {
         const marker = new kakao.maps.Marker({
@@ -206,58 +197,45 @@ export default {
           removavle: iwRemovaable,
         });
         infowindow.open(map, marker);
-
         map.setCenter(locPosition);
       }
-
       /* 현재 위치 조회하는 함수 (GeoLocation) */
       function geolocationFunc() {
         if (navigator.geolocation) {
           // GeoLocation을 이용해서 접속 위치를 얻어옴
           navigator.geolocation.getCurrentPosition(function (position) {
             lat = position.coords.latitude; // 위도
-
             lon = position.coords.longitude; // 경도
-
             const locPosition = new kakao.maps.LatLng(lat, lon);
             const message = '<div style="padding:5px;">여기에 계신가요?</div>'; // 인포윈도우에 표시될 내용
-
             // 마커와 인포윈도우를 표시한다.
             displayMarker(locPosition, message);
           });
         } else {
           var locPostion = new kakao.maps.LatLng(33.450701, 126.570667);
           var message = "현재위치를 찾을 수 없습니다.";
-
           displayMarker(locPostion, message);
         }
       }
-
       /* 내 위치 찾기 버튼 클릭 시 현재 위치로 지도 이동하는 코드 start */
       currentBtn.addEventListener("click", function (event) {
         const locPosition = new kakao.maps.LatLng(lat, lon);
         map.setCenter(locPosition);
       });
-
       /* 지도 중심좌표 찾는 코드 start */
       // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
       kakao.maps.event.addListener(map, "center_changed", function () {
         // 지도의 중심좌표를 얻어옵니다
         var latlng = map.getCenter();
-
         const latitude = latlng.getLat();
         const longitude = latlng.getLng();
-
         base.currentLat = latitude;
         base.currentLng = longitude;
-
         /* 주소 얻어오기(주소-좌표 변환) */
         getAddr(latitude, longitude);
-
         function getAddr(lat, lon) {
           /* 주소-좌표 변환 객체 생성 */
           let geocoder = new kakao.maps.services.Geocoder();
-
           let coord = new kakao.maps.LatLng(lat, lon);
           let callback = function (result, status) {
             if (status === kakao.maps.services.Status.OK) {
@@ -268,7 +246,6 @@ export default {
           geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
         }
       });
-
       // // 커스텀 오버레이에 표시할 컨텐츠 입니다
       // // 커스텀 오버레이는 아래와 같이 사용자가 자유롭게 컨텐츠를 구성하고 이벤트를 제어할 수 있기 때문에
       // // 별도의 이벤트 메소드를 제공하지 않습니다
@@ -292,12 +269,9 @@ export default {
       //   "    </div>" +
       //   "    <button>버튼</button>";
       // ("</div>");
-
       // let overlay = new Object();
       // createCustomOverlay();
-
       addBoardMarker();
-
       /* 등록된 게시물의 좌표를 통해 마커 생성 */
       function addBoardMarker() {
         let boardMarkerPosition = 0;
@@ -307,16 +281,12 @@ export default {
             base.boardDetails[i].latitude,
             base.boardDetails[i].longitude
           );
-
           const boardMarker = new kakao.maps.Marker({
             position: boardMarkerPosition,
             title: cnt + i,
           });
-
           boardMarker.setMap(map);
-
           base.boardMarkers.push(boardMarker);
-
           /* 등록된 게시글의 마커를 클릭 시 발생하는 이벤트 */
           kakao.maps.event.addListener(boardMarker, "click", function () {
             if (base.selectedMarker || base.selectedMarker !== boardMarker) {
@@ -330,24 +300,20 @@ export default {
               base.openDetailModal(base.selectedMarker);
             }
           });
-
           // // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
           // kakao.maps.event.addListener(boardMarker, "click", function () {
           //   overlay.setMap(map);
           // });
-
           // // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다
           // function closeOverlay() {
           //   overlay.setMap(null);
           // }
         }
       }
-
       // // 마커 위에 커스텀오버레이를 표시합니다
       // // 마커를 중심으로 커스텀 오버레이를 표시하기위해 CSS를 이용해 위치를 설정했습니다
       // function createCustomOverlay() {
       //   let boardMarkerPosition = 0;
-
       //   for (let i = 0; i < base.boardDetails.length; i++) {
       //     boardMarkerPosition = new kakao.maps.LatLng(
       //       base.boardDetails[i].latitude,
@@ -360,7 +326,6 @@ export default {
       //     });
       //   }
       // }
-
       //강혜경
       selectCategory();
       function selectCategory() {
@@ -395,7 +360,6 @@ export default {
           if (!currCategory) {
             return;
           }
-
           // 커스텀 오버레이를 숨깁니다
           placeOverlay.setMap(null);
           // 지도에 표시되고 있는 마커를 제거합니다
@@ -518,7 +482,6 @@ export default {
               place.address_name +
               "</span>";
           }
-
           content +=
             '    <span class="tel">' +
             place.phone +
@@ -541,7 +504,6 @@ export default {
         function onClickCategory() {
           var id = this.id,
             className = this.className;
-
           placeOverlay.setMap(null);
           if (className === "on") {
             currCategory = "";
@@ -572,99 +534,4 @@ export default {
 };
 </script>
 
-<style scoped>
-@import "@/assets/css/meeting/offMeeting/kakaomap.css";
 
-.wrap {
-  position: absolute;
-  left: 0;
-  bottom: 40px;
-  width: 288px;
-  height: 132px;
-  margin-left: -144px;
-  text-align: left;
-  overflow: hidden;
-  font-size: 12px;
-  font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
-  line-height: 1.5;
-}
-.wrap * {
-  padding: 0;
-  margin: 0;
-}
-.wrap .info {
-  width: 286px;
-  height: 120px;
-  border-radius: 5px;
-  border-bottom: 2px solid #ccc;
-  border-right: 1px solid #ccc;
-  overflow: hidden;
-  background: #fff;
-}
-.wrap .info:nth-child(1) {
-  border: 0;
-  box-shadow: 0px 1px 2px #888;
-}
-.info .title {
-  padding: 5px 0 0 10px;
-  height: 30px;
-  background: #eee;
-  border-bottom: 1px solid #ddd;
-  font-size: 18px;
-  font-weight: bold;
-}
-.info .close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  color: #888;
-  width: 17px;
-  height: 17px;
-  background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png");
-}
-.info .close:hover {
-  cursor: pointer;
-}
-.info .body {
-  position: relative;
-  overflow: hidden;
-}
-.info .desc {
-  position: relative;
-  margin: 13px 0 0 90px;
-  height: 75px;
-}
-.desc .ellipsis {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.desc .jibun {
-  font-size: 11px;
-  color: #888;
-  margin-top: -2px;
-}
-.info .img {
-  position: absolute;
-  top: 6px;
-  left: 5px;
-  width: 73px;
-  height: 71px;
-  border: 1px solid #ddd;
-  color: #888;
-  overflow: hidden;
-}
-.info:after {
-  content: "";
-  position: absolute;
-  margin-left: -12px;
-  left: 50%;
-  bottom: 0;
-  width: 22px;
-  height: 12px;
-  background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png");
-}
-.info .link {
-  color: #5085bb;
-}
-</style>
