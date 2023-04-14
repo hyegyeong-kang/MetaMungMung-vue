@@ -18,7 +18,7 @@
 
 <script>
 import KakaoMap from "@/components/meeting/offMeeting/KakaoMap.vue";
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 
 export default {
   name: "Service",
