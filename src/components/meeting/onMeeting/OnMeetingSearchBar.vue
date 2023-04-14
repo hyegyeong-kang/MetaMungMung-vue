@@ -20,7 +20,7 @@ export default {
         const route = useRoute();
         const router = useRouter();
         const searchKeyword = ref('');
-        const isMain = ref(true);
+        // const isMain = ref(true);
 
         const init = () => {
             searchKeyword.value = route.query.keywords;
@@ -29,7 +29,7 @@ export default {
         init();
 
         const checkInputText = () => {
-            if(searchKeyword.value != null){
+            if(searchKeyword.value !== ''){
                 emit('send-type', 'search');
                 router.push({name: 'OnMeeting', query: {keywords: searchKeyword.value}});
             }

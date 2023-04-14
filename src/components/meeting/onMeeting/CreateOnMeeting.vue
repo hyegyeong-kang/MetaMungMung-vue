@@ -156,10 +156,6 @@ export default {
 </script>
 
 <style scoped>
-input[type='radio'] {
-    /* margin-left: 0; */
-    margin-bottom: 10px;
-}
 .gSrOnly{
     font-weight: 900;
     font-size: 40px;
@@ -313,7 +309,7 @@ img {
     content: '';
 }
 .bandMake .makeCover .coverSelect .coverList {
-    padding-top: 100px;
+    padding-top: 142px;
 }
 /* .bandMake .makeCover .coverSelect .coverList .head h3 {
     height: 23px;
