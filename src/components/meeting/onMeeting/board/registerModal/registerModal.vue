@@ -1,97 +1,70 @@
 <template>
-  <div class="post-form">
-    <div class="lyPostShareWrite _lyContent" style="margin-top: 77px;">
-        <header class="header">
-            <h1 class="title">글쓰기</h1>
-            
-        </header>
-        <div class="main _editorRegion">
-            <div data-viewname="DPostEditorView" class="cPostWrite">
-                <h3 class="gSrOnly">글쓰기</h3>
-
-                
-<div class="postWriteForm _postWriteForm -standby" style="max-height: 466px;">
-    <p class="gSrOnly" id="postWriteFormPlaceholderText">새로운 소식을 남겨보세요.</p>
-    <div class="contentEditor _richEditor skin6 cke_editable cke_editable_inline cke_contents_ltr" contenteditable="true" aria-labelledby="postWriteFormPlaceholderText" tabindex="0" spellcheck="true" role="textbox" aria-label="false" style="position: relative;"><p>&ZeroWidthSpace;&ZeroWidthSpace;&ZeroWidthSpace;&ZeroWidthSpace;&ZeroWidthSpace;&ZeroWidthSpace;&ZeroWidthSpace;<br></p></div>
-</div>
-
-
-<div class="buttonArea _bottomToolbar">
-    <ul class="toolbarList">
-        
-        <li class="toolbarListItem">
-            <label class="photo _btnAttachPhoto _attachWidgetBtn js-fileapi-wrapper" for="postPhotoInput_view1002">
-                <input type="file" id="postPhotoInput_view1002" multiple="" aria-labelledby="photoLabel_view1002" title=" " accept="image/*" name="attachment">
-                <span class="tooltip" id="photoLabel_view1002">사진</span>
-                <svg class="svgIcon" aria-hidden="true">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#ico-p-photo"></use>
-                </svg>
-            </label>
-        </li>
-        
-        <li class="toolbarListItem">
-            <label class="file _btnAttachFile _attachWidgetBtn js-fileapi-wrapper" for="postFileInput_view1002">
-                <input type="file" id="postFileInput_view1002" multiple="" aria-labelledby="fileLabel_view1002" title=" " accept="*/*" name="attachment">
-                <span class="tooltip" id="fileLabel_view1002">파일</span>
-                <svg class="svgIcon" aria-hidden="true">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#ico-p-file"></use>
-                </svg>
-            </label>
-        </li>
- 
-        <li class="toolbarListItem">
-            <button type="button" class="map _btnAttachLocation _attachWidgetBtn">
-                <span class="tooltip ">지도</span>
-                <svg class="svgIcon" aria-hidden="true">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#ico-p-map"></use>
-                </svg>
-            </button>
-        </li>
-    </ul>
-
-    <div class="writeSettingBox">
-        <div class="buttonSubmit">
-            <button type="submit" class="uButton -sizeM -disabled _btnSubmitPost">게시</button>    
+  <!-- on meeting게시물 작성 모달 start -->
+  <transition class="modal">
+    <!-- Modal content -->
+    <div class="modal-content slideDown" @click.self="$emit('close')">
+      <div class="modal-header">
+        <span @click="$emit('close')" class="close" id="closeModal"
+          >&times;</span>
+        <h2>글쓰기</h2>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label for="">내용</label>
+          <textarea v-model="content"/>
         </div>
-    </div>
-</div>
-</div></div>
-        <footer class="footer">
-            
+      </div>
+      <div class="MapModal">
+        <MapModal
+          @close="closeModal" v-if="modal"
+        />
+      </div>
+      <div class="modal-footer">
+        <button @click="$emit('close')" class="btn btn-submit" >
+          게시
+        </button>
+        <button class="btn btn-file">파일</button>
+        <button class="btn btn-map" @click="openModal">지도</button>
+      </div> <!--footer end -->
 
-            <button type="button" class="btnLyClose _btnCancel"><span class="gSrOnly">취소</span></button>
-        </footer>
     </div>
-  </div>
+  </transition>
+  <!-- on meeting게시물 작성 모달 end -->
 </template>
 
 <script>
 import MapModal from '@/components/meeting/onMeeting/board/registerModal/mapModal.vue';
-import {ref} from 'vue';
 
 export default {
   name: "RegisterModal",
-  props: [
+  props: {
 
-  ],
+  },
   components: {
     MapModal
   },
   data() {
-    return {
-      modalOpen: false,
-      post: {
-        title: '',
-        content: '',
-        author: ''
-      }
-    }
+        return {
+            modal: false,
+            content: ''
+        }
   },
   methods: {
-    submitPost() {
-      // 게시판 글쓰기 로직
-      // this.post 객체를 서버로 전송하는 코드 작성
-    }
+        openModal() {
+            this.modal = true
+        },
+        closeModal() {
+            this.modal = false
+        },
+        doSend() {
+            if (this.message.length > 0) {
+                alert(this.message)
+                this.message = ''
+                this.closeModal()
+            } else {
+                alert('메시지를 입력해주세요.')
+            }
+        }
   }
 }
 </script>
@@ -103,5 +76,10 @@ textarea{
     resize:none;/* 크기고정 */ 
 /*   resize: horizontal; // 가로크기만 조절가능 
 	resize: vertical;  세로크기만 조절가능  */
+}
+
+.modal{
+  width:100%; 
+	height:80%;  
 }
 </style>

@@ -2,15 +2,16 @@
 <div>
     <div>
         <span><strong>지도 첨부</strong></span>
-        <span><button> X </button></span>
+        <span @click="$emit('close')" class="close" id="closeModal"
+        >&times;</span>
     </div>
     <div class="map_wrap" style="position: relative;">
-      <div id="map">
-        <div class="hAddr">
-            <span class="title">지도중심기준 행정동 주소정보</span>
-            <span id="centerAddr"></span>
+        <div id="map2">
+            <div class="hAddr">
+                <span class="title">지도중심기준 행정동 주소정보</span>
+                <span id="centerAddr"></span>
+            </div>
         </div>
-      </div>
     </div>
 </div>
   
@@ -48,7 +49,7 @@ export default {
             document.head.appendChild(script)
             },
         loadMap () {
-            const container = document.getElementById('map')
+            const container = document.getElementById('map2')
             const currentBtn = document.getElementById('current-location-btn');
             let lat = 0;
             let lon = 0;
@@ -112,7 +113,7 @@ export default {
                     lon = position.coords.longitude // 경도
 
                     const locPosition = new kakao.maps.LatLng(lat, lon)
-                    const message = '<div style="padding:5px;">이 위치를 추가   <span><img src="@/assets/images/offMeeting/paw-print.png"></span></div>' // 인포윈도우에 표시될 내용
+                    const message = '<div style="padding:5px;">이 위치를 추가<span style="margin-left:10px"><img src="https://github.com/hyegyeong-kang/MetaMungMung-vue.js/blob/main/src/assets/images/offMeeting/paw-print.png?raw=true" height="20px" width="15px"/></span></div>' // 인포윈도우에 표시될 내용
 
                     // 마커와 인포윈도우를 표시한다.
                     displayMarker(locPosition, message)
@@ -274,6 +275,6 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 @import "@/assets/css/meeting/offMeeting/map-modal.css";
 </style>
