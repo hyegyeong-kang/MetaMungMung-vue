@@ -485,6 +485,12 @@ export default {
 @import "@/assets/css/store/product/list/product-list.css";
 @import "@/assets/css/store/product/detail/product-detail.css";
 
+strong {
+  display: block;
+  font-size: 1.1rem;
+  padding-top: 10px;
+}
+
 .menu-box-1 {
   text-align: center;
 }

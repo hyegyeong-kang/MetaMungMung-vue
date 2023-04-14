@@ -99,7 +99,7 @@
 export default {};
 </script>
 
-<style>
+<style scoped>
 ul > span {
   width: calc(100% / 7);
 }

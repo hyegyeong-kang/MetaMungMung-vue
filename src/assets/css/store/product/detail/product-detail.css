@@ -1,5 +1,3 @@
-@charset "utf-8";
-
 /*--------- default setting ---------*/
 
 h2 {
@@ -50,12 +48,6 @@ li {
 #detail-img {
   width: 100%;
   vertical-align: top;
-}
-
-strong {
-  display: block;
-  font-size: 1.1rem;
-  padding-top: 10px;
 }
 
 /*--------- common class setting ---------*/
