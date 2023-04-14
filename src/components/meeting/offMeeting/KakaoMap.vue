@@ -132,7 +132,6 @@ export default {
   // created() {
   //   let base = this;
   //   //비동기적으로 selectedMarker를 업데이트
-
   // },
   mounted() {
     // api 스크립트 소스 불러오기 및 지도 출력
@@ -164,6 +163,7 @@ export default {
       let lat = 0;
       let lon = 0;
       let locationAddress = "";
+      let base = this;
 
       const option = {
         center: new kakao.maps.LatLng(33.450701, 126.570667),
@@ -173,13 +173,13 @@ export default {
       /* 지도 생성 코드 */
       const map = new kakao.maps.Map(container, option);
 
-      // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+      // 지도 확대 축소를 제어할 수 있는 줌 컨트롤을 생성합니다
       var zoomControl = new kakao.maps.ZoomControl();
       map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
       geolocationFunc();
 
-      // 지도에 마커와 인포윈도우를 표시하는 함수
+      /* 지도에 마커와 인포윈도우를 표시하는 함수 */
       function displayMarker(locPosition, message) {
         const marker = new kakao.maps.Marker({
           map: map,
@@ -197,6 +197,7 @@ export default {
         map.setCenter(locPosition);
       }
 
+      /* 현재 위치 조회하는 함수 (GeoLocation) */
       function geolocationFunc() {
         if (navigator.geolocation) {
           // GeoLocation을 이용해서 접속 위치를 얻어옴
@@ -225,8 +226,6 @@ export default {
         map.setCenter(locPosition);
       });
 
-      let base = this;
-
       /* 지도 중심좌표 찾는 코드 start */
       // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
       kakao.maps.event.addListener(map, "center_changed", function () {
@@ -239,7 +238,7 @@ export default {
         base.currentLat = latitude;
         base.currentLng = longitude;
 
-        /* 주소 얻어오기 */
+        /* 주소 얻어오기(주소-좌표 변환) */
         getAddr(latitude, longitude);
 
         function getAddr(lat, lon) {
@@ -250,9 +249,7 @@ export default {
           let callback = function (result, status) {
             if (status === kakao.maps.services.Status.OK) {
               locationAddress = result[0].address.address_name;
-              // console.log(locationAddress);
               base.currentLocation = locationAddress;
-              // console.log('ssssss'+base.currentLocation)
             }
           };
           geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
@@ -285,9 +282,10 @@ export default {
 
       // let overlay = new Object();
       // createCustomOverlay();
+
       addBoardMarker();
 
-      /* 게시물 좌표 마커 생성 */
+      /* 등록된 게시물의 좌표를 통해 마커 생성 */
       function addBoardMarker() {
         let boardMarkerPosition = 0;
         let cnt = 1;
@@ -306,6 +304,7 @@ export default {
 
           base.boardMarkers.push(boardMarker);
 
+          /* 등록된 게시글의 마커를 클릭 시 발생하는 이벤트 */
           kakao.maps.event.addListener(boardMarker, "click", function () {
             if (base.selectedMarker || base.selectedMarker !== boardMarker) {
               base.selectedMarker = boardMarker;
@@ -315,7 +314,7 @@ export default {
                   ", 위도경도는" +
                   base.selectedMarker.getPosition()
               );
-              base.openIt();
+              base.openIt(base.selectedMarker);
             }
           });
 
@@ -413,7 +412,7 @@ export default {
         }
         // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
         function placesSearchCB(data, status, pagination) {
-          console.log(`kang_data!!  ${JSON.stringify(data, null, 2)}`);
+          // console.log(`kang_data!!  ${JSON.stringify(data, null, 2)}`);
           if (status === kakao.maps.services.Status.OK) {
             // 정상적으로 검색이 완료됐으면 지도에 마커를 표출합니다
             displayPlaces(data);
