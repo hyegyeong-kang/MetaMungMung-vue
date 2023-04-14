@@ -29,17 +29,25 @@
           </button>
         </div>
       </div>
-      <OffMeetingModal
-        :currentLocation="currentLocation"
-        :currentLat="this.currentLat"
-        :currentLng="this.currentLng"
-      ></OffMeetingModal>
-      <DetailModal
-        :selectedMarker="selectedMarker"
-        :boardDetails="boardDetails"
-        ref="detailModal"
-      />
+      <button
+        @click="openCreateModal"
+        class="custom-btn btn-12 modal-button"
+        style="position: absolute; z-index: 2; bottom: 5%; right: 5%"
+      >
+        <span>클릭하세요!</span><span>모임생성</span>
+      </button>
     </div>
+    <CreateModal
+      :currentLocation="currentLocation"
+      :currentLat="this.currentLat"
+      :currentLng="this.currentLng"
+      ref="createModal"
+    ></CreateModal>
+    <DetailModal
+      :selectedMarker="selectedMarker"
+      :boardDetails="boardDetails"
+      ref="detailModal"
+    />
     <div>{{ this.currentLocation }}</div>
     <div>{{ this.currentLat }}</div>
     <div>{{ this.currentLng }}</div>
@@ -47,13 +55,13 @@
 </template>
 
 <script>
-import OffMeetingModal from "@/components/meeting/offMeeting/modal/createModal.vue";
+import CreateModal from "@/components/meeting/offMeeting/modal/createModal.vue";
 import DetailModal from "@/components/meeting/offMeeting/modal/detailModal.vue";
 // import {ref} from 'vue';
 export default {
   name: "KakaoMap",
   components: {
-    OffMeetingModal,
+    CreateModal,
     DetailModal,
   },
   data() {
@@ -61,7 +69,8 @@ export default {
       currentLocation: "",
       currentLat: "",
       currentLng: "",
-      openIt: null,
+      openDetailModal: null,
+      openCreateModal: null,
       selectedMarker: null,
       boardMarkers: [],
       boardDetails: [
@@ -143,12 +152,16 @@ export default {
 
     let base = this;
 
-    base.openIt = this.$refs.detailModal.openDetailModalFunc;
+    base.openCreateModal = this.$refs.createModal.openCreateModalFunc;
+    base.openDetailModal = this.$refs.detailModal.openDetailModalFunc;
 
-    console.log("asdfasdfasdfasdf");
-    console.log(base.openIt + "asdfasdfasdfasdf");
+    console.log(base.openCreateModal);
+    console.log(base.openDetailModal);
   },
   methods: {
+    openCreateModal() {
+      base.openCreateModal();
+    },
     loadScript() {
       const script = document.createElement("script");
       script.src =
@@ -314,7 +327,7 @@ export default {
                   ", 위도경도는" +
                   base.selectedMarker.getPosition()
               );
-              base.openIt(base.selectedMarker);
+              base.openDetailModal(base.selectedMarker);
             }
           });
 

@@ -1,11 +1,11 @@
 <template>
-  <button
+  <!-- <button
     @click="openModalFunc"
     class="custom-btn btn-12 modal-button"
     style="position: absolute; z-index: 2; bottom: 5%; right: 5%"
   >
     <span>클릭하세요!</span><span>모임생성</span>
-  </button>
+  </button> -->
 
   <form @submit.prevent="submitOffMeetingForm">
     <!-- 모임생성 모달 start -->
@@ -98,20 +98,12 @@ export default {
     const modal = document.getElementsByClassName("modal");
     const clickable = document.querySelectorAll(".clickable");
 
-    const openModal = () => {
+    const openCreateModalFunc = () => {
       modal[0].style.display = "block";
     };
 
-    const closeModal = () => {
-      modal[0].style.display = "none";
-    };
-
-    const openModalFunc = () => {
-      openModal();
-    };
-
     const closeModalFunc = () => {
-      closeModal();
+      modal[0].style.display = "none";
     };
 
     const submitOffMeetingForm = () => {
@@ -137,7 +129,7 @@ export default {
       }
     };
     return {
-      openModalFunc,
+      openCreateModalFunc,
       closeModalFunc,
       submitOffMeetingForm,
       title,
