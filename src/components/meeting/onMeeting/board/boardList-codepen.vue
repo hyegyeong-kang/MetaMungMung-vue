@@ -185,8 +185,13 @@
 
         <!-- 게시물 글 작성하는 곳  --> 
 		<div class="new-tweet">
-			<textarea placeholder="What's happening?"></textarea>
-			<div class="btns">
+			<textarea placeholder="새로운 소식을 남겨보세요." @click="openModal"></textarea>
+			<div class="registerModal">
+                <RegisterModal
+                    @close="closeModal" v-if="modal"
+                />
+            </div>
+            <div class="btns">
 				<!-- <div class="btn">
 					<button><i class="fas fa-image"></i></button>
 				</div>
@@ -330,10 +335,10 @@
 			</header>
 			<main>
 				<a href="#"> <!--여기서 카페 멤버 반복으로 돌려주면 됨 -->
-					<img src="https://pbs.twimg.com/profile_images/1030015093747138562/YGStmPuy_400x400.jpg">
+					<img src="https://www.petoria.co.kr/web/product/big/202302/b2fde590335a31b868394dc90006e99f.jpg">
 					<div class="user">
-						<p>DevTips<small>@DevTipsShow</small></p>
-						<span>Followed by James Bob and Will Smith</span>
+						<p>강혜경</p>
+						<span>강아지를 사랑합니다.</span>
 					</div>
 				</a>
 			</main>
@@ -344,9 +349,25 @@
 </template>
 
 <script>
+import RegisterModal from '@/components/meeting/onMeeting/board/registerModal/registerModal.vue';
 export default {
     name: 'BoardList-codepen',
-
+    components: {
+        RegisterModal
+    },
+    data() {
+        return {
+            modal: false,
+        }
+    },
+    methods: {
+        openModal() {
+            this.modal = true
+        },
+        closeModal() {
+            this.modal = false
+        }
+    },
 }
 </script>
 
