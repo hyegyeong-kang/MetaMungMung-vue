@@ -1,20 +1,19 @@
 <template>
-  <MainHeader/>
-    <router-view/>
-  <MainFooter/>
+  <MainHeader />
+  <router-view />
+  <MainFooter />
 </template>
 
 <script>
-import MainHeader from '@/components/common/MainHeader.vue'
-import MainFooter from '@/components/common/MainFooter.vue'
+import MainHeader from "@/components/common/MainHeader.vue";
+import MainFooter from "@/components/common/MainFooter.vue";
 
-export default ({
-  name: 'App',
+export default {
+  name: "App",
   components: {
     MainHeader,
-    MainFooter
+    MainFooter,
   },
-  setup () {
-  }
-})
+  setup() {},
+};
 </script>
