@@ -12,20 +12,22 @@
       <!--일반-->
       <div class="bn-line"></div>
       <div class="top-line"></div>
-      <!-- 카테고리 (화면 줄여졌을 때 )-->
-      <ProductCategory />
 
+      <!-- 카테고리 -->
       <article class="product">
         <section>
           <div class="mo-into-title">
-            <div class="sub-title">
-              <span class="gray">간식 / 사료</span>
-              <p>15,000원</p>
+            <div style="min-width: 700px" class="sub-title">
+              <span
+                style="text-algin: center; width: 100px; height: 50px"
+                class="box ivory"
+                >간식 / 사료</span
+              >
             </div>
 
-            <div class="main-title">
-              <h2>펫밀크<br />퓨추라 럭스</h2>
-              <span class="orange">친환경 소재</span>
+            <div style="margin-bottom: -30px" class="main-title">
+              <h3>[냠냠] 펫밀크 퓨추라 럭스</h3>
+              <!-- <h3 style="color: black; font-weight: bolder">15,000원</h3> -->
             </div>
           </div>
 
@@ -35,11 +37,52 @@
                 id="detail-img"
                 src="https://images-dev.wefluffy.co.kr/product-option/8149/1000011210_detail_069.webp"
               />
+            </div>
+            <form class="option-box">
+              <div style="margin-top: 30px" class="price">
+                <span
+                  class="sale"
+                  style="color: red; fone-weight: bold; font-size: 20px"
+                  >20<span>%</span></span
+                >
+                <span class="cost-price">15000원</span>
+                <span style="color: black" class="sale-price">15000원</span>
+              </div>
+
+              <div class="quantity">
+                <span>수량</span>
+                <input type="text" value="1" />
+                <span class="minus">-</span>
+                <span class="plus">+</span>
+              </div>
+
+              <div class="mo-btn-box">
+                <button id="pd-detail-btn" type="button" name="cart">
+                  장바구니
+                </button>
+                <button type="button" id="pd-detail-btn" name="justdoit">
+                  바로 구매
+                </button>
+              </div>
+
+              <div class="pc-btn-box">
+                <button id="pd-detail-btn" type="button" name="justdoit">
+                  바로 구매
+                </button>
+                <div class="pc-side-btn">
+                  <button id="pd-detail-btn" type="button" name="cart">
+                    장바구니
+                  </button>
+                  <button id="pd-detail-btn" type="button" name="wish">
+                    위시리스트
+                  </button>
+                </div>
+              </div>
               <img
                 src="https://images-dev.wefluffy.co.kr/product-detail/1000011210/82608_detail1.webp"
                 alt=""
               />
-            </div>
+            </form>
             <!-- 상품정보 -->
             <table class="table">
               <tr>
@@ -49,7 +92,7 @@
                 <td>기타</td>
               </tr>
               <tr>
-                <td>제조사</td>
+                <td>브랜드</td>
                 <td>일단밥을먹어</td>
                 <td>배송타입</td>
                 <td>뇸뇸뇸</td>
@@ -65,58 +108,24 @@
 
           <div class="infomation">
             <div class="infomation-container">
-              <div class="pc-into-title">
+              <div style="margin-bottom: -50px" class="pc-into-title">
                 <div class="sub-title">
-                  <span class="gray">간식 / 사료</span>
+                  <span
+                    style="margin-top: -30px; width: 100px; height: 50px"
+                    class="box ivory"
+                    >간식 / 사료</span
+                  >
                 </div>
 
                 <div class="main-title">
                   <h2>펫밀크</h2>
-                  <span class="orange">제조사 : cj</span>
+                  <span
+                    style="color: black; font-weight: bold; font-size: 20px"
+                    class="orange"
+                    >15000원</span
+                  >
                 </div>
               </div>
-
-              <form class="option-box">
-                <div class="price">
-                  <span
-                    class="sale"
-                    style="color: red; fone-weight: bold; font-size: 20px"
-                    >20<span>%</span></span
-                  >
-                  <span class="cost-price">15000원</span>
-                  <span class="sale-price">15000원</span>
-                </div>
-
-                <div class="quantity">
-                  <span>수량</span>
-                  <input type="text" value="1" />
-                  <span class="minus">-</span>
-                  <span class="plus">+</span>
-                </div>
-
-                <div class="mo-btn-box">
-                  <button id="pd-detail-btn" type="button" name="cart">
-                    장바구니
-                  </button>
-                  <button type="button" id="pd-detail-btn" name="justdoit">
-                    바로 구매
-                  </button>
-                </div>
-
-                <div class="pc-btn-box">
-                  <button id="pd-detail-btn" type="button" name="justdoit">
-                    바로 구매
-                  </button>
-                  <div class="pc-side-btn">
-                    <button id="pd-detail-btn" type="button" name="cart">
-                      장바구니
-                    </button>
-                    <button id="pd-detail-btn" type="button" name="wish">
-                      위시리스트
-                    </button>
-                  </div>
-                </div>
-              </form>
 
               <div class="pickup">
                 <div class="stop-pickup">
@@ -127,10 +136,11 @@
 
               <div class="custom">
                 <div class="color-style">
-                  <p>• 현재 컬러 : 블랙/블랙/화이트</p>
-                  <p>• 스타일 : DR7194-010</p>
+                  <p>• 상품명 : 블랙/블랙/화이트</p>
+                  <p>• 카테고리 : DR7194-010</p>
+                  <p>• 브랜드 : DR7194-010</p>
+                  <p>• 용량 : DR7194-010</p>
                   <span class="line" onclick="하잉()">더 보기</span>
-                  <p>↑ 😊선샘미 이거 눌러주세요😊</p>
                 </div>
               </div>
 
@@ -379,7 +389,9 @@
                   </div>
                   <div class="item-txt">
                     <p>펫밀크</p>
-                    <span class="orange">친환경 소재</span>
+                    <span style="color: #808080" class="orange"
+                      >브랜드 : cj</span
+                    >
                     <p>15,000원</p>
                   </div>
                 </div>
@@ -1249,5 +1261,20 @@ li {
 .categori span,
 .origin span {
   color: #6a6a6a;
+}
+
+.box {
+  border-radius: 15px 15px 15px 15px;
+  width: 150px;
+  padding: 10px;
+  text-align: center;
+  color: #555;
+  border: 1px solid transparent;
+}
+
+.ivory {
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+  color: #8a6d3b;
 }
 </style>
