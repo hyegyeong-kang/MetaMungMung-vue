@@ -168,11 +168,11 @@
 		<div class="bottom">
 			<a href="#">
 				<p>총 게시글</p>
-				<h3 style="color:white">3.6K</h3>
+				<h3 style="color:white">2</h3>
 			</a>
 			<a href="#">
 				<p>멤버</p>
-				<h3 style="color:white">24.3K</h3>
+				<h3 style="color:white">3</h3>
 			</a>
 		</div>
 	</div>
@@ -185,28 +185,30 @@
 
         <!-- 게시물 글 작성하는 곳  --> 
 		<div class="new-tweet">
-			<textarea placeholder="새로운 소식을 남겨보세요." @click="openModal"></textarea>
-			<div class="registerModal">
-                <RegisterModal
-                    @close="closeModal" v-if="modal"
-                />
-            </div>
+			<textarea placeholder="새로운 소식을 남겨보세요." ></textarea>
+                <div class="registerModal">
+                    <RegisterModal
+                        @close="closeModal" v-if="modal"
+                    />
+                </div>
             <div class="btns">
-				<!-- <div class="btn">
-					<button><i class="fas fa-image"></i></button>
+				<div class="btn">
+					<button><img src="@/assets/images/onMeeting/upload-file-icon.png" alt=""></button>
+				</div>
+                <div class="btn">
+					<button @click="openModal"><img src="@/assets/images/onMeeting/map-icon2.png" alt="" width="25" height="25"></button>
 				</div>
 				<div class="btn">
-					<button><i class="fas fa-film"></i></button>
+					<button>게시</button>
 				</div>
-				<div class="btn">
-					<button><i class="fas fa-chart-bar"></i></button>
-				</div>
-				<div class="btn">
-					<button class="blue"><i class="fas fa-comment"></i>Tweet</button>
-				</div > -->
 			</div>
 		</div>
 
+        <div class="MapModal">
+            <MapModal
+            @close="closeModal" v-if="modal"
+            />
+        </div>
 
 
 
@@ -318,7 +320,7 @@
 				<a href="#" class="trend">
 					<div class="trend-num"><span>1 - Trending</span></div>
 					<div class="trend">
-						<p>#aflpiesdons</p>
+						<p>몽몽에 오신걸 환영합니다.</p>
 					</div>
 				</a>
                 <a href="#" class="btn blue" style="background: #87CEFA;text-align:center;" >글쓰기</a>
@@ -345,11 +347,13 @@
 </template>
 
 <script>
-import RegisterModal from '@/components/meeting/onMeeting/board/registerModal/registerModal.vue';
+//import RegisterModal from '@/components/meeting/onMeeting/board/registerModal/registerModal.vue';
+import MapModal from '@/components/meeting/onMeeting/board/registerModal/mapModal.vue';
 export default {
     name: 'BoardList-codepen',
     components: {
-        RegisterModal
+        //RegisterModal,
+        MapModal
     },
     data() {
         return {
@@ -747,7 +751,7 @@ header.nav-closed {
 		padding: 15px;
 		height: auto;
 		box-sizing: border-box;
-		height: 51px;
+		height: 200px;
 		cursor: pointer;
 		color: var(--color);
 		background: var(--bg3);
@@ -761,14 +765,14 @@ header.nav-closed {
 		}
 	}
 	.btns {
-		padding: 0 15px;
+		padding: 0 10px;
 		box-sizing: border-box;
 		display: flex;
 		align-items: center;
-		overflow: hidden;
+		overflow: visible;
 		height: 0;
 		.btn {
-			margin-right: 15px;
+			margin-right: 10px;
 			button {
 				padding: 0;
 				padding: 0;
