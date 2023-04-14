@@ -11,7 +11,7 @@
                         <div class="uInput -simpleLine inputBand">
                             <input value="" type="text" class="_inputBandName" id="ex_name" maxlength="50" placeholder="모임 이름을 입력하세요">
                         </div>
-                        
+                        <AddAddressModal v-if="isOpen" :isOpen="isOpen" @is-open="modalFun" @add-address="modalFun2" />
 
                         <div class="coverSelect">
                             <div class="mainCover">
@@ -35,35 +35,6 @@
                                         공개
                                     </label>
                                 </div>
-                                <!-- <div class="bandType">
-                                    <div class="bandTypeListWrap gBoxShadow">
-                                        <ul class="typeList ">
-                                            <li class="typeListItem">
-                                                <label for="secret" class="uCheck -checkbox">
-                                                    <input type="radio" value="secret" name="bandOpenType" id="secret" class="checkInput">
-                                                    <span class="checkLabel">
-                                                    <span class="shape"></span>
-                                                    <span class="text">
-                                                        <strong>비공개</strong>
-                                                    </span>
-                                                </span>
-
-                                                </label>
-                                            </li>
-                                            <li class="typeListItem">
-                                                <label for="public" class="uCheck -checkbox">
-                                                    <input type="radio" value="public" name="bandOpenType" id="public" class="checkInput">
-                                                    <span class="checkLabel">
-                                                        <span class="shape"></span>
-                                                        <span class="text">
-                                                            <strong>공개</strong>
-                                                        </span>
-                                                    </span>
-                                                </label>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div> -->
                             </div>
                             <div class="coverList">
                                 <h3 class="title">커버사진</h3>
@@ -140,22 +111,44 @@
 </template>
 
 <script>
-
+import AddAddressModal from './modal/AddAddressModal.vue';
+import {ref} from 'vue';
 
 export default {
+    components:{
+        AddAddressModal
+    },
     setup(){
+        const isOpen = ref(false);
+        const address = ref('');
+
         const openMap = () => {
-            
+            isOpen.value = !isOpen.value;
+        }
+
+        const modalFun = (status) => {
+            isOpen.value = status;
+        }
+
+        const modalFun2 = (address) => {
+            address.value = address;
         }
 
         return{
-            openMap
+            address,
+            isOpen,
+            openMap,
+            modalFun,
+            modalFun2
         }
     }
 }
 </script>
 
 <style scoped>
+input[type='radio']{
+    margin-left: -19px;
+}
 .gSrOnly{
     font-weight: 900;
     font-size: 40px;
@@ -171,7 +164,7 @@ export default {
     padding-bottom: 20px;
 }
 .bandMake {
-    width: 840px;
+    max-width: 840px;
     margin: 0 auto;
     padding-top: 58px;
 }
@@ -311,13 +304,6 @@ img {
 .bandMake .makeCover .coverSelect .coverList {
     padding-top: 142px;
 }
-/* .bandMake .makeCover .coverSelect .coverList .head h3 {
-    height: 23px;
-    font-size: 13px;
-    font-weight: 400;
-    color: #444;
-    line-height: 23px;
-} */
 .bandMake .makeCover .coverSelect .coverList .list {
     margin-left: -10px;
     margin-top: 2px;
@@ -414,8 +400,8 @@ input, textarea {
 }
 .bandMake .makeType {
     position: relative;
-    margin-left: 50px;
-    padding-left: 567px;
+    margin-left: 88%;
+    /* padding-left: 567px; */
 }
 .bandMake .makeType .title {
     margin-bottom: 19px;
@@ -426,38 +412,10 @@ input, textarea {
     font-weight: 400;
     color: #444;
 }
-.bandMake .makeType .bandType {
-    position: relative;
-    background-color: #fff;
-}
 .gBoxShadow {
-    background-color: var(--tier2SurfaceLayer01);
+    background-color: #fff;
     -webkit-box-shadow: 0 1.4px 1.3px 0 rgba(62,73,89,.07);
     box-shadow: 0 1.4px 1.3px 0 rgba(62,73,89,.07);
-}
-.bandMake .makeType .bandType .typeList:after, .bandMake .makeType .bandType .typeList:before {
-    display: table;
-    content: ' ';
-}
-.bandMake .makeType .bandType .bandTypeListWrap .typeList .typeListItem {
-    width: 33.33%;
-    float: none;
-    padding: 0;
-    padding-bottom: 15px;
-}
-.bandMake .makeType .bandType .typeList li:first-child {
-    padding-left: 38px;
-}
-.bandMake .makeType .bandType .typeList li {
-    float: left;
-    padding-right: 21px;
-    padding-left: 25px;
-    width: 33.3333%;
-}
-.bandMake .makeType .bandType .typeList li .uCheck {
-    overflow-wrap: break-word;
-    word-break: break-word;
-    white-space: normal;
 }
 .uCheck {
     position: relative;
@@ -483,10 +441,6 @@ input, textarea {
     display: block;
     padding-left: 20px;
     cursor: pointer;
-}
-.bandMake .makeType .bandType .bandTypeListWrap .typeList .typeListItem .uCheck.-checkbox .checkLabel .shape {
-    top: 0;
-    margin-top: 0;
 }
 .uCheck.-checkbox .checkLabel .shape {
     width: 20px;
@@ -548,13 +502,6 @@ input, textarea {
     transition: all .2s ease;
     content: '';
 }
-.bandMake .makeType .bandType .bandTypeListWrap .typeList .typeListItem .uCheck .text {
-    margin-left: 12px;
-    max-width: 187px
-}
-.bandMake .makeType .bandType .typeList li .uCheck .text {
-    margin-left: 14px;
-}
 .uCheck .checkLabel .text {
     overflow: hidden;
     display: inline-block;
@@ -563,23 +510,6 @@ input, textarea {
     font-size: 14px;
     font-weight: 400;
     color: #333;
-}
-.bandMake .makeType .bandType .bandTypeListWrap .typeList .typeListItem .uCheck .msg {
-    margin-top: 4px;
-}.bandMake .makeType .bandType .typeList li .uCheck .msg {
-    display: block;
-    margin-top: 7px;
-    line-height: 1.39;
-    font-size: 13px;
-    font-weight: 400;
-    color: #666;
-}
-.bandMake .makeType .bandType .typeList:after {
-    clear: both;
-}
-.bandMake .makeType .bandType .typeList:after, .bandMake .makeType .bandType .typeList:before {
-    display: table;
-    content: ' ';
 }
 .bandMake .btnFooter {
     margin: 40px 0 58px;
