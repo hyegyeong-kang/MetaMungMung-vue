@@ -11,7 +11,8 @@
                         <div class="uInput -simpleLine inputBand">
                             <input value="" type="text" class="_inputBandName" id="ex_name" maxlength="50" placeholder="모임 이름을 입력하세요">
                         </div>
-                        <AddAddressModal v-if="isOpen" :isOpen="isOpen" @is-open="modalFun" @add-address="modalFun2" />
+
+                        <AddAddressModal v-if="isOpen" @close-req="closeModal" @send-addr="sendAddr" />
 
                         <div class="coverSelect">
                             <div class="mainCover">
@@ -93,7 +94,7 @@
                         <div class="introOption _locationButtonWrapper" style="display: flex;">
                             <div class="introOptionBox">
                                 <div class="addressText">
-                                    <button type="button" class="textButton _btnSelectLocation" @click="openMap">주소를 등록해주세요.</button>
+                                    <button type="button" class="textButton _btnSelectLocation" @click="openMap">{{address}}</button>
                                 </div>
                             </div>
                         </div>
@@ -118,28 +119,31 @@ export default {
     components:{
         AddAddressModal
     },
-    setup(){
+    emits: ['toggle-modal'],
+    setup(props, {emit}){
         const isOpen = ref(false);
-        const address = ref('');
+        const address = ref('주소를 등록해주세요.');
 
         const openMap = () => {
             isOpen.value = !isOpen.value;
+            emit('toggle-modal', isOpen.value);
         }
 
-        const modalFun = (status) => {
-            isOpen.value = status;
+        const closeModal = (req) => {
+            isOpen.value = req;
+            emit('toggle-modal', isOpen.value);
         }
 
-        const modalFun2 = (address) => {
-            address.value = address;
+        const sendAddr = (addr) => {
+            address.value = addr;
         }
 
         return{
             address,
             isOpen,
             openMap,
-            modalFun,
-            modalFun2
+            closeModal,
+            sendAddr
         }
     }
 }
