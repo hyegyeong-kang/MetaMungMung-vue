@@ -1,94 +1,160 @@
 <template>
-  <div id="pc-categoryMenuWidget" class="_3Te07yM0Z_">
-    <div class="_1bplHci37r">
-      <div class="_3TZha2IPoQ">
-        <div class="kKWaaZzr6M">
-          <div class="_1Do44itO20">
-            <div class="_20owVxSw3I type_white_gnb _1Qz6L4zdcV">
-              <div class="_1AJ8D2PjS4 _3nO3wKj4-Z">
-                <div class="_1J2oAxZvAG" style="text-align: center">
-                  <ul class="_3AV7RVieRB">
-                    <span
-                      id="categoryList"
-                      class="_1E0Pj6SKQC type_white_gnb _3KXbOehKIC N=a:LNB.best"
-                    >
-                      <a href="/sajopet/best?cp=1" class="_3kz1USn-rs"
-                        >🏆베스트</a
-                      >
-                    </span>
-                    <span
-                      id="categoryList"
-                      class="_2jm5JW3D5W type_white_gnb YI_nVHGI_0 N=a:lca.depth1"
-                      data-category-menu-key="1006c60a4199496a80fabc6586df7376"
-                    >
-                      <a
-                        href="/sajopet/category/1006c60a4199496a80fabc6586df7376?cp=1"
-                        class="_3HQCww4jR6 _27UBX4PJLi"
-                        >⚡초특가 할인<span class="_3PK0aGa3Hc"></span
-                      ></a>
-                    </span>
-                    <span
-                      id="categoryList"
-                      class="_2jm5JW3D5W type_white_gnb YI_nVHGI_0 N=a:lca.depth1"
-                      data-category-menu-key="f28a4959a4a843ff9128a580ecccbff1"
-                    >
-                      <a
-                        href="/sajopet/category/f28a4959a4a843ff9128a580ecccbff1?cp=1"
-                        class="_3HQCww4jR6 _27UBX4PJLi"
-                        >🐶강아지 건식<span class="_3PK0aGa3Hc"></span
-                      ></a>
-                    </span>
-                    <span
-                      id="categoryList"
-                      class="_2jm5JW3D5W type_white_gnb YI_nVHGI_0 N=a:lca.depth1"
-                      data-category-menu-key="b07819b1ddb24db482bd74bc51aa7f32"
-                    >
-                      <a
-                        href="/sajopet/category/b07819b1ddb24db482bd74bc51aa7f32?cp=1"
-                        class="_3HQCww4jR6 _27UBX4PJLi"
-                        >🥫강아지 습식<span class="_3PK0aGa3Hc"></span
-                      ></a>
-                    </span>
-                    <span
-                      id="categoryList"
-                      class="_2jm5JW3D5W type_white_gnb YI_nVHGI_0 N=a:lca.depth1"
-                      data-category-menu-key="8d4831ae8f4c4605a9ecf3934495bd4f"
-                    >
-                      <a
-                        href="/sajopet/category/8d4831ae8f4c4605a9ecf3934495bd4f?cp=1"
-                        class="_3HQCww4jR6 _27UBX4PJLi"
-                        >🦴강아지 간식&amp;영양제<span
-                          class="_3PK0aGa3Hc"
-                        ></span
-                      ></a>
-                    </span>
-                    <span
-                      id="categoryList"
-                      class="_2jm5JW3D5W type_white_gnb YI_nVHGI_0 N=a:lca.depth1"
-                      data-category-menu-key="81337ba6dfc14b93aad5f2cef098f0e1"
-                    >
-                      <a
-                        href="/sajopet/category/81337ba6dfc14b93aad5f2cef098f0e1?cp=1"
-                        class="_3HQCww4jR6 _27UBX4PJLi"
-                        >😺고양이 건식<span class="_3PK0aGa3Hc"></span
-                      ></a>
-                    </span>
-                    <span
-                      id="categoryList"
-                      class="_2jm5JW3D5W type_white_gnb YI_nVHGI_0 N=a:lca.depth1"
-                      data-category-menu-key="672ece7ec6e14aef957bb35f8725d76f"
-                    >
-                      <a
-                        href="/sajopet/category/672ece7ec6e14aef957bb35f8725d76f?cp=1"
-                        class="_3HQCww4jR6 _27UBX4PJLi"
-                        >🥫고양이 습식<span class="_3PK0aGa3Hc"></span
-                      ></a>
-                    </span>
-                  </ul>
-                </div>
+  <div class="num-1440-category num-960-category" b-kladk2uprp="">
+    <!--!-->
+    <div class="grey-container" b-5udx3prrol="">
+      <div class="category-section" b-kladk2uprp="">
+        <div class="category-layout" b-kladk2uprp="">
+          <!--!--><a class="category-item-component" href="/b/4" b-aodjs4goz8=""
+            ><div class="category" b-aodjs4goz8="">
+              <img
+                class="image"
+                src="https://images.pet-high.com/category-image/cc912fcb-d3c6-4083-9fea-2b305a08d65d.webp"
+                alt="사료"
+                loading="lazy"
+                b-aodjs4goz8=""
+              /><!--!-->
+
+              <div class="text-layout" b-aodjs4goz8="">
+                <p class="text" b-aodjs4goz8="">사료</p>
               </div>
-            </div>
-          </div>
+            </div></a
+          ><!--!--><a
+            class="category-item-component"
+            href="/b/22"
+            b-aodjs4goz8=""
+            ><div class="category" b-aodjs4goz8="">
+              <img
+                class="image"
+                src="https://images.pet-high.com/category-image/88033dc5-d300-4393-ba08-08c13423c005.webp"
+                alt="장난감"
+                loading="lazy"
+                b-aodjs4goz8=""
+              /><!--!-->
+
+              <div class="text-layout" b-aodjs4goz8="">
+                <p class="text" b-aodjs4goz8="">장난감</p>
+              </div>
+            </div></a
+          ><!--!--><a
+            class="category-item-component"
+            href="/b/15"
+            b-aodjs4goz8=""
+            ><div class="category" b-aodjs4goz8="">
+              <img
+                class="image"
+                src="https://images.pet-high.com/category-image/90586b47-33ce-4fe0-b2eb-0f191b6ead16.webp"
+                alt="외출용품"
+                loading="lazy"
+                b-aodjs4goz8=""
+              /><!--!-->
+
+              <div class="text-layout" b-aodjs4goz8="">
+                <p class="text" b-aodjs4goz8="">외출용품</p>
+              </div>
+            </div></a
+          ><!--!--><a
+            class="category-item-component"
+            href="/b/192"
+            b-aodjs4goz8=""
+            ><div class="category" b-aodjs4goz8="">
+              <img
+                class="image"
+                src="https://images.pet-high.com/category-image/746861d9-0fbc-47c2-9c71-f262645c518c.webp"
+                alt="간식"
+                loading="lazy"
+                b-aodjs4goz8=""
+              /><!--!-->
+
+              <div class="text-layout" b-aodjs4goz8="">
+                <p class="text" b-aodjs4goz8="">간식</p>
+              </div>
+            </div></a
+          ><!--!--><a
+            class="category-item-component"
+            href="/b/21"
+            b-aodjs4goz8=""
+            ><div class="category" b-aodjs4goz8="">
+              <img
+                class="image"
+                src="https://images.pet-high.com/category-image/77194c64-e482-4e76-9f9c-a2f414c46e39.webp"
+                alt="배변/탈취"
+                loading="lazy"
+                b-aodjs4goz8=""
+              /><!--!-->
+
+              <div class="text-layout" b-aodjs4goz8="">
+                <p class="text" b-aodjs4goz8="">배변/탈취</p>
+              </div>
+            </div></a
+          ><!--!--><a
+            class="category-item-component"
+            href="/b/13"
+            b-aodjs4goz8=""
+            ><div class="category" b-aodjs4goz8="">
+              <img
+                class="image"
+                src="https://images.pet-high.com/category-image/883cd9f5-c35a-4d6e-ba92-a050662bf0b5.webp"
+                alt="의류/악세서리"
+                loading="lazy"
+                b-aodjs4goz8=""
+              /><!--!-->
+
+              <div class="text-layout" b-aodjs4goz8="">
+                <p class="text" b-aodjs4goz8="">의류/악세서리</p>
+              </div>
+            </div></a
+          ><!--!--><a
+            class="category-item-component"
+            href="/b/17"
+            b-aodjs4goz8=""
+            ><div class="category" b-aodjs4goz8="">
+              <img
+                class="image"
+                src="https://images.pet-high.com/category-image/0c5f5eba-c09f-49a3-ae08-e1dc5a6e78a9.webp"
+                alt="하우스/방범"
+                loading="lazy"
+                b-aodjs4goz8=""
+              /><!--!-->
+
+              <div class="text-layout" b-aodjs4goz8="">
+                <p class="text" b-aodjs4goz8="">하우스/방범</p>
+              </div>
+            </div></a
+          ><!--!--><a
+            class="category-item-component"
+            href="/b/18"
+            b-aodjs4goz8=""
+            ><div class="category" b-aodjs4goz8="">
+              <img
+                class="image"
+                src="https://images.pet-high.com/category-image/f5d9e305-dfa9-4eb7-a9b6-b33470075f59.webp"
+                alt="급식기/급수기"
+                loading="lazy"
+                b-aodjs4goz8=""
+              /><!--!-->
+
+              <div class="text-layout" b-aodjs4goz8="">
+                <p class="text" b-aodjs4goz8="">급식기/급수기</p>
+              </div>
+            </div></a
+          ><!--!--><a
+            class="category-item-component"
+            href="/b/19"
+            b-aodjs4goz8=""
+            ><div class="category" b-aodjs4goz8="">
+              <img
+                class="image"
+                src="https://images.pet-high.com/category-image/ff2a7ff7-43af-4e07-9d8c-8db2abcdaa34.webp"
+                alt="목욕/미용"
+                loading="lazy"
+                b-aodjs4goz8=""
+              /><!--!-->
+
+              <div class="text-layout" b-aodjs4goz8="">
+                <p class="text" b-aodjs4goz8="">목욕/미용</p>
+              </div>
+            </div></a
+          >
         </div>
       </div>
     </div>
@@ -96,15 +162,129 @@
 </template>
 
 <script>
-export default {};
+import { ref } from "vue";
+
+export default {
+  setup() {
+    const isActive = ref(false);
+    let prevIdx = 0;
+
+    const cateToggle = (idx) => {
+      const parent = document.getElementsByClassName("searchedSortBand")[0];
+      if (idx != prevIdx) {
+        parent.children[prevIdx].classList.remove("active");
+        parent.children[idx].classList.add("active");
+        prevIdx = idx;
+      }
+    };
+
+    return {
+      isActive,
+      cateToggle,
+    };
+  },
+};
 </script>
 
 <style scoped>
-ul > span {
-  width: calc(100% / 7);
+.grey-container[b-5udx3prrol] {
+  width: 100%;
+  /* padding-left: max(16px, (100vw - 1280px)/2) !important; */
+  /* padding-right: max(16px, (100vw - 1280px)/2) !important; */
 }
 
-ul > span > a {
-  font-size: 15px;
+.category-section[b-kladk2uprp] {
+  width: 100%;
+}
+
+@media (min-width: 1px) and (max-width: 599.98px) {
+  .category-section[b-kladk2uprp] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+  }
+}
+
+@media (min-width: 599.98px) and (max-width: 599.98px) {
+  .num-960-category[b-kladk2uprp] {
+    background-color: #fff;
+    padding-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+@media (min-width: 1px) and (max-width: 959.98px) {
+  [b-aodjs4goz8].category-item-component {
+    flex: 1 0 19%;
+  }
+}
+
+@media (min-width: 1px) and (max-width: 959.98px) {
+  .category-layout[b-kladk2uprp] {
+    flex-wrap: wrap;
+    row-gap: 20px;
+  }
+}
+
+.category-layout[b-kladk2uprp] {
+  max-width: 100vw;
+}
+
+@media (min-width: 1px) and (max-width: 599.98px) {
+  .category-layout[b-kladk2uprp] {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    align-self: stretch;
+  }
+}
+
+[b-aodjs4goz8] .category {
+  display: inline-block;
+  flex-direction: column;
+  /* align-items: center; */
+}
+
+.category[b-aodjs4goz8] {
+  cursor: pointer;
+}
+
+@media (min-width: 1px) and (max-width: 599.98px) {
+  .image[b-aodjs4goz8] {
+    max-width: 56px;
+    max-height: 56px;
+    aspect-ratio: 1/1;
+  }
+}
+
+[b-aodjs4goz8] .image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 3px;
+}
+
+img {
+  overflow-clip-margin: content-box;
+  overflow: clip;
+  cursor: pointer;
+}
+
+[b-aodjs4goz8] .image {
+  width: 100%;
+  height: auto;
+  max-width: 80px;
+  max-height: 80px;
+  aspect-ratio: 1/1;
+  margin-bottom: 3px;
+  margin-right: 40px;
+}
+
+[b-aodjs4goz8] .text-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
