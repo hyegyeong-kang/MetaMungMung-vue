@@ -4,12 +4,13 @@
             <h2 class="gSrOnly">
                 모임 생성
             </h2>
-            <form action="" class="_form">
+            <form class="_form" @submit.prevent="registerOnMeeting">
                 <fieldset>
                     <div class="makeCover">
-                        <label class="title" for="ex_name">모임 이름</label>
+                        <label class="title" for="ex_name">모임 이름(최대 50자)</label>
+                        <p class="err">{{nameMessage}}</p>
                         <div class="uInput -simpleLine inputBand">
-                            <input value="" type="text" class="_inputBandName" id="ex_name" maxlength="50" placeholder="모임 이름을 입력하세요">
+                            <input value="" type="text" class="_inputBandName" id="ex_name" maxlength="20" placeholder="모임 이름을 입력하세요" @change="inputLengthCheck" required>
                         </div>
 
                         <AddAddressModal v-if="isOpen" @close-req="closeModal" @send-addr="sendAddr" />
@@ -18,7 +19,7 @@
                             <div class="mainCover">
                                 <span class="cover">
                     
-                                    <img data-cover="http://coresos.phinf.naver.net/a/2ih08a/c_b6hUd018adm1pd8bo8s7zqln_paxnin.jpg" src="https://coresos-phinf.pstatic.net/a/2ih08a/c_b6hUd018adm1pd8bo8s7zqln_paxnin.jpg?type=cover_a640" class="_selectedCover coverImg" width="300" height="225" alt="">
+                                    <img :data-cover="coverImg" :src="coverImg" class="_selectedCover coverImg" width="300" height="225" alt="">
                     
                                 </span>
                             </div>
@@ -38,53 +39,33 @@
                                 </div>
                             </div>
                             <div class="coverList">
-                                <h3 class="title">커버사진</h3>
-
+                                <h3 class="title">커버사진(최대 30MB)</h3>
+                                <p class="err">{{imgMessage}}</p>
                                 <ul class="list">
                                     <li>
                                         <span class="changeCover _coverImageUploader js-fileapi-wrapper">
                                             <label for="addPhoto" class="labelAddPhoto">사진 추가</label>
-                                            <input type="file" class="imageUpload" id="addPhoto" accept="image/*" name="attachment">
+                                            <input type="file" class="imageUpload" id="addPhoto" accept="image/*" name="attachment" @change="upload">
                                         </span>
                                     </li>
                     
                         
-                                    <li class="_coverSet_0" style="">
+                                    <li v-for="image in images" :key="image.id" class="_coverSet_0" style="">
                                         
-                                        <button type="button" data-cover="http://coresos.phinf.naver.net/a/34g092/3_4a2Ud018admiqcybenasyfp_5ksoqj.png" aria-selected="false" class="_defaultCovers cover ">
-                                            <img class="coverImg" src="https://coresos-phinf.pstatic.net/a/34g092/3_4a2Ud018admiqcybenasyfp_5ksoqj.png?type=cover_a264" width="120" height="90" alt="">
+                                        <button type="button" :data-cover="image.src" aria-selected="false" class="_defaultCovers cover " @click="selectImg(image.id)">
+                                            <img class="coverImg" :src="image.src" width="120" height="90" alt="">
                                             <span class="mask"></span>
                                         </button>
                                         
                                     </li>
 
-                        
-                                    <li class="_coverSet_0" style="">
-                                        
-                                        <button type="button" data-cover="http://coresos.phinf.naver.net/a/34g02i/a_fa1Ud018adm1pbar0p6egwuz_5ksoqj.png" aria-selected="false" class="_defaultCovers cover ">
-                                            <img class="coverImg" src="https://coresos-phinf.pstatic.net/a/34g02i/a_fa1Ud018adm1pbar0p6egwuz_5ksoqj.png?type=cover_a264" width="120" height="90" alt="">
-                                            <span class="mask"></span>
-                                        </button>
-                                        
-                                    </li>
-                        
-                                
-                        
-                                    <li class="_coverSet_0" style="">
-                                        
-                                        <button type="button" data-cover="http://coresos.phinf.naver.net/a/34g01h/8_6a2Ud018adm1bhn9k9y349hq_5ksoqj.png" aria-selected="false" class="_defaultCovers cover ">
-                                            <img class="coverImg" src="https://coresos-phinf.pstatic.net/a/34g01h/8_6a2Ud018adm1bhn9k9y349hq_5ksoqj.png?type=cover_a264" width="120" height="90" alt="">
-                                            <span class="mask"></span>
-                                        </button>
-                                        
-                                    </li>
                     
                                 </ul>
                             </div>
                         </div>
 
                         <div>
-                            <h3 class="title" style="margin-top: 20px">모임 소개글</h3>
+                            <h3 class="title" style="margin-top: 20px;padding-bottom:0">모임 소개글</h3>
                             <div class="uTextarea">
                                 <textarea class="_introDescription" id="bandIntroduce" cols="30" rows="10" maxlength="500" placeholder="모임 소개글을 입력하세요." style="height:100%"></textarea>
                                 <span class="border"></span>
@@ -102,7 +83,7 @@
             
                         <div class="btnFooter">
                             <button type="button" class="_btnCancel uButton -sizeXL -cancel">취소</button>
-                            <button type="submit" class="_btnConfirm uButton -sizeXL -disabled">완료</button>
+                            <button type="submit" class="_btnConfirm uButton -sizeXL -disabled" @click="check">완료</button>
                         </div>
                     </div>
                 </fieldset>
@@ -113,7 +94,8 @@
 
 <script>
 import AddAddressModal from './modal/AddAddressModal.vue';
-import {ref} from 'vue';
+import {ref, reactive} from 'vue';
+import {useRouter} from 'vue-router';
 
 export default {
     components:{
@@ -121,8 +103,48 @@ export default {
     },
     emits: ['toggle-modal'],
     setup(props, {emit}){
+        const router = useRouter();
+        const coverImg = ref('https://coresos-phinf.pstatic.net/a/2ih08a/c_b6hUd018adm1pd8bo8s7zqln_paxnin.jpg?type=cover_a640');
+        const images = reactive([{
+            id: 1,
+            src: 'https://coresos-phinf.pstatic.net/a/2ih08a/c_b6hUd018adm1pd8bo8s7zqln_paxnin.jpg?type=cover_a640'
+        },
+        {
+            id: 2,
+            src: 'https://coresos-phinf.pstatic.net/a/34g092/3_4a2Ud018admiqcybenasyfp_5ksoqj.png?type=cover_a264'
+        },
+        {
+            id: 3,
+            src: 'https://coresos-phinf.pstatic.net/a/34g02i/a_fa1Ud018adm1pbar0p6egwuz_5ksoqj.png?type=cover_a264'
+        },
+        {
+            id: 4,
+            src: 'https://coresos-phinf.pstatic.net/a/34g01h/8_6a2Ud018adm1bhn9k9y349hq_5ksoqj.png?type=cover_a264'
+        }]);
+        let imgValidation = true;
+        const imgMessage = ref('');
+        const nameMessage = ref('');
         const isOpen = ref(false);
         const address = ref('주소를 등록해주세요.');
+
+        const upload = (e) => {
+            const file = e.target.files[0];
+            if(file.size > 1024 * 1024 * 30){
+                imgMessage.value = '파일 용량은 30MB 이하만 가능합니다.';
+                imgValidation = false;
+            }
+            if(imgValidation){
+                let url = URL.createObjectURL(file);
+                coverImg.value = url;
+            }
+            else{
+                
+            }
+        }
+
+        const selectImg = (id) => {
+            coverImg.value = images[id - 1].src;
+        }
 
         const openMap = () => {
             isOpen.value = !isOpen.value;
@@ -138,18 +160,77 @@ export default {
             address.value = addr;
         }
 
+        const check = () => {
+            if(document.getElementById("ex_name").value === ''){
+                nameMessage.value = '모임 이름을 입력해주세요.';
+            }
+        }
+
+        // maxlength 한글 처리 이슈 해결방법 https://jeonjin.tistory.com/499
+        const inputLengthCheck = (e) => {
+            nameMessage.value = '';
+            var inputText = e.currentTarget.value;
+            var inputMaxLength = e.currentTarget.getAttribute("maxlength");
+            var j = 0;
+            var count = 0;
+
+            for(var i = 0;i < inputText.length;i++) { 
+                let val = encodeURI(inputText.charAt(i)).length; 
+
+                if(val == 6){
+                    j++;
+                }
+
+                j++;
+
+                if(j <= inputMaxLength){
+                    count++;
+                }
+            }
+
+            if(j > inputMaxLength){
+                e.currentTarget.setAttribute('value', inputText.substr(0, count));
+            }
+        }
+
+        const registerOnMeeting = () => {
+            router.push({
+                name: "OnMeeting"
+            });
+        }
+
         return{
-            address,
+            coverImg,
+            images,
+            imgMessage,
+            nameMessage,
             isOpen,
+            address,
+            upload,
+            selectImg,
             openMap,
             closeModal,
-            sendAddr
+            sendAddr,
+            check,
+            inputLengthCheck,
+            registerOnMeeting
         }
     }
 }
 </script>
 
 <style scoped>
+.err{
+    color: red;
+    display: inline;
+    margin-left: 20px;
+}
+/* 이미지 크기 맞추기 */
+._selectedCover{
+    width: 300px;
+    height: 225px;
+    object-fit: cover;
+}
 input[type='radio']{
     margin-left: -19px;
 }
@@ -195,6 +276,7 @@ legend {
     display: block;
     margin-bottom: 11px;
     font-weight: 600;
+    display: inline-block;
 }
 .bandMake .title {
     font-size: 14px;
