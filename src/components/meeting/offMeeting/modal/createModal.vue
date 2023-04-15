@@ -38,6 +38,7 @@
               v-model="title"
             />
           </div>
+
           <div class="form-group" style="display: none">
             <label for="location">위치</label>
             <input
@@ -228,6 +229,6 @@ export default {
   font-size: 13px;
   color: white;
   width: 100px;
-  background-color: lightslategray;
+  background-color: lightgray;
 }
 </style>

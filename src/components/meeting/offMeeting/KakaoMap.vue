@@ -17,7 +17,7 @@
             편의시설
           </li>
         </ul>
-        <div class="center-marker">
+        <div style="top: 45%" class="center-marker">
           <img src="@/assets/images/offMeeting/center-marker.png" alt="" />
         </div>
         <div class="current-location">
@@ -128,8 +128,8 @@ export default {
           title: "다섯번째 게시글!!!!",
           host: "박길동",
           addr: "빽다방",
-          latitude: 37.49481084427134,
-          longitude: 127.1203642409428,
+          latitude: 37.21333912528333,
+          longitude: 127.3225686617836,
           limit: "4",
           date: "2023-04-15",
           startTime: "12:00",
@@ -533,5 +533,3 @@ export default {
   },
 };
 </script>
-
-
