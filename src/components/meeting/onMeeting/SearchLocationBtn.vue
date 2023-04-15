@@ -13,13 +13,16 @@
 </template>
 
 <script>
-import {ref} from 'vue';
+import {ref, watchEffect} from 'vue';
 
 export default {
-    setup(){
+    props: {
+        addr: String
+    },
+    setup(props){
         const isActive = ref(false);
         const selectCate = ref('모든 동네');
-        const curLocation = ref('가락동');
+        const curLocation = ref('연지동');
 
         const menuToggle = () => {
             isActive.value = !isActive.value;
@@ -32,6 +35,15 @@ export default {
             curLocation.value = tmp;
             menuToggle();
         }
+
+        const locationSetting = () => {
+            console.log(props.addr);
+            curLocation.value = props.addr;
+        }
+        
+        watchEffect(() => {
+            locationSetting();
+        });
 
         return{
             isActive,
