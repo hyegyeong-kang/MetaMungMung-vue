@@ -70,6 +70,18 @@
             <div class="heart-flip"></div>
             <span>참여<span>완료</span></span>
           </button>
+          <button
+            @click="checkJoinMember"
+            style="
+              margin-left: 10px;
+              padding: 10px;
+              font-size: 13px;
+              font-weight: bold;
+            "
+            class="badge"
+          >
+            참여자 확인! ✅
+          </button>
 
           <input
             type="number"
@@ -136,15 +148,20 @@
     </div>
   </div>
   <!-- 모임생성 모달 end -->
+  <JoinMemberModal ref="joinMemberModal" />
 </template>
 
 <script>
+import JoinMemberModal from "@/components/meeting/offMeeting/modal/JoinMemberModal.vue";
 import axios from "axios";
 import { ref, onMounted } from "vue";
 
 export default {
   name: "OffMeetingModal",
   props: ["selectedMarker", "boardDetails"],
+  components: {
+    JoinMemberModal,
+  },
   setup(props) {
     let title = ref("");
     let host = ref("");
@@ -156,6 +173,19 @@ export default {
     let content = ref("");
     let limit = ref("");
     let likeBtn = null;
+    let joinMemberModal = ref(null);
+
+    // const checkJoinMember = () => {
+    //   let openIt = () => {
+    //     joinMemberModal.openJoinMemberModal();
+    //   };
+    //   console.log(openIt + "ok!!!!!!");
+    // };
+
+    const checkJoinMember = () => {
+      joinMemberModal.value.openJoinMemberModal();
+      console.log(joinMemberModal.value.openJoinMemberModal());
+    };
 
     const activeJoin = () => {
       likeBtn = document.getElementsByClassName("heart-button")[0];
@@ -208,6 +238,7 @@ export default {
       openDetailModalFunc,
       closeDetailModalFunc,
       activeJoin,
+      checkJoinMember,
       title,
       date,
       startTime,
@@ -215,6 +246,7 @@ export default {
       limit,
       host,
       location,
+      joinMemberModal,
     };
   },
 };
