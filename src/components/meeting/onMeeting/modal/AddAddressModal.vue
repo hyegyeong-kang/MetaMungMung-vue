@@ -66,9 +66,6 @@ export default {
         
     },
     emits: ['close-req', 'send-addr'],
-    props:{
-        isOpen: Boolean
-    },
     setup(props, {emit}){
         const addr = ref('');
 

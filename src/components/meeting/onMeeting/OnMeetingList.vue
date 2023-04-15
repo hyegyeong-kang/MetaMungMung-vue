@@ -18,21 +18,21 @@
                         </div>
                         <div class="bandName">
                             <strong class="name">
-                                <a href="/band/73052575" class="text _bandLink" target="_blank">
+                                <router-link :to="{name: 'OnMeetingDetail', params:{id: onMeeting.onMeetingIdx}}" class="text _bandLink">
                                     
                                     {{ onMeeting.onMeetName }}
-                                </a>
+                                </router-link>
                             </strong>
                             <p class="pSubTxt">{{ onMeeting.introduction }}</p>
 
-                            <a v-if="isMain" href="/discover/search/%EA%B7%B8%EB%A6%BC%EC%9F%81%EC%9D%B4" class="moreBandLink _tagLink"><strong>{{ onMeeting.category }}</strong> 모임 더보기</a>
+                            <router-link v-if="isMain" :to="{name: 'OnMeeting', query: {keywords: onMeeting.category}}" class="moreBandLink _tagLink"><strong>{{ onMeeting.category }}</strong> 모임 더보기</router-link>
                             <p v-else class="member">
                                 <span class="total">멤버 <strong class="totalNumber">{{ onMeeting.memberCnt }}</strong></span>
                                 <span class="leader">리더 <strong class="leagerName">{{ onMeeting.hostName }}</strong></span>
                             </p>
                             
                         </div>
-                        <a href="/band/73052575" class="bandLink _bandLink" target="_blank"><span class="gSrOnly">이 모임으로 이동</span></a>
+                        <router-link :to="{name: 'OnMeetingDetail', params:{id: onMeeting.onMeetingIdx}}" class="bandLink _bandLink"><span class="gSrOnly">이 모임으로 이동</span></router-link>
                     </div>
                 </li>
             </ul>

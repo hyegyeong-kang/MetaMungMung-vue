@@ -1,7 +1,7 @@
 <template>
     <div class="pageHeader">
         <router-link :to="{name: 'OnMeeting'}" @click="moveToPage"><div class="pageTitle">모임😊</div></router-link>
-        <SearchLocationBtn :addr="addr"/>
+        <SearchLocationBtn :addr="addr" v-if="showLoc"/>
         <OnMeetingSearchBar @send-type="sendType" :isMain="isMain"/>
     </div>
 </template>
@@ -10,7 +10,7 @@
 import SearchLocationBtn from './SearchLocationBtn.vue'
 import OnMeetingSearchBar from './OnMeetingSearchBar.vue'
 import {useRouter} from 'vue-router'
-import {ref} from 'vue';
+import {ref, watchEffect} from 'vue';
 
 
 export default {
@@ -23,7 +23,8 @@ export default {
         }
     },
     props: {
-        isMain: Boolean
+        isMain: Boolean,
+        showLocation: Boolean
     },
     components: {
         SearchLocationBtn,
@@ -32,6 +33,15 @@ export default {
     setup(props, {emit}){
         const router = useRouter();
         const addr = ref('');
+        const showLoc = ref(true);
+
+        watchEffect(() => {
+            if(!props.showLocation){
+                showLoc.value = false;
+            } else{
+                showLoc.value = true;
+            }
+        });
 
         const sendType = () => {
             emit('send-type', 'search');
@@ -97,6 +107,7 @@ export default {
                
 
         return{
+            showLoc,
             addr,
             sendType,
             moveToPage,

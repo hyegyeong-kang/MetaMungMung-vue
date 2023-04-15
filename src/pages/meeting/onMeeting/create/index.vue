@@ -1,6 +1,8 @@
 <template>
     <div class="services_section layout_padding">
         <div class="container">
+            <OnMeetingHeader :showLocation="false"/>
+            <hr>
             <CreateOnMeeting/>
         </div>
     </div>
@@ -8,10 +10,15 @@
 
 <script>
 import CreateOnMeeting from '../../../../components/meeting/onMeeting/CreateOnMeeting.vue';
+import OnMeetingHeader from '../../../../components/meeting/onMeeting/OnMeetingHeader.vue';
 
 export default {
     components: {
-        CreateOnMeeting
+        CreateOnMeeting,
+        OnMeetingHeader
+    },
+    setup(){
+
     }
 }
 </script>

@@ -22,11 +22,11 @@ export default {
         const searchKeyword = ref('');
         // const isMain = ref(true);
 
-        const init = () => {
-            searchKeyword.value = route.query.keywords;
-        }
+        // const init = () => {
+        //     searchKeyword.value = route.query.keywords;
+        // }
 
-        init();
+        // init();
 
         const checkInputText = () => {
             if(searchKeyword.value !== ''){
@@ -42,6 +42,10 @@ export default {
                 console.log("메인화면이니" + props.isMain);
                 searchKeyword.value = '';
             }
+            else{
+                searchKeyword.value = route.query.keywords;
+            }
+
         });
 
         return {
