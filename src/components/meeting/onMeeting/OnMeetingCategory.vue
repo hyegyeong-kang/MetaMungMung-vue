@@ -2,21 +2,21 @@
     <div data-viewname="DGlobalSearchBandSubTabNavView" class="bandListWrap">
         <div class="wide -w840">
             <div class="searchedSortBand">
-                
+
                 <a href="" class="sortButton _btnTabNav active" data-id="1" :class="{active: isActive}" @click.prevent="cateToggle(0)">전체</a>
-                
+
                 <a href="" class="sortButton _btnTabNav " data-id="2" :class="{active: isActive}" @click.prevent="cateToggle(1)">소형견</a>
-                
+
                 <a href="" class="sortButton _btnTabNav " data-id="3" :class="{active: isActive}" @click.prevent="cateToggle(2)">중형견</a>
-                
+
                 <a href="" class="sortButton _btnTabNav " data-id="4" :class="{active: isActive}" @click.prevent="cateToggle(3)">대형견</a>
-                
+
                 <a href="" class="sortButton _btnTabNav " data-id="5" :class="{active: isActive}" @click.prevent="cateToggle(4)">일상</a>
 
                 <a href="" class="sortButton _btnTabNav " data-id="6" :class="{active: isActive}" @click.prevent="cateToggle(5)">취미</a>
 
                 <a href="" class="sortButton _btnTabNav " data-id="7" :class="{active: isActive}" @click.prevent="cateToggle(6)">정보</a>
-                
+
             </div>
         </div>
     </div>
