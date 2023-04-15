@@ -1,6 +1,6 @@
 <template>
     <div class="pageHeader">
-        <router-link :to="{name: 'OnMeeting'}" @click="moveToPage"><div class="pageTitle">모임</div></router-link>
+        <router-link :to="{name: 'OnMeeting'}" @click="moveToPage"><div class="pageTitle">모임😊</div></router-link>
         <SearchLocationBtn :addr="addr"/>
         <OnMeetingSearchBar @send-type="sendType" :isMain="isMain"/>
     </div>
@@ -10,7 +10,7 @@
 import SearchLocationBtn from './SearchLocationBtn.vue'
 import OnMeetingSearchBar from './OnMeetingSearchBar.vue'
 import {useRouter} from 'vue-router'
-import {ref, watchEffect} from 'vue';
+import {ref} from 'vue';
 
 
 export default {
@@ -101,7 +101,6 @@ export default {
             sendType,
             moveToPage,
             loadScript,
-            loadScript,
             loadMap
         }
     }
@@ -114,7 +113,7 @@ export default {
     font-size: 40px;
     margin: 0;
     float: left;
-    color: black;
+    color: #89cbeb;
 }
 .pageHeader {
     position: relative;

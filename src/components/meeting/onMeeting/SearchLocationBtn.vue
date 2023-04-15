@@ -1,14 +1,16 @@
 <template>
-    <button type="button" class="btnMySetting" 
-        :class="{active: isActive}" aria-haspopup="true" :aria-expanded=isActive aria-controls="gnbProfileMenuPopup" @click="menuToggle">
-            {{curLocation}}
-    </button>
-    <div class="menuModalLayer">
-        <ul class="menuModalList">
-            <li class="menuModalItem" @click="changeList">
-                <div class="menuModalText">{{selectCate}}</div>
-            </li>
-        </ul>
+    <div style="float: left">
+        <button type="button" class="btnMySetting" 
+            :class="{active: isActive}" aria-haspopup="true" :aria-expanded=isActive aria-controls="gnbProfileMenuPopup" @click="menuToggle">
+                {{curLocation}}
+        </button>
+        <div class="menuModalLayer">
+            <ul class="menuModalList">
+                <li class="menuModalItem" @click="changeList">
+                    <div class="menuModalText">{{selectCate}}</div>
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
@@ -47,9 +49,9 @@ export default {
 
         return{
             isActive,
-            menuToggle,
             selectCate,
             curLocation,
+            menuToggle,
             changeList
         }
     }
@@ -95,8 +97,8 @@ export default {
     display: block!important;
 }
 .menuModalLayer {
-    top: 46px;
-    left: 100px;
+    margin-top: 46px;
+    margin-left: 20px;
 }
 .menuModalLayer {
     display: none;
@@ -117,5 +119,6 @@ export default {
 }
 .menuModalText{
     width: 80px;
+    margin-left: 10px;
 }
 </style>

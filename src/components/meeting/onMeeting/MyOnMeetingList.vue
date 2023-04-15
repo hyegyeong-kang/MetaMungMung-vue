@@ -4,7 +4,7 @@
         <div class="mainWrap  _bandListRegion">
             <ul data-viewname="DBandCollectionView" class="bandCardList gMab25">
 
-                <li class="bandCardItem">
+                <li class="bandCardItem" id="createOnMeetingCard">
                     <div class="uCover -main -notCover">
                         <div class="bandInner">
                             <router-link :to="{name: 'OnMeetingCreate'}" class="bandCreate  _link">
@@ -133,8 +133,8 @@ ol, ul {
     overflow: hidden;
     border-radius: 20px;
     background: #fff;
-    -webkit-box-shadow: 0 5px 20px rgba(0,0,0,.03);
-    box-shadow: 0 5px 20px rgba(0,0,0,.03);
+    -webkit-box-shadow: 0 5px 20px rgba(0,0,0,.1);
+    box-shadow: 0 5px 20px rgba(0,0,0,.1);
 }
 .uCover .bandCover {
     display: block;
@@ -204,5 +204,12 @@ button, dd, dl, dt, fieldset, ol, p, ul {
     text-overflow: ellipsis;
     margin-top: 6px;
     line-height: 1.1;
+}
+#createOnMeetingCard{
+    /* border: 1px solid; */
+    border-radius: 20px;
+    -webkit-box-shadow: 0 5px 20px rgba(0,0,0,.1);
+    box-shadow: 0 5px 20px rgba(0,0,0,.1);
+    background-color: rgba(137,203,235,.3);
 }
 </style>
