@@ -16,62 +16,116 @@
           <span @click="closeModalFunc" class="close" id="closeModal"
             >&times;</span
           >
-          <h2>모임생성</h2>
+          <h2 style="color: gray; font-weight: bolder">모임 생성</h2>
         </div>
         <div class="modal-body">
-          <form action="" class="modal-form">
-            <div class="form-row">
-              <label for="">제목</label>
-              <input
-                type="text"
-                placeholder="제목을 입력해주세요."
-                v-model="title"
-              />
-            </div>
-            <div class="form-row">
-              <label for="">위치</label>
-              <input type="text" :value="currentLocation" disabled />
-            </div>
-            <div class="form-row" style="display: none">
-              <label for="">위도</label>
-              <input type="text" :value="currentLat" disabled />
-            </div>
-            <div class="form-row" style="display: none">
-              <label for="">경도</label>
-              <input type="text" :value="currentLng" disabled />
-            </div>
+          <div style="margin-bottom: 20px">
+            <middle
+              id="location"
+              style="text-align: center"
+              class="form-text text-muted box ivory"
+              >👉🏻 모임 생성 위치 : {{ currentLocation }} 👈🏻</middle
+            >
+          </div>
+          <div class="form-group">
+            <label for="title">🐶 제목</label>
+            <input
+              type="text"
+              class="form-control inputText"
+              id="title"
+              aria-describedby="emailHelp"
+              placeholder="제목을 입력해주세요."
+              v-model="title"
+            />
+          </div>
+          <div class="form-group" style="display: none">
+            <label for="location">위치</label>
+            <input
+              type="text"
+              class="form-control inputText disabledLabel"
+              id="location"
+              :value="currentLocation"
+              disabled
+            />
+          </div>
 
-            <div class="form-row">
-              <label for="iduser">제한인원</label>
+          <div class="form-group" style="display: none">
+            <label for="">위도</label>
+            <input type="text" :value="currentLat" disabled />
+          </div>
+          <div class="form-group" style="display: none">
+            <label for="">경도</label>
+            <input type="text" :value="currentLng" disabled />
+          </div>
+
+          <div class="form-group">
+            <label for="limit">💁🏼‍♀️ 제한인원</label>
+            <input
+              type="number"
+              id="limit"
+              :value="limit"
+              name="usernumber"
+              min="2"
+              max="1000"
+              class="form-control inputText"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="limit">📅 날짜</label>
+            <input
+              type="date"
+              id="date"
+              v-model="date"
+              name="limit"
+              class="form-control inputText"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="startTime">⏰ 시작시간</label>
+            <input
+              type="time"
+              id="startTime"
+              v-model="startTime"
+              name="startTime"
+              class="form-control inputText"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="content">📝 내용</label>
+            <textarea
+              class="form-control inputText"
+              id="content"
+              rows="3"
+              placeholder="내용을 입력해주세요."
+              v-model="content"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="content">📸 파일첨부</label>
+            <div class="custom-file">
               <input
-                type="number"
-                id="usernumber"
-                :value="limit"
-                name="usernumber"
-                min="2"
-                max="1000"
+                type="file"
+                class="custom-file-input"
+                id="inputGroupFile04"
               />
+              <label class="custom-file-label inputText" for="inputGroupFile04"
+                >파일을 선택하세요.</label
+              >
             </div>
-            <div class="form-row">
-              <label for="">날짜</label>
-              <input type="date" v-model="date" />
-            </div>
-            <div class="form-row">
-              <label for="">시작시간</label>
-              <input type="time" v-model="startTime" />
-            </div>
-            <div class="form-row">
-              <label for="">내용</label>
-              <textarea
-                type="text"
-                placeholder="내용을 입력해주세요."
-                v-model="content"
-              ></textarea>
-            </div>
-          </form>
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">등록</button>
+          <button type="submit" class="btn createBtn">모임생성</button>
+          <a
+            @click="closeModalFunc"
+            style="color: white; width: 100px"
+            class="btn cancelBtn"
+            >취소</a
+          >
         </div>
       </div>
     </div>
@@ -81,7 +135,7 @@
 
 <script>
 import axios from "axios";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 export default {
@@ -123,11 +177,14 @@ export default {
       clickable[i].openModalFunc;
     }
 
-    window.onclick = function (event) {
-      if (event.target == modal[0]) {
-        modal[0].style.display = "none";
-      }
-    };
+    onMounted(() => {
+      window.onclick = function (event) {
+        if (event.target == modal[0]) {
+          modal[0].style.display = "none";
+        }
+      };
+    });
+
     return {
       openCreateModalFunc,
       closeModalFunc,
@@ -142,3 +199,35 @@ export default {
 };
 </script>
 
+<style scoped>
+.box {
+  border-radius: 15px 15px 15px 15px;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  color: #555;
+  border: 1px solid transparent;
+}
+
+.ivory {
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+  color: #8a6d3b;
+}
+
+.createBtn {
+  border-radius: 20px;
+  font-size: 13px;
+  color: white;
+  width: 100px;
+  background-color: cornflowerblue;
+}
+
+.cancelBtn {
+  border-radius: 20px;
+  font-size: 13px;
+  color: white;
+  width: 100px;
+  background-color: lightslategray;
+}
+</style>
