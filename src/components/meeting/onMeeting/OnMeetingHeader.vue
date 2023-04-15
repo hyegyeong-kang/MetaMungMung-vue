@@ -1,6 +1,11 @@
 <template>
     <div class="pageHeader">
-        <router-link :to="{name: 'OnMeeting'}" @click="moveToPage"><div class="pageTitle">모임😊</div></router-link>
+        <router-link :to="{name: 'OnMeeting'}" @click="moveToPage">
+            <div class="pageTitle">
+                모임
+                <img src="@/assets/images/offMeeting/paw-print.png" style="width: 70px"/>
+            </div>
+            </router-link>
         <SearchLocationBtn :addr="addr" v-if="showLoc"/>
         <OnMeetingSearchBar @send-type="sendType" :isMain="isMain"/>
     </div>
@@ -120,11 +125,12 @@ export default {
 
 <style scoped>
 .pageTitle{
-    font-weight: 900;
+    /* font-weight: 900; */
     font-size: 40px;
     margin: 0;
     float: left;
-    color: #89cbeb;
+    color: #addaed;
+    font-weight: 600;
 }
 .pageHeader {
     position: relative;

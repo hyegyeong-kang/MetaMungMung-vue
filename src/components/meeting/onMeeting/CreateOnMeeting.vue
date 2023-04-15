@@ -93,7 +93,7 @@
             
             
                         <div class="btnFooter">
-                            <button type="button" class="_btnCancel uButton -sizeXL -cancel">취소</button>
+                            <button type="button" class="_btnCancel uButton -sizeXL -cancel" @click="cancel">취소</button>
                             <button type="submit" class="_btnConfirm uButton -sizeXL -disabled" @click="check">완료</button>
                         </div>
                     </div>
@@ -177,6 +177,12 @@ export default {
             }
         }
 
+        const cancel = () => {
+            router.push({
+                name: "OnMeeting"
+            });
+        }
+
         // maxlength 한글 처리 이슈 해결방법 https://jeonjin.tistory.com/499
         const inputLengthCheck = (e) => {
             nameMessage.value = '';
@@ -223,6 +229,7 @@ export default {
             closeModal,
             sendAddr,
             check,
+            cancel,
             inputLengthCheck,
             registerOnMeeting
         }
@@ -277,7 +284,7 @@ input[type='radio']{
     padding-bottom: 20px;
 }
 .bandMake {
-    max-width: 840px;
+    /* max-width: 840px; */
     margin: 0 auto;
     padding-top: 58px;
 }

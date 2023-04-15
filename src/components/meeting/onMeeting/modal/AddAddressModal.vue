@@ -552,6 +552,7 @@ export default {
     border: 1px solid hsl(0, 0%, 90%);
     padding: 0.4rem 0.4rem;
     max-width: 100%;
+    color: white;
 }
 .topInputSearch{
     width: 10%;
