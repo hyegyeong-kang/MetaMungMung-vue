@@ -291,6 +291,7 @@ export default {
 
                 if (!keyword.replace(/^\s+|\s+$/g, '')) {
                     alert('키워드를 입력해주세요!');
+                    document.getElementById('menu_wrap').style.display = 'none';
                     return false;
                 }
 
