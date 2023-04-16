@@ -1,548 +1,399 @@
 <template>
-  <div id="app">
-
-  <!-- Header -->
-  <header class="container">
-    <h1>Shopping Cart</h1>
-    <ul class="breadcrumb">
-      <li>Home</li>
-      <li>Shopping Cart</li>
-    </ul>
-    <span class="count">{{ itemCount }} items in the bag</span>
-  </header>
-  <!-- End Header -->
-
-  <!-- Product List -->
-  <section class="container">
-    <div v-if="products.length > 0">
-      <ul class="products">
-      <li class="row" v-for="(product, index) in products" :key="product">
-        <div class="col left">
-          <div class="thumbnail">
-            <a href="#">
-              <img :src="product.image" :alt="product.name" />
-            </a>
-          </div>
-          <div class="detail">
-            <div class="name"><a href="#">{{ product.name }}</a></div>
-            <div class="description">{{ product.description }}</div>
-            <div class="price">{{ product.price | currencyFormatted }}</div>
-          </div>
-        </div>
-
-        <div class="col right">
-          <div class="quantity">
-            <input type="number" class="quantity" step="1" :value="product.quantity" @input="updateQuantity(index, $event)" @blur="checkQuantity(index, $event)" />
-          </div>
-          
-          <div class="remove">
-            <svg @click="removeItem(index)" version="1.1" class="close" xmlns="//www.w3.org/2000/svg" xmlns:xlink="//www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 60 60" enable-background="new 0 0 60 60" xml:space="preserve"><polygon points="38.936,23.561 36.814,21.439 30.562,27.691 24.311,21.439 22.189,23.561 28.441,29.812 22.189,36.064 24.311,38.186 30.562,31.934 36.814,38.186 38.936,36.064 32.684,29.812"></polygon></svg>
-          </div>
-        </div>
-      </li>
-    </ul>
-    </div>
-    <div v-else class="empty-product">
-      <h3>There are no products in your cart.</h3>
-      <button>Shopping now</button>
-    </div>
-  </section>
-  <!-- End Product List -->
+        <div class="page-section">
+          <div class="container">
+            <div class="cart_table" id="kang">
+                <p><strong style="color:black;margin-top:30px">장바구니</strong><img src="@/assets/images/offMeeting/paw-print.png"/></p>
+                <ul class="cart_list">
+                  <!--맨 위 전체선태그 삭제 버튼-->
+                  <li>
+                        <div class="checkbox">
+                            <!-- <input type="checkbox" name="all_chk" id="all_chk"  @click="checkAll($event.target.checked)"> -->
+                            <input type="checkbox" name="all_chk" id="all_chk" v-model="allChecked" @click="checkedAll($event.target.checked)">
+                            <label for="all_chk">전체선택</label>
+                        </div>
+                        <div class="del_btn">삭제 (<span class="num">0</span>)</div>
+                  </li>
+                    
   
-  <!-- Summary -->
-  <section class="container" v-if="products.length > 0">
-    <div class="promotion">
-      <label for="promo-code">Have A Promo Code?</label>
-      <input type="text" id="promo-code" v-model="promoCode" /> <button type="button" @click="checkPromoCode"></button>
-    </div>
+                    <!--장바구니 리스트-->
 
-    <div class="summary">
-      <ul>
-        <li>Subtotal <span>{{ subTotal | currencyFormatted }}</span></li>
-        <li v-if="discount > 0">Discount <span>{{ discountPrice | currencyFormatted }}</span></li>
-        <li>Tax <span>{{ tax | currencyFormatted }}</span></li>
-        <li class="total">Total <span>{{ totalPrice | currencyFormatted }}</span></li>
-      </ul>
-    </div>
+                  <div v-for="(cart, index) in cartList" :key="cart.cartnum" >
+                      <li class="cell">
+                          <!--상품 체크박스 부분-->
+                          <div class="checkbox">
+                              <input type="checkbox" :id="'check_' + cart.cartnum" 
+                              value="cart.cartnum" v-model="item_selected" :key="index" @click="selected($event)">
+                              <label :for="cart" :key="index + '1'"></label>
+                          </div>
+                    
+                          <div class="item_detail">
+                              <tr>
+                                  <td class="td_width cart_info_td">
+                                      <!--상품 개당 가격,  상품 갯수, 상품 갯수에 맞는 가격 -->
+                                      <!-- <input class="productPrice" type="hidden"><span>{{ cart.price }}</span>
+                                      <input class="productQuantitiy" type="hidden"><span>{{ cart.quantity }}</span> -->
+                                      <!-- <input class="productTotalPrice" type="hidden"><span>{{ cart.price * cart.price }}</span> -->
+                                          <!-- <div class="productPrice"><span>{{ cart.price }}</span></div>
+                                          <div class="productQuantitiy"><span>{{ cart.quantity }}</span></div>
+                                          <div class="productTotalPrice"><span>{{ cart.product_price * cart.quantity }}</span></div> -->
+                                  </td>
+                              </tr>
+                              <!--상품 이미지, 상품 이름-->
+                              <img class="cart-img" :src="`${ cart.productList[0].img_url}`">
+                              <p class="productName"><span>{{ cart.productList[0].name }}</span></p>
+                          </div>
+                          <!--상품 갯수 변경하는 버튼과 상품 갯수에 따른 가격 변동-->
+                          <div class="opt_info">
+                              <div class="price_btn">
+                                  <strong class="price_unit">{{ cart.productList[0].price}}</strong>원
+                                  <input type="button" class="minus_btn" @click="minusBtn(cart)"> 
+                                  <input type="text" class="product_count"><span>{{ cart.quantity }}</span>
+                                  <input type="button" class="plus_btn"  @click="plusBtn(cart)">
+                                <span class="total_p">
+                                  <strong class="price_amount"><span>{{ cart.productList[0].price * cart.quantity }}</span></strong><span>원</span>
+                                  <!-- <strong class="price_amount"><span>{{ cart.productList[index].price}}</span></strong>원 -->
+                                  <span type="button" @click="deleteBtn(cart, index)" class="del_li_btn"><img src="https://tictoc-web.s3.ap-northeast-2.amazonaws.com/web/img/icon/btn_del_circle.svg"></span>
+                                </span>
+                              </div>
+                          </div>
+                      </li>
+                  </div> <!-- for 문 끝남 -->
+                  <span></span>
+                </ul>
+    
+                <!--밑에 결제 정보 텍스트-->
+                <div class="cart_total_area">
+                    <p>결제 정보</p>
+    
+                    <div class="cart_total_price">
+                        <p>총 상품금액 <strong class="item_price" style="color:#87cefa"><span>64000</span></strong>원 <span class="plus_ic"></span></p>
+                        <p>총 결제금액 <strong class="total_price color-red" style="color:#87cefa"><span>64000</span></strong>원</p>
+                    </div>
+                </div>
+    
+                <!--밑에 계속 쇼핑하기, 결제하기 버튼-->
+                <div class="btn_box">
+                    <button type="button" onclick="history.go(-1);return false;" class="btn wh-btn" style="border-color:#87cefa">계속 쇼핑하기</button>
+                    <button type="button" onclick="order()" class="btn black-btn" style="background-color:#87cefa">구매하기</button>
+                </div>
+              </div>
+            </div>
+        </div>
+    
+      <div class="agree"></div> <!-- 이거 지우지 마세요! -->
+  </template>
 
-    <div class="checkout">
-      <button type="button">Check Out</button>
-    </div>
-  </section>
-  <!-- End Summary -->
-</div>
-</template>
+  <script>
 
-<script>
-export default {
-    name: "Cart",
-    data: {
-        products: [
-        {
-            image: "https://via.placeholder.com/200x150",
-            name: "PRODUCT ITEM NUMBER 1",
-            description: "Description for product item number 1",
-            price: 5.99,
-            quantity: 2
-        },
-        {
-            image: "https://via.placeholder.com/200x150",
-            name: "PRODUCT ITEM NUMBER 2",
-            description: "Description for product item number 1",
-            price: 9.99,
-            quantity: 1
-        }
-        ],
-        tax: 5,
-        promotions: [
-        {
-            code: "SUMMER",
-            discount: "50%"
-        },
-        {
-            code: "AUTUMN",
-            discount: "40%"
-        },
-        {
-            code: "WINTER",
-            discount: "30%"
-        }
-        ],
-        promoCode: "",
-        discount: 0
-  },
-  computed: {
-    itemCount: function() {
-      var count = 0;
+  import { ref } from "vue";
+  import axios from 'axios';
+  export default {
+    setup() {
+      const cart = ref("");
 
-      for (var i = 0; i < this.products.length; i++) {
-        count += parseInt(this.products[i].quantity) || 0;
+      let count = ref(1);
+      const cartList = ref([]);
+      let allChecked = false;
+
+      let total = ref(0);
+
+      const minusBtn = (cart) => {
+        return --cart.quantity;
+        //   axios.patch('/members/{m_id}/cart', {quantity: --count})
+        //     .then(res => {
+        //           console.log(`HYE!! :     ${res.data}`)
+        //     })
+        //     .catch((error) => {
+        //       console.log(error);
+        //     });
+      };
+  
+      const plusBtn = (cart) => {
+        return ++cart.quantity;
+        //   axios.patch('/members/{m_id}/cart', {quantity: ++count.value})
+        //     .then(res => {
+        //       console.log(res.data)
+        //     })
+        //     .catch((error) => {
+        //       console.log(error);
+        //     });
+      };
+  
+      const deleteBtn = (cart, index) => {
+        console.log(`KANG1111111111 ${JSON.stringify(cart, null, 2)}`)
+        console.log(`KANG2222222222 ${JSON.stringify(cartList.value[index], null, 2)}`)
+        console.log(`KANG$$$$$$$$$ ${typeof cartList.value[0]}`)
+        delete cartList.value[index];
+        console.log(`KANG999999999 ${JSON.stringify(cartList.value, null, 2)}`)
+
+      //  getTotalPrice(cartList.value);
+       // console.log(`KANG33333333 ${JSON.stringify(cartList.value, null, 2)}`)
+
+       
+        //   axios.delete('/members/{m_id}/cart')
+        //   .then(res => {
+        //     console.log(res.data)
+        //   })
+        //   .catch((error) => {
+        //     console.log(error);
+        //   });
+      };
+  
+      const getCartProductList = async() => {
+        
+          await axios.get('/cart/cartList', {})
+            .then((response) => {
+              console.log(`KANG!!!!!! ${JSON.stringify(response, null, 2)}`);
+                cartList.value = {...response.data}
+             //   getTotalPrice(cartList.value);
+            
+            // for (let i = 0 ; i < Object.keys(cartList.value).length; i++) {
+            //     console.log(`%%3%%  ${JSON.stringify(cartList.value[i].productList[0].price, null, 2)}`);
+            //     const cart = cartList.value[i];
+            //     console.log(`*************** ${cart.productList[0].price}`)
+            //     total += cart.productList[0].price; // 장바구니에 담긴 제품들 모두 합친 가격.
+            // }
+
+            // console.log(`TOTAL!!!!: ${total}` )
+            // console.log(`TOTAL9999999999999: ${this.total}` )
+            // this.total.value = total;
+
+            // list.forEach((cart) => {
+            //     console.log(`TOTAL: ${cart}`)
+            //     total += cart.value[0].productList[0].price; // 장바구니에 담긴 제품들 모두 합친 가격
+            // });
+            // this.total = total.value;
+
+            })
+            .finally(() => {
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+      };
+
+      getCartProductList();
+
+
+      const getTotalPrice = (cartListValue) => {
+        console.log(`GETTTTTTTTTT: ${Object.keys(cartListValue).length}`);
+        let total = 0;
+        for (let i = 0 ; i < Object.keys(cartListValue).length; i++) {
+            console.log(`GYEIGN: ${cartListValue[i].productList[0].price}`)
+                console.log(`%%3%%  ${JSON.stringify(cartListValue[i].productList[0].price, null, 2)}`);
+                const cart = cartListValue[i];
+                console.log(`*************** ${cart.productList[0].price}`)
+                total += cart.productList[0].price; // 장바구니에 담긴 제품들 모두 합친 가격.
+            }
+            console.log(`@@@@KANG@@@@ ${total}`);
+            return total;
+       // this.total.value = total;
       }
 
-      return count;
-    },
-    subTotal: function() {
-      var subTotal = 0;
 
-      for (var i = 0; i < this.products.length; i++) {
-        subTotal += this.products[i].quantity * this.products[i].price;
-      }
+      const checkedAll = (checked) => {
+        this.allChecked = checked
+            for (let i in this.cartList) {
+                this.cartList[i].selected = this.allChecked;
+            }
+      };
 
-      return subTotal;
-    },
-    discountPrice: function() {
-      return this.subTotal * this.discount / 100;
-    },
-    totalPrice: function() {
-      return this.subTotal - this.discountPrice + this.tax;
-    }
-  },
-  filters: {
-    currencyFormatted: function(value) {
-      return Number(value).toLocaleString("en-US", {
-        style: "currency",
-        currency: "USD"
-      });
-    }
-  },
-  methods: {
-    updateQuantity: function(index, event) {
-      var product = this.products[index];
-      var value = event.target.value;
-      var valueInt = parseInt(value);
+      const selected = (event) => {
+        for (let i in this.boardList) {
+                if(! this.boardList[i].selected) {
+                    this.allChecked = false;
+                    return;
+                } else {
+                    this.allChecked = true;
+                }
+            }
+      };
 
-      // Minimum quantity is 1, maximum quantity is 100, can left blank to input easily
-      if (value === "") {
-        product.quantity = value;
-      } else if (valueInt > 0 && valueInt < 100) {
-        product.quantity = valueInt;
-      }
-
-      this.$set(this.products, index, product);
+      return {
+        cart,
+        count,
+        minusBtn,
+        plusBtn,
+        deleteBtn,
+        getCartProductList,
+        cartList,
+        total,
+        selected,
+        checkedAll,
+        allChecked,
+        getTotalPrice,
+      };
     },
-    checkQuantity: function(index, event) {
-      // Update quantity to 1 if it is empty
-      if (event.target.value === "") {
-        var product = this.products[index];
-        product.quantity = 1;
-        this.$set(this.products, index, product);
-      }
-    },
-    removeItem: function(index) {
-      this.products.splice(index, 1);
-    },
-    checkPromoCode: function() {
-      for (var i = 0; i < this.promotions.length; i++) {
-        if (this.promoCode === this.promotions[i].code) {
-          this.discount = parseFloat(
-            this.promotions[i].discount.replace("%", "")
-          ); 
-          return;
-        }
-      }
-
-      alert("Sorry, the Promotional code you entered is not valid!");
-    }
+  };
+  </script>
+  
+  <style scoped>
+  .cart_table {
+    padding-top: 4.5rem;
   }
-}
-</script>
-
-<style scoped>
-* {
-  box-sizing: border-box;
-}
-
-html {
-  font-size: 12px;
-}
-
-body {
-  margin: 20px 0;
-  padding: 0;
-  font-family: arial, sans-serif;
-  overflow: scroll;
-}
-
-img {
-  max-width: 100%;
-  vertical-align: middle;
-  border-radius: 4px;
-}
-
-a {
-  text-decoration: none;
-  color: #333333;
-}
-
-a:hover {
-  color: #f58551;
-}
-
-button {
-  background-color: #16cc9b;
-  border: 2px solid #16cc9b;
-  color: #ffffff;
-  transition: all 0.25s linear;
-  cursor: pointer;
-}
-
-button::after {
-  position: relative;
-  right: 0;
-  content: " \276f";
-  transition: all 0.15s linear;
-}
-
-button:hover {
-  background-color: #f58551;
-  border-color: #f58551;
-}
-
-button:hover::after {
-  right: -5px;
-}
-
-button:focus {
-  outline: none;
-}
-
-ul {
-  padding: 0;
-  margin: 0;
-  list-style-type: none;
-}
-
-input {
-  transition: all 0.25s linear;
-}
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  margin: 0;
-}
-
-input {
-  outline: none;
-}
-
-.container {
-  width: 90%;
-  margin: 0 auto;
-  overflow: auto;
-}
-
-/* --- HEADER --- */
-header.container {
-  margin-bottom: 1.5rem;
-}
-
-header .breadcrumb {
-  color: #7d7d7d;
-}
-
-header .breadcrumb li {
-  float: left;
-  padding: 0 6px;
-  height: 20px;
-  line-height: 20px;
-}
-
-header .breadcrumb li:first-child {
-  padding-left: 2px;
-}
-
-header .breadcrumb li:not(:last-child)::after {
-  content: " \276f";
-  padding-left: 8px;
-}
-
-header .count {
-  float: right;
-  color: #333333;
-  height: 20px;
-  line-height: 20px;
-}
-
-/* --- PRODUCT LIST --- */
-.products {
-  border-top: 1px solid #ddd;
-}
-
-.products > li {
-  padding: 1rem 0;
-  border-bottom: 1px solid #ddd;
-}
-
-.row {
-  position: relative;
-  overflow: auto;
-  width: 100%;
-}
-
-.col,
-.quantity,
-.remove {
-  float: left;
-}
-
-.col.left {
-  width: 70%;
-}
-
-.col.right {
-  width: 30%;
-  position: absolute;
-  right: 0;
-  top: calc(50% - 30px);
-}
-
-.detail {
-  padding: 0 0.5rem;
-  line-height: 2.2rem;
-}
-
-.detail .name {
-  font-size: 1.2rem;
-}
-
-.detail .description {
-  color: #7d7d7d;
-  font-size: 1rem;
-}
-
-.detail .price {
-  font-size: 1.5rem;
-}
-
-.quantity,
-.remove {
-  width: 50%;
-  text-align: center;
-}
-
-.remove svg {
-  width: 60px;
-  height: 60px;
-}
-
-.quantity > input {
-  display: inline-block;
-  width: 60px;
-  height: 60px;
-  position: relative;
-  left: calc(50% - 30px);
-  background: #fff;
-  border: 2px solid #ddd;
-  color: #7f7f7f;
-  text-align: center;
-  font: 600 1.5rem Helvetica, Arial, sans-serif;
-}
-
-.quantity > input:hover,
-.quantity > input:focus {
-  border-color: #f58551;
-}
-
-.close {
-  fill: #7d7d7d;
-  transition: color 150ms linear, background-color 150ms linear,
-    fill 150ms linear, 150ms opacity linear;
-  cursor: pointer;
-}
-
-.close:hover {
-  fill: #f58551;
-}
-
-/* --- SUMMARY --- */
-.promotion,
-.summary,
-.checkout {
-  float: left;
-  width: 100%;
-  margin-top: 1.5rem;
-}
-
-.promotion > label {
-  float: left;
-  width: 100%;
-  margin-bottom: 1rem;
-}
-
-.promotion > input {
-  float: left;
-  width: 80%;
-  font-size: 1rem;
-  padding: 0.5rem 0 0.5rem 1.8rem;
-  border: 2px solid #16cc9b;
-  border-radius: 2rem 0 0 2rem;
-}
-
-.promotion:hover > input {
-  border-color: #f58551;
-}
-
-.promotion > button {
-  float: left;
-  width: 20%;
-  height: 2.4rem;
-  border-radius: 0 2rem 2rem 0;
-}
-
-.promotion:hover > button {
-  border-color: #f58551;
-  background-color: #f58551;
-}
-
-.promotion > button::after {
-  content: "\276f";
-  font-size: 1rem;
-}
-
-.summary {
-  font-size: 1.2rem;
-  text-align: right;
-}
-
-.summary ul li {
-  padding: 0.5rem 0;
-}
-
-.summary ul li span {
-  display: inline-block;
-  width: 30%;
-}
-
-.summary ul li.total {
-  font-weight: bold;
-}
-
-.checkout {
-  text-align: right;
-}
-
-.checkout > button {
-  font-size: 1.2rem;
-  padding: 0.8rem 2.8rem;
-  border-radius: 1.5rem;
-}
-
-.empty-product {
-  text-align: center;
-}
-
-.empty-product > button {
-  font-size: 1.3rem;
-  padding: 10px 30px;
-  border-radius: 5px;
-}
-
-/* --- SMALL SCREEN --- */
-@media all and (max-width: 599px) {
-  .thumbnail img {
-    display: none;
+  .cart_table > p {
+    margin-top: 60px;
+    font-size: 3rem;
+    border-bottom: 3px solid #87cefa;
+    padding-bottom: 10px;
+    padding: 0 0 10px 40px;
   }
-
-  .quantity > input {
-    width: 40px;
-    height: 40px;
-    left: calc(50% - 20px);
+  .cart_table  > p > img{
+    width: 70px;
+    height: 70px;
   }
-
-  .remove svg {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-/* --- MEDIUM & LARGE SCREEN --- */
-@media all and (min-width: 600px) {
-  html {
+  .cart_table .cart_list {
+    padding: 4rem;
     font-size: 14px;
   }
-
-  .container {
-    width: 75%;
-    max-width: 960px;
+  .cart_table .cart_list li > div {
+    display: inline-block;
+    position: relative;
   }
-
-  .thumbnail,
-  .detail {
+  .cart_table .cart_list li:first-of-type .del_btn {
+    float: right;
+    background: url(https://tictoc-web.s3.ap-northeast-2.amazonaws.com/web/img/icon/icon_trash.svg)
+      no-repeat 5px;
+    border: 1px solid #222;
+    margin-bottom: 1.5rem;
+    padding: 2px 5px 2px 25px;
+  }
+  .cart_table .cart_list li {
+    border-bottom: 1px solid #ccc;
+    padding: 15px 0;
+    position: relative;
+  }
+  .cart_table .cart_list li > div.item_detail span {
+    display: inline-block;
+    font-size: 20px;
+    width: 60%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin-left: 100px;
+    color: #666;
+  }
+  .cart_table .cart_list li > div.item_detail .txt {
+    margin-top: 1rem;
+  }
+  
+  
+  .cart_table .cart_list li > div.opt_info {
+    position: absolute;
+    right: 0;
+    top: 34%;
+    max-width: 39%;
+    width: 300px;
+  }
+  
+  .cart_table .cart_list li > div.opt_info .price_btn input {
+    font-size: 25px;
+    margin-left: -1px;
+    cursor: pointer;
+    color: #ccc;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    outline: 0;
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    background-size: cover !important;
+  }
+  .cart_table .cart_list li > div.opt_info .price_btn input.minus_btn {
+    background: url(https://tictoc-web.s3.ap-northeast-2.amazonaws.com/web/img/icon/btn_minus.svg)
+      no-repeat center;
+  }
+  .cart_table .cart_list li > div.opt_info .price_btn input.plus_btn {
+    background: url(https://tictoc-web.s3.ap-northeast-2.amazonaws.com/web/img/icon/btn_plus.svg)
+      no-repeat center;
+  }
+  .cart_table .cart_list li > div.opt_info .price_btn span.number .price_unit {
+    padding-bottom: 20px;
+    font-size: 25px;
+    background: #f5f5f5;
+    color: #666;
+    margin: 0 5px;
+  }
+  .cart_table .cart_list li > div.opt_info > div.price_unit div.price {
+    display: inline-block;
+    padding-bottom: 20px;
+  }
+  .cart_table .cart_list li > div.opt_info > div.price_btn > span.total_p text{
+    font-size: 22px;
+    /* float: right; */
+    margin-left: 20px;
+    padding-bottom: 20px;
+  }
+  .cart_table .cart_list li > div.opt_info > div.price_btn > span.total_p strong {
+    vertical-align: sub;
+    margin-right: 30px;
+    font-size: 20px;
+    padding-bottom: 20px;
+  }
+  .cart_table .cart_list li > div.opt_info > div.price_btn > span.total_p span {
+    width: 30px;
+    display: inline-block;
+    padding-bottom: 20px;
+  }
+  .cart_table .cart_list li > div.item_detail {
+    width: 60%;
+  }
+  
+  .cart_table .cart_list li > div.item_detail img {
+    max-width: 150px;
+    width: 25%;
+    margin: 0 5%;
     float: left;
   }
-
-  .thumbnail {
-    width: 35%;
+  .cart_table .cart_total_area {
+    padding: 0 4rem;
   }
-
-  .detail {
-    width: 65%;
+  .cart_table .cart_total_area > p {
+    font-size: 20px;
   }
-
-  .promotion,
-  .summary {
-    width: 50%;
+  .cart_table .cart_total_area .cart_total_price {
+    border: 2px solid #707070;
+    padding: 2rem;
+    margin: 2rem auto;
+    text-align: center;
   }
-
-  .checkout {
-    width: 100%;
+  .cart_table .cart_total_area .cart_total_price p {
+    display: inline-block;
+    text-align: left;
   }
-
-  .checkout,
-  .summary {
-    text-align: right;
+  .cart_table .cart_total_area .cart_total_price p > span {
+    width: 22px;
+    height: 22px;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 20px;
+    background-size: cover !important;
   }
-}
-
-/* --- LARGE SCREEN --- */
-@media all and (min-width: 992px) {
-  html {
-    font-size: 16px;
+  .plus_ic {
+    background: url(https://tictoc-web.s3.ap-northeast-2.amazonaws.com/web/img/icon/ic_plus_sqaure.svg);
   }
-}
-
-
-</style>
+  .equal_ic {
+    background: url(https://tictoc-web.s3.ap-northeast-2.amazonaws.com/web/img/icon/ic_equal_square.svg);
+  }
+  .cart_table .cart_total_area .cart_total_price p > strong {
+    display: inline-block;
+    margin-left: 10px;
+    margin: 0 5px 0 10px;
+    font-size: 30px;
+    vertical-align: unset;
+  }
+  .cart_table .btn_box {
+    padding: 4rem;
+    text-align: center;
+  }
+  .cart_table .btn_box .btn {
+    padding: 10px 0;
+    width: 24%;
+    margin: 0 1%;
+  }
+  .cart_table .btn_box .black-btn {
+    float: none;
+  }
+  </style>
