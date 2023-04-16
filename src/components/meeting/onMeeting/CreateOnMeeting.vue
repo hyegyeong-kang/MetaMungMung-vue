@@ -3,8 +3,8 @@
         <section data-viewname="DGroupBandCreateView" class="bandMake">
             <h2 class="gSrOnly">
                 모임 
-                <span v-if="status === 'create'">생성</span>
-                <span v-else>수정</span>
+                <span v-if="status === 'modify'">수정</span>
+                <span v-else>생성</span>
             </h2>
             <form class="_form" @submit.prevent="registerOnMeeting">
                 <fieldset>
@@ -119,7 +119,7 @@ export default {
     // emits: ['toggle-modal'],
     setup(props, {emit}){
         const router = useRouter();
-        const status = ref('create');
+        const status = ref('');
         const name = ref('');
         const introduction = ref('');
         const coverImg = ref('https://coresos-phinf.pstatic.net/a/2ih08a/c_b6hUd018adm1pd8bo8s7zqln_paxnin.jpg?type=cover_a640');
@@ -183,9 +183,7 @@ export default {
         }
 
         const cancel = () => {
-            router.push({
-                name: "OnMeeting"
-            });
+            router.go(-1);
         }
 
         const registerOnMeeting = () => {
