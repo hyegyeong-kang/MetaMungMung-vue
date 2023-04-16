@@ -13,12 +13,18 @@
 
                 <div>
                     <div>비밀번호</div>
-                    <input id="password" v-model="member.password" type="password" placeholder="비밀번호 입력" >
+                    <input id="password" v-model="member.password" type="password" placeholder="8자이상 16자 이하이며 대/소문자/숫자 1개 이상" @blur="passwordValid">
+                     <div v-if="!passwordValidFlag" style="color: #F55050;">
+                      유효하지 않은 비밀번호입니다.
+                    </div>
                 </div>
 
                 <div>
                     <div>비밀번호 확인</div>
-                    <input id="passwordCheck" type="password" placeholder="비밀번호 확인" >
+                    <input id="passwordCheck" v-model="passwordCheck" type="password" placeholder="비밀번호 확인" @blur="passwordCheckValid">
+                    <div v-if="!passwordCheckFlag" style="color: #F55050;">
+                      비밀번호가 동일하지 않습니다.
+                    </div>
                 </div>
 
                 <div>
@@ -38,6 +44,7 @@
                 </div>
 
                 <button type="submit" id="btnSave">저장하기</button>
+                <button type="submit" id="btnDelete">회원 탈퇴하기</button>
                 </div>
 
                 </form>
@@ -58,6 +65,27 @@ export default {
   setup() {
     const route = useRoute();
     const router = useRouter();
+
+    const passwordValidFlag = ref(true);
+    const passwordCheck = ref('');
+    const passwordCheckFlag = ref(true);
+
+    const passwordValid = () => {
+      if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$/.test(member.value.password)) {
+        passwordValidFlag.value = true
+      } else {
+        passwordValidFlag.value = false
+      }
+    }
+
+    const passwordCheckValid = () => {
+      if (member.value.password === passwordCheck.value) {
+        passwordCheckFlag.value = true
+      } else {
+        passwordCheckFlag.value = false
+      }
+    }
+
 
     const memberInfo = JSON.parse(sessionStorage.getItem("memberInfo"));
 
@@ -95,10 +123,16 @@ export default {
         console.log(member.value);
     };
 
+    
     return {
       memberInfo,
       member,
       modifyForm,
+      passwordValid,
+      passwordValidFlag,
+      passwordCheck,
+      passwordCheckValid,
+      passwordCheckFlag,
     };
   }
 }
