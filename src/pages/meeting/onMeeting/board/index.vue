@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import BoardList from '@/components/meeting/onMeeting/board/boardList-codepen.vue'
+import BoardList from '@/components/meeting/onMeeting/board/boardList.vue'
 export default {
   name: 'Service',
   components: {
