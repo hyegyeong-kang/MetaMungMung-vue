@@ -162,7 +162,7 @@ export default {
     };
 
     const submitOffMeetingForm = () => {
-      // console.log("제목!!! " + title.value);
+      console.log("제목!!! " + title.value);
       // console.log("위치!!!   " + props.currentLocation);
       // console.log("제한인원!!!  " + limit.value);
       // console.log("날짜!!! " + date.value);
