@@ -5,7 +5,7 @@
           <textarea
             placeholder="댓글을 입력하세요"
             v-model="context"
-            style="border: 1px solid;border-radius: 2em;color:#C0C0C0"
+            style="border: 1px solid;border-radius: 2em;color:#C0C0C0;"
             ></textarea>
       </span>
       <span>
