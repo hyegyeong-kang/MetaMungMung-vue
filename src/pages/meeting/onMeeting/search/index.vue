@@ -3,9 +3,9 @@
         <div class="container">
             <OnMeetingHeader @send-type="sendType" :isMain="isMain" :showLocation="true"/>
             <hr>
-            <OnMeetingCategory v-if="isSearch" :key="categoryKey"/>
+            <OnMeetingCategory v-if="isSearch" :key="categoryKey" @select-cate="selectCate"/>
             <hr>
-            <OnMeetingList @send-type="sendType" :isMain="isMain" :isSearch="isSearch" />
+            <OnMeetingList @send-type="sendType" :isMain="isMain" :isSearch="isSearch" :cate="cate"/>
         </div>
     </div>
 </template>
@@ -30,6 +30,7 @@ export default {
         const isMain = ref(true);
         const isSearch = ref(false);
         const categoryKey = ref(0);
+        const cate = ref('전체');
 
         watchEffect(() => {
             if(route.query.keywords != null){
@@ -55,12 +56,18 @@ export default {
             categoryKey.value += 1;
         }
 
+        const selectCate = (category) => {
+            cate.value = category;
+        }
+
         return{
             isMain,
             isSearch,
             categoryKey,
+            cate,
             sendType,
-            forceRender
+            forceRender,
+            selectCate
         }
     }
 }

@@ -45,13 +45,14 @@
 </template>
 
 <script>
-import {ref} from 'vue'
+import {ref, watchEffect} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 
 export default {
     props: {
         isMain: Boolean,
-        isSearch: Boolean
+        isSearch: Boolean,
+        cate: String
     },
     emits: ['send-type'],
     setup(props, {emit}){
@@ -73,6 +74,11 @@ export default {
                 onMeetingIdx: 4, onMeetName: '연지동 정보 공유방', category: '정보', introduction: '많이 들어오셔서 정보 공유해요.', thumbnail: 'https://pbs.twimg.com/media/FtwQHBhaQAEjpae?format=jpg&name=small', isPulic: '0', onMeetingAddr: '연지동', memberCnt: 1707, hostName: '전 설'
             }
         ]);
+
+        watchEffect(() => {
+            // 카테고리별 list 나오게
+            console.log(props.cate);
+        });
 
         const viewAll = () => {
             emit("send-type", "viewAll");

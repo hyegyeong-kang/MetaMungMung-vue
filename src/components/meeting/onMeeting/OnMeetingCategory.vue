@@ -30,7 +30,8 @@ export default {
     props:{
         isViewAll: Boolean
     },
-    setup(props){
+    emits: ['select-cate'],
+    setup(props, {emit}){
         const route = useRoute();
         const router = useRouter();
         const isActive = ref(false);
@@ -71,40 +72,41 @@ export default {
         }
 
         const viewSearchResult = (cate) => {
-            let searchKeyword = '';
-            if(Array.isArray(route.query.keywords)){
-                searchKeyword = route.query.keywords[0];
-            } else if(route.query){
-                searchKeyword = route.query.keywords;
-            }
+            // let searchKeyword = '';
+            // if(Array.isArray(route.query.keywords)){
+            //     searchKeyword = route.query.keywords[0];
+            // } else if(route.query){
+            //     searchKeyword = route.query.keywords;
+            // }
 
-            if(cate === '전체'){
-                router.push({
-                    name: 'OnMeetingSearch',
-                    query: {
-                        keywords: searchKeyword
-                    }
-                });
-            } 
-            else if(cate === searchKeyword){
-                router.push({
-                    name: 'OnMeetingSearch',
-                    query: {
-                        keywords: searchKeyword
-                    }
-                });
-            }
-            else{
-                router.push({
-                    name: 'OnMeetingSearch',
-                    query: {
-                        keywords: [
-                            searchKeyword,
-                            cate
-                        ]
-                    }
-                });
-            }
+            // if(cate === '전체'){
+            //     router.push({
+            //         name: 'OnMeetingSearch',
+            //         query: {
+            //             keywords: searchKeyword
+            //         }
+            //     });
+            // } 
+            // else if(cate === searchKeyword){
+            //     router.push({
+            //         name: 'OnMeetingSearch',
+            //         query: {
+            //             keywords: searchKeyword
+            //         }
+            //     });
+            // }
+            // else{
+            //     router.push({
+            //         name: 'OnMeetingSearch',
+            //         query: {
+            //             keywords: [
+            //                 searchKeyword,
+            //                 cate
+            //             ]
+            //         }
+            //     });
+            // }
+            emit('select-cate', cate);
         }
 
         return {
