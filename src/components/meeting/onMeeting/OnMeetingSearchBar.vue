@@ -25,7 +25,7 @@ export default {
         const init = () => {
             if(Array.isArray(route.query.keywords) && route.query.keywords[0] === ''){
                 searchKeyword.value = '';
-            } else{
+            } else if(route.query.keywords != null){
                 searchKeyword.value = route.query.keywords;
             }
         }

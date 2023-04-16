@@ -27,7 +27,10 @@ import {ref} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 
 export default {
-    setup(){
+    props:{
+        isViewAll: Boolean
+    },
+    setup(props){
         const route = useRoute();
         const router = useRouter();
         const isActive = ref(false);
@@ -41,42 +44,66 @@ export default {
                 selectElem.classList.add('active');
                 prevIdx = idx;
 
-                let searchKeyword = '';
-                if(Array.isArray(route.query.keywords)){
-                    searchKeyword = route.query.keywords[0];
-                } else{
-                    searchKeyword = route.query.keywords;
-                }
 
-                if(selectElem.innerText === '전체'){
-                    router.push({
-                        name: 'OnMeetingSearch',
-                        query: {
-                            keywords: searchKeyword
-                        }
-                    });
-                } 
-                else if(selectElem.innerText === searchKeyword){
-                    router.push({
-                        name: 'OnMeetingSearch',
-                        query: {
-                            keywords: searchKeyword
-                        }
-                    });
+                if(props.isViewAll){
+                    viewCate(selectElem.innerText);
                 }
                 else{
-                    router.push({
-                        name: 'OnMeetingSearch',
-                        query: {
-                            keywords: [
-                                searchKeyword,
-                                selectElem.innerText
-                            ]
-                        }
-                    });
+                    viewSearchResult(selectElem.innerText);
                 }
+            }
+        }
 
-                
+        const viewCate = (cate) => {
+            if(cate === '전체'){
+                router.push({
+                    name: 'OnMeeting'
+                });
+            }
+            else{
+                router.push({
+                    name: 'OnMeeting',
+                    query: {
+                        category: cate
+                    }
+                });
+            }
+        }
+
+        const viewSearchResult = (cate) => {
+            let searchKeyword = '';
+            if(Array.isArray(route.query.keywords)){
+                searchKeyword = route.query.keywords[0];
+            } else if(route.query){
+                searchKeyword = route.query.keywords;
+            }
+
+            if(cate === '전체'){
+                router.push({
+                    name: 'OnMeetingSearch',
+                    query: {
+                        keywords: searchKeyword
+                    }
+                });
+            } 
+            else if(cate === searchKeyword){
+                router.push({
+                    name: 'OnMeetingSearch',
+                    query: {
+                        keywords: searchKeyword
+                    }
+                });
+            }
+            else{
+                router.push({
+                    name: 'OnMeetingSearch',
+                    query: {
+                        keywords: [
+                            searchKeyword,
+                            cate
+                        ]
+                    }
+                });
             }
         }
 

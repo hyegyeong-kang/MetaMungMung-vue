@@ -1,10 +1,10 @@
 <template>
     <div class="services_section layout_padding">
         <div class="container">
-            <MeetingHeader @send-type="sendType" :isMain="isMain" :showLocation="true"/>
+            <OnMeetingHeader @send-type="sendType" :isMain="isMain" :showLocation="true"/>
             <hr>
             <MyOnMeetingList v-if="isMain"/>
-            <OnMeetingCategory v-else :key="categoryKey"/>
+            <OnMeetingCategory v-else :key="categoryKey" :isViewAll="isViewAll"/>
             <hr>
             <OnMeetingList @send-type="sendType" :isMain="isMain" :isSearch="isSearch" />
         </div>
@@ -12,9 +12,8 @@
 </template>
 
 <script>
-import {ref, watchEffect} from 'vue';
-import {useRoute} from 'vue-router';
-import MeetingHeader from '../../../components/meeting/onMeeting/OnMeetingHeader.vue';
+import {ref} from 'vue';
+import OnMeetingHeader from '../../../components/meeting/onMeeting/OnMeetingHeader.vue';
 import MyOnMeetingList from '../../../components/meeting/onMeeting/MyOnMeetingList.vue'
 import OnMeetingList from '../../../components/meeting/onMeeting/OnMeetingList.vue'
 import OnMeetingCategory from '../../../components/meeting/onMeeting/OnMeetingCategory.vue';
@@ -24,20 +23,13 @@ export default {
         MyOnMeetingList,
         OnMeetingList,
         OnMeetingCategory,
-        MeetingHeader
+        OnMeetingHeader
     },
     setup(){
-        const route = useRoute();
         const isMain = ref(true);
         const isSearch = ref(false);
+        const isViewAll = ref(false);
         const categoryKey = ref(0);
-
-        watchEffect(() => {
-            if(route.query.keywords != null){
-                isMain.value = false;
-                isSearch.value = true;
-            }
-        });
 
         const sendType = (type) => {
             console.log("부모가 받았어!");
@@ -45,12 +37,15 @@ export default {
             if(type === 'viewAll'){
                 isMain.value = false;
                 isSearch.value = false;
+                isViewAll.value = true;
             } else if(type === 'search'){
                 isMain.value = false;
                 isSearch.value = true;
+                isViewAll.value = false;
             } else{
                 isMain.value = true;
                 isSearch.value = false;
+                isViewAll.value = false;
             }
             forceRender();
         }
@@ -62,6 +57,7 @@ export default {
         return{
             isMain,
             isSearch,
+            isViewAll,
             categoryKey,
             sendType,
             forceRender
