@@ -25,7 +25,7 @@
                             </strong>
                             <p class="pSubTxt">{{ onMeeting.introduction }}</p>
 
-                            <router-link v-if="isMain" :to="{name: 'OnMeeting', query: {keywords: onMeeting.category}}" class="moreBandLink _tagLink"><strong>{{ onMeeting.category }}</strong> 모임 더보기</router-link>
+                            <router-link v-if="isMain" :to="{name: 'OnMeetingSearch', query: {keywords: onMeeting.category}}" class="moreBandLink _tagLink"><strong>{{ onMeeting.category }}</strong> 모임 더보기</router-link>
                             <p v-else class="member">
                                 <span class="total">멤버 <strong class="totalNumber">{{ onMeeting.memberCnt }}</strong></span>
                                 <span class="leader">리더 <strong class="leagerName">{{ onMeeting.hostName }}</strong></span>
@@ -46,7 +46,7 @@
 
 <script>
 import {ref} from 'vue'
-import {useRouter} from 'vue-router'
+import {useRoute, useRouter} from 'vue-router'
 
 export default {
     props: {
@@ -55,6 +55,7 @@ export default {
     },
     emits: ['send-type'],
     setup(props, {emit}){
+        const route = useRoute();
         const router = useRouter();
         const searchResultCnt = ref(0);
         const onMeetingList = ref([
@@ -75,7 +76,7 @@ export default {
 
         const viewAll = () => {
             emit("send-type", "viewAll");
-            // router.push({name: "OnMeetingSearch"});
+            router.push({name: "OnMeeting"});
         }
         
         return{

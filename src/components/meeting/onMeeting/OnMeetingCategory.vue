@@ -24,9 +24,12 @@
 
 <script>
 import {ref} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
 
 export default {
     setup(){
+        const route = useRoute();
+        const router = useRouter();
         const isActive = ref(false);
         let prevIdx = 0;
 
@@ -34,8 +37,46 @@ export default {
             const parent = document.getElementsByClassName("searchedSortBand")[0];
             if(idx != prevIdx){
                 parent.children[prevIdx].classList.remove('active');
-                parent.children[idx].classList.add('active');
+                const selectElem = parent.children[idx];
+                selectElem.classList.add('active');
                 prevIdx = idx;
+
+                let searchKeyword = '';
+                if(Array.isArray(route.query.keywords)){
+                    searchKeyword = route.query.keywords[0];
+                } else{
+                    searchKeyword = route.query.keywords;
+                }
+
+                if(selectElem.innerText === '전체'){
+                    router.push({
+                        name: 'OnMeetingSearch',
+                        query: {
+                            keywords: searchKeyword
+                        }
+                    });
+                } 
+                else if(selectElem.innerText === searchKeyword){
+                    router.push({
+                        name: 'OnMeetingSearch',
+                        query: {
+                            keywords: searchKeyword
+                        }
+                    });
+                }
+                else{
+                    router.push({
+                        name: 'OnMeetingSearch',
+                        query: {
+                            keywords: [
+                                searchKeyword,
+                                selectElem.innerText
+                            ]
+                        }
+                    });
+                }
+
+                
             }
         }
 

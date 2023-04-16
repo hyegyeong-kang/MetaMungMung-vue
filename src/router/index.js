@@ -10,6 +10,8 @@ import RegisterModal from '../pages/meeting/onMeeting/board/index.vue';
 import ProductList from "../pages/store/product/index.vue";
 import ProductDetail from "../pages/store/product/detail/_id.vue";
 import ProductReviews from "../pages/store/product/review/index.vue";
+import OnMeetingDetail from "../pages/meeting/onMeeting/_id.vue";
+import OnMeetingSearch from "../pages/meeting/onMeeting/search/index.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -45,13 +47,13 @@ const router = createRouter({
       component: OnMeeting,
     },
     {
-      path: '/onMeeting/create',
-      name: 'OnMeetingCreate',
+      path: "/onMeeting/create",
+      name: "OnMeetingCreate",
       component: OnMeetingCreate
     },
     {
-      path: '/onMeeting/board',
-      name: 'RegisterModal',
+      path: "/onMeeting/board",
+      name: "RegisterModal",
       component: RegisterModal
     },
     {
@@ -69,7 +71,20 @@ const router = createRouter({
       name: "ProductReviews",
       component: ProductReviews,
     },
+    {
+      path: "/onMeeting/:id",
+      name: "OnMeetingDetail",
+      component: OnMeetingDetail
+    },
+    {
+      path: "/onMeeting/search",
+      name: "OnMeetingSearch",
+      component: OnMeetingSearch
+    }
   ],
+  scrollBehavior(){
+    return { top: 0 }
+  },
 });
 
 export default router;
