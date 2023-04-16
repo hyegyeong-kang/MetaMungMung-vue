@@ -24,12 +24,18 @@
 
                 <div>
                     <div>비밀번호</div>
-                    <input id="password" v-model="member.password" type="password" placeholder="비밀번호 입력" required>
+                    <input id="password" v-model="member.password" type="password" placeholder="8자이상 16자 이하이며 대/소문자/숫자 1개 이상" @blur="passwordValid">
+                     <div v-if="!passwordValidFlag" style="color: #F55050;">
+                      유효하지 않은 비밀번호입니다.
+                    </div>
                 </div>
 
                 <div>
                     <div>비밀번호 확인</div>
-                    <input id="passwordCheck" v-model="member.passwordCheck" type="passwordCheck" placeholder="비밀번호 확인" required>
+                    <input id="passwordCheck" v-model="passwordCheck" type="password" placeholder="비밀번호 확인" @blur="passwordCheckValid">
+                    <div v-if="!passwordCheckFlag" style="color: #F55050;">
+                      비밀번호가 동일하지 않습니다.
+                    </div>
                 </div>
 
                 <div>
@@ -76,6 +82,7 @@
 
         </div>
     </div>
+    
 </template>
 
 <script>
@@ -99,6 +106,26 @@ export default {
       address1: '',
       address2:''
     });
+
+    const passwordValidFlag = ref(true);
+    const passwordCheck = ref('');
+    const passwordCheckFlag = ref(true);
+
+    const passwordValid = () => {
+      if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$/.test(member.value.password)) {
+        passwordValidFlag.value = true
+      } else {
+        passwordValidFlag.value = false
+      }
+    }
+
+    const passwordCheckValid = () => {
+      if (member.value.password === passwordCheck.value) {
+        passwordCheckFlag.value = true
+      } else {
+        passwordCheckFlag.value = false
+      }
+    }
 
     console.log(member.value.birth)
 
@@ -147,6 +174,11 @@ export default {
       member,
       signupForm,
       idCheck,
+      passwordValid,
+      passwordValidFlag,
+      passwordCheck,
+      passwordCheckValid,
+      passwordCheckFlag,
     };
   }
 }
