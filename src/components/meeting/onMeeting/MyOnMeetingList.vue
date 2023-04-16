@@ -24,7 +24,7 @@
                 <li v-for="onMeet in myOnMeetings" :key="onMeet.id" class="bandCardItem">
                     <div class="uCover -main">
                         <div class="bandInner">
-                            <a href="" class="bandCover _link">
+                            <router-link :to="{name: 'OnMeetingDetail', params: {id: onMeet.id}}" class="bandCover _link">
                                 <div class="cover">
                                     <div class="uCoverImage -border -w186 ">
                                         <span class="coverInner">
@@ -42,7 +42,7 @@
                                         
                                     </span>
                                 </div>    
-                            </a>
+                            </router-link>
                         </div>
                     </div>
                 </li>

@@ -198,7 +198,7 @@ export default {
 
             const locPosition = kangFunc();
             // 현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
-            searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+            // searchAddrFromCoords(map.getCenter(), displayCenterInfo);
 
             // 지도를 클릭했을 때 클릭 위치 좌표에 대한 주소정보를 표시하도록 이벤트를 등록합니다
             kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
@@ -227,10 +227,10 @@ export default {
                 });
             });
 
-            // 중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
-            kakao.maps.event.addListener(map, 'idle', function() {
-                searchAddrFromCoords(map.getCenter(), displayCenterInfo);
-            });
+            // // 중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
+            // kakao.maps.event.addListener(map, 'idle', function() {
+            //     searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+            // });
 
             function searchAddrFromCoords(coords, callback) {
                 // 좌표로 행정동 주소 정보를 요청합니다
@@ -242,20 +242,20 @@ export default {
                 geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
             }
 
-            // 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
-            function displayCenterInfo(result, status) {
-                if (status === kakao.maps.services.Status.OK) {
-                    var infoDiv = document.getElementById('centerAddr');
+            // // 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
+            // function displayCenterInfo(result, status) {
+            //     if (status === kakao.maps.services.Status.OK) {
+            //         var infoDiv = document.getElementById('centerAddr');
 
-                    for(var i = 0; i < result.length; i++) {
-                        // 행정동의 region_type 값은 'H' 이므로
-                        if (result[i].region_type === 'H') {
-                            infoDiv.innerHTML = result[i].address_name;
-                            break;
-                        }
-                    }
-                }    
-            }
+            //         for(var i = 0; i < result.length; i++) {
+            //             // 행정동의 region_type 값은 'H' 이므로
+            //             if (result[i].region_type === 'H') {
+            //                 infoDiv.innerHTML = result[i].address_name;
+            //                 break;
+            //             }
+            //         }
+            //     }    
+            // }
 
             // 지도 위에 표시되고 있는 마커를 모두 제거합니다
             function removeMarker() {
@@ -552,7 +552,7 @@ export default {
     border: 1px solid hsl(0, 0%, 90%);
     padding: 0.4rem 0.4rem;
     max-width: 100%;
-    color: white;
+    background: white;
 }
 .topInputSearch{
     width: 10%;

@@ -2,18 +2,19 @@
     <main id="content" data-uiselector="regionContent" role="main">
         <section data-viewname="DGroupBandCreateView" class="bandMake">
             <h2 class="gSrOnly">
-                모임 생성
+                모임 
+                <span v-if="status === 'create'">생성</span>
+                <span v-else>수정</span>
             </h2>
             <form class="_form" @submit.prevent="registerOnMeeting">
                 <fieldset>
                     <div class="makeCover">
-                        <label class="title" for="ex_name">모임 이름(최대 50자)</label>
-                        <p class="err">{{nameMessage}}</p>
+                        <label class="title" for="ex_name">모임 이름(최대 10자)</label>
                         <div class="uInput -simpleLine inputBand">
-                            <input value="" type="text" class="_inputBandName" id="ex_name" maxlength="20" placeholder="모임 이름을 입력하세요" @change="inputLengthCheck" required>
+                            <input @value="name" type="text" class="_inputBandName" id="ex_name" maxlength="10" placeholder="모임 이름을 입력하세요" required>
                         </div>
 
-                        <AddAddressModal v-if="isOpen" @close-req="closeModal" @send-addr="sendAddr" />
+                        <AddAddressModal v-if="isOpen" @close-req="toggleMap" @send-addr="sendAddr" />
 
                         <div class="coverSelect">
                             <div class="mainCover">
@@ -24,26 +25,26 @@
                                 </span>
                             </div>
 
-                            <select id="cateSelect">
-                                <option selected>카테고리 선택</option>
-                                <option>소형견</option>
-                                <option>중형견</option>
-                                <option>대형견</option>
-                                <option>일상</option>
-                                <option>취미</option>
-                                <option>정보</option>
+                            <select id="cateSelect" required>
+                                <option value="">카테고리 선택</option>
+                                <option value="소형견">소형견</option>
+                                <option value="중형견">중형견</option>
+                                <option value="대형견">대형견</option>
+                                <option value="일상">일상</option>
+                                <option value="취미">취미</option>
+                                <option value="정보">정보</option>
                             </select>
 
                             <div class="makeType">
                                 <h2 class="title">모임 공개</h2>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                    <input class="form-check-input" type="radio" name="private" id="flexRadioDefault1">
                                     <label class="form-check-label" for="flexRadioDefault1">
                                         비공개
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                                    <input class="form-check-input" type="radio" name="public" id="flexRadioDefault2" checked>
                                     <label class="form-check-label" for="flexRadioDefault2">
                                         공개
                                     </label>
@@ -78,7 +79,7 @@
                         <div>
                             <h3 class="title" style="margin-top: 20px;padding-bottom:0">모임 소개글</h3>
                             <div class="uTextarea">
-                                <textarea class="_introDescription" id="bandIntroduce" cols="30" rows="10" maxlength="500" placeholder="모임 소개글을 입력하세요." style="height:100%"></textarea>
+                                <textarea class="_introDescription" id="bandIntroduce" cols="30" rows="10" maxlength="500" placeholder="모임 소개글을 입력하세요." style="height:100%" v-model="introduction"></textarea>
                                 <span class="border"></span>
                             </div>
                         </div>
@@ -86,7 +87,7 @@
                         <div class="introOption _locationButtonWrapper" style="display: flex;">
                             <div class="introOptionBox">
                                 <div class="addressText">
-                                    <button type="button" class="textButton _btnSelectLocation" @click="openMap">{{address}}</button>
+                                    <button type="button" class="textButton _btnSelectLocation" @click="toggleMap">{{address}}</button>
                                 </div>
                             </div>
                         </div>
@@ -105,16 +106,22 @@
 
 <script>
 import AddAddressModal from './modal/AddAddressModal.vue';
-import {ref, reactive} from 'vue';
+import {ref, reactive, watchEffect} from 'vue';
 import {useRouter} from 'vue-router';
 
 export default {
     components:{
         AddAddressModal
     },
-    emits: ['toggle-modal'],
+    props:{
+        status: String
+    },
+    // emits: ['toggle-modal'],
     setup(props, {emit}){
         const router = useRouter();
+        const status = ref('create');
+        const name = ref('');
+        const introduction = ref('');
         const coverImg = ref('https://coresos-phinf.pstatic.net/a/2ih08a/c_b6hUd018adm1pd8bo8s7zqln_paxnin.jpg?type=cover_a640');
         const images = reactive([{
             id: 1,
@@ -134,9 +141,12 @@ export default {
         }]);
         let imgValidation = true;
         const imgMessage = ref('');
-        const nameMessage = ref('');
         const isOpen = ref(false);
         const address = ref('주소를 등록해주세요.');
+
+        watchEffect(() => {
+            status.value = props.status;
+        });
 
         const upload = (e) => {
             const file = e.target.files[0];
@@ -148,66 +158,34 @@ export default {
                 let url = URL.createObjectURL(file);
                 coverImg.value = url;
             }
-            else{
-                
-            }
         }
 
         const selectImg = (id) => {
             coverImg.value = images[id - 1].src;
         }
 
-        const openMap = () => {
+        const toggleMap = () => {
             isOpen.value = !isOpen.value;
-            emit('toggle-modal', isOpen.value);
+            // emit('toggle-modal', isOpen.value);
         }
 
-        const closeModal = (req) => {
-            isOpen.value = req;
-            emit('toggle-modal', isOpen.value);
-        }
+        // const closeModal = () => {
+        //     isOpen.value = !isOpen.value;
+        //     // emit('toggle-modal', isOpen.value);
+        // }
 
         const sendAddr = (addr) => {
             address.value = addr;
         }
 
         const check = () => {
-            if(document.getElementById("ex_name").value === ''){
-                nameMessage.value = '모임 이름을 입력해주세요.';
-            }
+            introduction.value = introduction.value.split('\n').join('<br>');
         }
 
         const cancel = () => {
             router.push({
                 name: "OnMeeting"
             });
-        }
-
-        // maxlength 한글 처리 이슈 해결방법 https://jeonjin.tistory.com/499
-        const inputLengthCheck = (e) => {
-            nameMessage.value = '';
-            var inputText = e.currentTarget.value;
-            var inputMaxLength = e.currentTarget.getAttribute("maxlength");
-            var j = 0;
-            var count = 0;
-
-            for(var i = 0;i < inputText.length;i++) { 
-                let val = encodeURI(inputText.charAt(i)).length; 
-
-                if(val == 6){
-                    j++;
-                }
-
-                j++;
-
-                if(j <= inputMaxLength){
-                    count++;
-                }
-            }
-
-            if(j > inputMaxLength){
-                e.currentTarget.setAttribute('value', inputText.substr(0, count));
-            }
         }
 
         const registerOnMeeting = () => {
@@ -217,20 +195,22 @@ export default {
         }
 
         return{
+            status,
+            name,
+            introduction,
             coverImg,
             images,
             imgMessage,
-            nameMessage,
             isOpen,
             address,
             upload,
             selectImg,
-            openMap,
-            closeModal,
+            toggleMap,
+            // openMap,
+            // closeModal,
             sendAddr,
             check,
             cancel,
-            inputLengthCheck,
             registerOnMeeting
         }
     }
@@ -658,8 +638,8 @@ button.uButton {
     line-height: 1;
 }
 .uButton.-disabled:not(.-text), .uButton[data-status=off]:not(.-text), .uButton[disabled]:not(.-text) {
-    color: #ECEEEF!important;
-    background: #C9C9CA!important;
+    color: #F5F6F8!important;
+    background: #addaed!important;
 }
 .bandMake .btnFooter button {
     margin: 0 3px;
