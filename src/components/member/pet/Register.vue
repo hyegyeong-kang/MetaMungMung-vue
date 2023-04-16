@@ -73,7 +73,7 @@ export default {
     const inputImage = ref(null);
     const previewSrc = ref('');
     const defaultImage = () => {
-        previewSrc.value = require(`@/assets/images/common/pet-image.png`);
+        previewSrc.value = require(`@/assets/images/member/pet-image.png`);
     }
 
     function readImage() {
