@@ -259,11 +259,11 @@
                 <div>
                     <CreateReply/>  
                 </div>
-                  <!-- <BoardDetail @close="closeBoardModal" v-if="boardModal"/> -->
-                  <BoardDetail ref="boardDetail" @close="closeBoardModal" />
          </div>
+          <BoardDetail ref="boardDetail" @close="closeBoardModal" />
         </div>
-        <div class="tweet" @click="openBoardModal">
+        <!-- 하나의 트윗이 끝나는 곳-->
+        <div class="tweet">
         <div class="left">
           <img
             src="https://yt3.ggpht.com/-uJh4oSQAwak/AAAAAAAAAAI/AAAAAAAAAAA/AMGKfKvDP3w/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"
@@ -274,7 +274,7 @@
             <p>강혜경</p>
             <time>11m</time>
           </div>
-          <div class="message">
+          <div class="message" @click="openBoardModal">
             <p>!!!!이곳에 게시물 내용이 들어가면 됩니다!!!!</p>
             <img
               src="https://img.dogpre.com/web/dogpre/event/popular_keyword_theme/43_pc_main_page_banner_0036.jpg"

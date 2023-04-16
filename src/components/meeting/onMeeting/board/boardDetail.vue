@@ -1,19 +1,22 @@
 <template>
 <!-- <form @submit.prevent="submitBoardDetailForm" style="width:50px;height:50px"> -->
-  <div class="modal" >
-        <span @click="closeModalFunc" class="close" id="closeModal"
-          >&times;</span
-        >
-        <div class="tweet">
+  <div class="modal">
+      <div class="tweet">
+        <div class="tweet-content">
         <div class="left">
           <img
             src="https://yt3.ggpht.com/-uJh4oSQAwak/AAAAAAAAAAI/AAAAAAAAAAA/AMGKfKvDP3w/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"
           />
         </div>
         <div class="right">
-          <div class="info">
+          <div class="info" style="position:relative">
             <p>강혜경</p>
             <time>11m</time>
+            <span @click="closeModalFunc" class="close" id="closeModal" style="position: absolute;
+            top: 0;
+            right: 0;
+            padding: 20px;"
+            >&times;</span> 
           </div>
           <div class="message">
             <p>!!!!이곳에 게시물 내용이 들어가면 됩니다!!!!</p>
@@ -31,22 +34,29 @@
               />2(댓글 갯수)
             </button>
           </div>
-                <div>
-                    <ReplyList/>
-                </div>
-                <div>
-                    <CreateReply/>  
-                </div>
-         </div>
+          <div>
+              <ReplyList/>
+          </div>
+          <div>
+              <CreateReply/>  
+          </div>
         </div>
+        </div>
+      </div>
   </div>
 <!-- </form> -->
 </template>
 
 <script>
 import { useRouter } from "vue-router";
+import CreateReply from "@/components/meeting/onMeeting/board/reply/createReply.vue";
+import ReplyList from "@/components/meeting/onMeeting/board/reply/replyList.vue";
 export default {
   name: "BoardDetail",
+  components: {
+      ReplyList,
+      CreateReply,
+  },
   setup() {
     const router = useRouter();
 
@@ -854,6 +864,31 @@ header.nav-closed {
       }
     }
   }
+}
+.modal{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+.tweet {
+    background-color : $red;
+    position: relative;
+    background-repeat: no-repeat;
+    overflow-x: hidden;
+    z-index: 500;
+}
+.tweet-content {
+    opacity: 1;
+    background-color: white;
+    position: relative;
+    max-width: 80%;
+    margin: auto;
+    margin-top: 30px;
+    padding: 20px;
+    min-height: 500px;
+    z-index: 1000;
 }
 
 
