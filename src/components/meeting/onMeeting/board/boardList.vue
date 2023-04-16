@@ -226,7 +226,7 @@
 
       <!--게시물 올라오는 곳 --> <!--이게 반복되면 되는 것임!! -->
       <!-- 이거 클릭하면 해당 게시물 디테일 나오면 됨..--> 
-      <div class="tweet" @click="openBoardModal">
+      <div class="tweet">
         <div class="left">
           <img
             src="https://yt3.ggpht.com/-uJh4oSQAwak/AAAAAAAAAAI/AAAAAAAAAAA/AMGKfKvDP3w/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"
@@ -237,7 +237,7 @@
             <p>강혜경</p>
             <time>11m</time>
           </div>
-          <div class="message">
+          <div class="message" @click="openBoardModal">
             <p>!!!!이곳에 게시물 내용이 들어가면 됩니다!!!!</p>
             <img
               src="https://img.dogpre.com/web/dogpre/event/popular_keyword_theme/43_pc_main_page_banner_0036.jpg"
@@ -259,9 +259,8 @@
                 <div>
                     <CreateReply/>  
                 </div>
-
-                    <!-- <BoardDetail @close="closeBoardModal" v-if="boardModal"/> -->
-                    <BoardDetail ref="boardDetail" @close="closeBoardModal" />
+                  <!-- <BoardDetail @close="closeBoardModal" v-if="boardModal"/> -->
+                  <BoardDetail ref="boardDetail" @close="closeBoardModal" />
          </div>
         </div>
         <div class="tweet" @click="openBoardModal">
