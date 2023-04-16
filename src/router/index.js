@@ -3,10 +3,11 @@ import Home from "../pages/index.vue";
 import Signup from "../pages/member/signup.vue";
 import Login from "../pages/member/login.vue";
 import Modify from "../pages/member/modify.vue";
+import Register from "../pages/member/pet/register.vue";
+import MyPage from "../pages/member/myPage.vue";
 import OffMeeting from "../pages/meeting/offMeeting/index.vue";
 import OnMeeting from "../pages/meeting/onMeeting/index.vue";
-import OnMeetingCreate from "../pages/meeting/onMeeting/create/index.vue";
-import RegisterModal from "../pages/meeting/onMeeting/board/index.vue";
+import RegisterModal from '../pages/meeting/onMeeting/board/index.vue'
 import ProductPage from "../pages/store/product/index.vue";
 import ProductDetail from "../pages/store/product/detail/_id.vue";
 import ProductReviews from "../pages/store/product/review/index.vue";
@@ -35,6 +36,16 @@ const router = createRouter({
       component: Modify,
     },
     {
+      path: "/members/pet/register",
+      name: "Register",
+      component: Register,
+    },
+    {
+      path: "/members/myPage",
+      name: "MyPage",
+      component: MyPage,
+    },
+    {
       path: "/offMeeting",
       name: "OffMeeting",
       component: OffMeeting,
@@ -45,14 +56,9 @@ const router = createRouter({
       component: OnMeeting,
     },
     {
-      path: "/onMeeting/create",
-      name: "OnMeetingCreate",
-      component: OnMeetingCreate,
-    },
-    {
-      path: "/onMeeting/board",
-      name: "RegisterModal",
-      component: RegisterModal,
+      path: '/onMeeting/board',
+      name: 'RegisterModal',
+      component: RegisterModal
     },
     {
       path: "/products",
@@ -60,12 +66,12 @@ const router = createRouter({
       component: ProductPage,
     },
     {
-      path: "/product/:id",
+      path: "/products/:id",
       name: "ProductDetail",
       component: ProductDetail,
     },
     {
-      path: "/product/:id/reviews",
+      path: "/products/:id/reviews",
       name: "ProductReviews",
       component: ProductReviews,
     },
