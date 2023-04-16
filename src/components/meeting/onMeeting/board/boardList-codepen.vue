@@ -190,7 +190,7 @@
   <div id="container" class="wrapper nav-closed">
     <div id="timeline">
       <!-- 게시물 글 작성하는 곳  -->
-      <div class="new-tweet">
+      <div class="new-tweet" style="border: 1px solid;border-radius: 2em;color:	#C0C0C0">
         <textarea placeholder="새로운 소식을 남겨보세요."></textarea>
         <div class="registerModal">
           <RegisterModal @close="closeModal" v-if="modal" />
@@ -292,12 +292,17 @@
         </div>
       </div>
       <footer>
-        <i class="fab fa-twitter"></i>
-        <button>Load More</button>
+        <!-- <i class="fab fa-twitter"></i>
+        <button>Load More!!!</button> -->
       </footer>
     </div>
     <div id="right">
-      <div class="search-container">
+      <div class="search-container" style="border: 1px solid;border-radius: 2em;color:	#C0C0C0">
+        <div class="search-input">
+                <img src="@/assets/images/onMeeting/search-icon.png">
+				<input id="search" type="search" placeholder="글 내용 검색" autocomplete="off">
+				<!-- <i class="fas fa-search"></i> -->
+		</div>
         <div class="search-results">
           <div class="result">
             <p>youtube</p>
@@ -813,12 +818,12 @@ header.nav-closed {
     background: var(--bg3);
     &:focus,
     &:not(:placeholder-shown) {
-      height: 100px;
+      height: 200px;
       cursor: text;
-      ~ .btns {
-        height: 100%;
-        padding: 0 15px 15px;
-      }
+    //   ~ .btns {
+    //     height: 100%;
+    //     padding: 0 15px 15px;
+    //   }
     }
   }
   .btns {
@@ -831,6 +836,7 @@ header.nav-closed {
     .btn {
       margin-right: 10px;
       button {
+        margin-bottom: 50px;
         padding: 0;
         padding: 0;
         display: block;
@@ -854,7 +860,7 @@ header.nav-closed {
           width: auto;
           border-radius: 3px;
           padding: 0 10px;
-          background: $blue;
+          background: #87cefa;
           color: #fff;
           &:hover {
             background: darken($blue, 3%);
@@ -1024,6 +1030,14 @@ header.nav-closed {
       pointer-events: none;
       user-select: none;
       color: var(--color);
+    }
+    img {
+        position: absolute;
+        display: flex;
+        width: 20px;
+        height: 20px;
+        margin-top: 17px;
+        margin-left: 20px;
     }
   }
   .search-results {
