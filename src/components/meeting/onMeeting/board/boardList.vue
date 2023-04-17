@@ -48,9 +48,7 @@
   <div id="more-popout" class="nav-closed">
     <div class="nav-item">
       <div class="icon-container">
-        <img
-          src="https://pbs.twimg.com/profile_images/1153329245248053248/xONN2R7u_400x400.png"
-        />
+
       </div>
       <div class="nav-text">
         <p>Ian | Gibbu</p>
@@ -327,45 +325,35 @@
           </div>
           <hr />
           <div class="result">
-            <img
-              src="https://pbs.twimg.com/profile_images/1042095789894295552/2xCUFmgU_normal.jpg"
-            />
+
             <div class="right">
               <p>YouTube Gaming</p>
               <span>@YouTubeGaming</span>
             </div>
           </div>
           <div class="result">
-            <img
-              src="https://pbs.twimg.com/profile_images/1148327441527689217/1QpS06D6_normal.png"
-            />
+
             <div class="right">
               <p>YouTube</p>
               <span>@YouTube</span>
             </div>
           </div>
           <div class="result">
-            <img
-              src="https://pbs.twimg.com/profile_images/1148364735034691585/OVoeKZYC_normal.png"
-            />
+
             <div class="right">
               <p>YouTube Creators</p>
               <span>@YTCreators</span>
             </div>
           </div>
           <div class="result">
-            <img
-              src="https://pbs.twimg.com/profile_images/1148267294004600832/Vibmuz25_normal.png"
-            />
+
             <div class="right">
               <p>YouTube TV</p>
               <span>@youtubemusic</span>
             </div>
           </div>
           <div class="result">
-            <img
-              src="https://pbs.twimg.com/profile_images/1148296104611635201/VlnAnBaz_normal.jpg"
-            />
+ 
             <div class="right">
               <p>YouTube Music</p>
               <span>@youtubemusic</span>
@@ -420,7 +408,6 @@ import MapModal from "@/components/meeting/onMeeting/board/registerModal/mapModa
 import ReplyList from "@/components/meeting/onMeeting/board/reply/replyList.vue";
 import CreateReply from "@/components/meeting/onMeeting/board/reply/createReply.vue";
 import BoardDetail from "@/components/meeting/onMeeting/board/boardDetail.vue";
-//import AddAddressModal from "@/components/meeting/onMeeting/modal/AddAddressModal.vue";
 import { ref } from 'vue';
 
 
@@ -465,7 +452,7 @@ export default {
   },
   mounted() {
       let base = this;
-     // base.openBoardModal = this.$refs.boardDetail.openBoardModalFunc;
+      base.openBoardModal = this.$refs.boardDetail.openBoardModalFunc;
      // base.openMapModal = this.$refs.map.openMapModalFunc;
 
      // console.log(`!!! ${base.openMapModal}`);

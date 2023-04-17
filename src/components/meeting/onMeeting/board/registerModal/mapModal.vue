@@ -4,8 +4,8 @@
         <!-- Modal content -->
         <div class="modal-content slideDown">
             <div class="modal-header">
-                <span @click="closeModal" class="close" id="closeModal">&times;</span>
                 <h2>주소 추가</h2>
+                <span @click="closeModal" class="close" id="closeModal">&times;</span>
             </div>
             <div class="modal-body">
                 <form action="" class="modal-form" id="addrForm">
@@ -542,7 +542,7 @@ export default {
     padding: 1.2rem;
     max-width: 50%;
     min-width: 400px;
-    visibility: hidden;
+    /* visibility: hidden; */
     box-shadow: 2px 2px 10px 0px rgba(99, 106, 119, 0.6);
     border-radius: 5px;
     position: fixed;

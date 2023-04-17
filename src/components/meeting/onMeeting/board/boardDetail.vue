@@ -65,7 +65,7 @@ export default {
 
 
     const openBoardModalFunc = () => {
-      console.log("open");
+      console.log("open!!!");
       console.log(modal);
       modal[1].style.display = "block";
     };
@@ -869,9 +869,9 @@ header.nav-closed {
 }
 .modal{
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    // top: 50%;
+    // left: 50%;
+    // transform: translate(-50%, -50%);
     z-index: 100;
 }
 .tweet {
