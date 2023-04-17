@@ -5,7 +5,7 @@
                 <p><strong style="color:black;margin-top:30px">장바구니</strong><img src="@/assets/images/offMeeting/paw-print.png"/></p>
                 <ul class="cart_list">
                   <!--맨 위 전체선태그 삭제 버튼-->
-                  <li>
+                  <li> 
                         <div class="checkbox">
                             <!-- <input type="checkbox" name="all_chk" id="all_chk"  @click="checkAll($event.target.checked)"> -->
                             <input type="checkbox" name="all_chk" id="all_chk" v-model="allChecked" @click="checkedAll($event.target.checked)">
