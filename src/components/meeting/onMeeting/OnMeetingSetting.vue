@@ -39,7 +39,7 @@
                     </tr>
                     <tr>
                         <td data-title="td"><label for="allow-member-removal">멤버 탈퇴 설정</label></td>
-                        <td data-title="btn" style="text-align: right"><button @click="modifyAllowMemberRemoval">변경</button></td>
+                        <td data-title="btn" style="text-align: right"><button @click="modifyAllowMemberWithdrawal">변경</button></td>
                     </tr>
                     <tr>
                         <td data-title="td"><label for="max-members">모임 탈퇴</label></td>
@@ -107,7 +107,8 @@ export default {
         'https://cdn.jsdelivr.net/npm/sweetalert2@11';
     document.head.appendChild(script);
   },
-  setup(){
+  emits: ['member-withdrawal'],
+  setup(props, {emit}){
     const router = useRouter();
     const maxMemberCnt = ref(50);
 
@@ -138,8 +139,9 @@ export default {
       });
     }
 
-    const modifyAllowMemberRemoval = () => {
+    const modifyAllowMemberWithdrawal = () => {
       // 멤버 목록 + 탈퇴 버튼 컴포넌트
+      emit('member-withdrawal', true);
     }
 
     const leaveGroup = () => {
@@ -182,7 +184,7 @@ export default {
       maxMemberCnt,
       modifyOnMeetingInfo,
       modifyMaxMembers,
-      modifyAllowMemberRemoval,
+      modifyAllowMemberWithdrawal,
       leaveGroup,
       deleteGroup
     }
@@ -191,7 +193,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import url("https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,800|Roboto:300,400,500,700");
 
 // 현주
 .group-settings {
