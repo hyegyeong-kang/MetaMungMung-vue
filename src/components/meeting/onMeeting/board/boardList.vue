@@ -177,11 +177,11 @@
       <div class="bottom">
         <a href="#">
           <p>총 게시글</p>
-          <h3 style="color: white">2</h3>
+          <h3 style="color: white;text-align:center;">2</h3>
         </a>
         <a href="#">
           <p>멤버</p>
-          <h3 style="color: white">3</h3>
+          <h3 style="color: white;text-align:center;">3</h3>
         </a>
       </div>
     </div>
@@ -193,7 +193,7 @@
       <div class="new-tweet" style="border: 1px solid;border-radius: 2em;color:	#C0C0C0">
         <textarea placeholder="새로운 소식을 남겨보세요."></textarea>
         <div class="registerModal">
-          <RegisterModal @close="closeRegisterModal" v-if="registerModal" />
+          <!-- <RegisterModal @close="closeRegisterModal" v-if="registerModal" /> -->
         </div>
         <div class="btns">
           <div class="btn">
@@ -205,7 +205,7 @@
             </button>
           </div>
           <div class="btn">
-            <button @click="openMapModal">
+            <button @click="toggleMap">
               <img
                 src="@/assets/images/onMeeting/map-icon2.png"
                 alt=""
@@ -213,6 +213,8 @@
                 height="25"
               />
             </button>
+            <!-- <MapModal ref="map" @close="closeMapModal" /> -->
+            <MapModal v-if="isOpen" @close-req="toggleMap" @send-addr="sendAddr" />
           </div>
           <div class="btn">
             <button>게시</button>
@@ -220,9 +222,9 @@
         </div>
       </div>
 
-      <div class="MapModal">
-        <MapModal @close="closeMapModal" v-if="mapModal" />
-      </div>
+
+        
+
 
       <!--게시물 올라오는 곳 --> <!--이게 반복되면 되는 것임!! -->
       <!-- 이거 클릭하면 해당 게시물 디테일 나오면 됨..--> 
@@ -418,6 +420,9 @@ import MapModal from "@/components/meeting/onMeeting/board/registerModal/mapModa
 import ReplyList from "@/components/meeting/onMeeting/board/reply/replyList.vue";
 import CreateReply from "@/components/meeting/onMeeting/board/reply/createReply.vue";
 import BoardDetail from "@/components/meeting/onMeeting/board/boardDetail.vue";
+//import AddAddressModal from "@/components/meeting/onMeeting/modal/AddAddressModal.vue";
+import { ref } from 'vue';
+
 
 export default {
   name: "BoardList",
@@ -440,19 +445,19 @@ export default {
     openMapModal() {
       this.mapModal = true;
     },
+    closeMapModal() {
+      this.mapModal = false;
+    },
     openBoardModal() {
         base.openBoardModal();
     //     console.log("###")
     //   this.boardModal = true;
     },
-    openRegisterModal() {
-      this.registerModal = true;
-    },
-    closeMapModal() {
-      this.mapModal = false;
-    },
     closeBoardModal() {
       this.boardModal = false;
+    },
+    openRegisterModal() {
+      this.registerModal = true;
     },
     closeRegisterModal() {
       this.registerModal = false;
@@ -460,11 +465,33 @@ export default {
   },
   mounted() {
       let base = this;
-      base.openBoardModal = this.$refs.boardDetail.openBoardModalFunc;
+     // base.openBoardModal = this.$refs.boardDetail.openBoardModalFunc;
+     // base.openMapModal = this.$refs.map.openMapModalFunc;
 
-      console.log(`!!! ${base.openBoardModal}`);
+     // console.log(`!!! ${base.openMapModal}`);
 
   },
+  setup() {
+    const isOpen = ref(false);
+
+    const toggleMap = () => {
+      console.log("KANG!!!")
+            isOpen.value = !isOpen.value;
+            // emit('toggle-modal', isOpen.value);
+        }
+
+    const sendAddr = (addr) => {
+            address.value = addr;
+        }
+
+
+
+    return {
+      isOpen,
+      toggleMap,
+      sendAddr,
+    }
+  }
 };
 </script>
 
