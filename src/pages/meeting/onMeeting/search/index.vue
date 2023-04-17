@@ -3,20 +3,20 @@
         <div class="container">
             <OnMeetingHeader @send-type="sendType" :isMain="isMain" :showLocation="true"/>
             <hr>
-            <MyOnMeetingList v-if="isMain"/>
-            <OnMeetingCategory v-else :key="categoryKey" :isViewAll="isViewAll"/>
+            <OnMeetingCategory v-if="isSearch" :key="categoryKey" @select-cate="selectCate"/>
             <hr>
-            <OnMeetingList @send-type="sendType" :isMain="isMain" :isSearch="isSearch" />
+            <OnMeetingList @send-type="sendType" :isMain="isMain" :isSearch="isSearch" :cate="cate"/>
         </div>
     </div>
 </template>
 
 <script>
-import {ref} from 'vue';
-import OnMeetingHeader from '../../../components/meeting/onMeeting/OnMeetingHeader.vue';
-import MyOnMeetingList from '../../../components/meeting/onMeeting/MyOnMeetingList.vue'
-import OnMeetingList from '../../../components/meeting/onMeeting/OnMeetingList.vue'
-import OnMeetingCategory from '../../../components/meeting/onMeeting/OnMeetingCategory.vue';
+import {ref, watchEffect} from 'vue';
+import {useRoute} from 'vue-router';
+import MyOnMeetingList from '../../../../components/meeting/onMeeting/MyOnMeetingList.vue'
+import OnMeetingList from '../../../../components/meeting/onMeeting/OnMeetingList.vue'
+import OnMeetingCategory from '../../../../components/meeting/onMeeting/OnMeetingCategory.vue';
+import OnMeetingHeader from '../../../../components/meeting/onMeeting/OnMeetingHeader.vue';
 
 export default {
     components: {
@@ -26,10 +26,18 @@ export default {
         OnMeetingHeader
     },
     setup(){
+        const route = useRoute();
         const isMain = ref(true);
         const isSearch = ref(false);
-        const isViewAll = ref(false);
         const categoryKey = ref(0);
+        const cate = ref('전체');
+
+        watchEffect(() => {
+            if(route.query.keywords != null){
+                isMain.value = false;
+                isSearch.value = true;
+            }
+        });
 
         const sendType = (type) => {
             console.log("부모가 받았어!");
@@ -37,15 +45,9 @@ export default {
             if(type === 'viewAll'){
                 isMain.value = false;
                 isSearch.value = false;
-                isViewAll.value = true;
             } else if(type === 'search'){
                 isMain.value = false;
                 isSearch.value = true;
-                isViewAll.value = false;
-            } else{
-                isMain.value = true;
-                isSearch.value = false;
-                isViewAll.value = false;
             }
             forceRender();
         }
@@ -54,13 +56,18 @@ export default {
             categoryKey.value += 1;
         }
 
+        const selectCate = (category) => {
+            cate.value = category;
+        }
+
         return{
             isMain,
             isSearch,
-            isViewAll,
             categoryKey,
+            cate,
             sendType,
-            forceRender
+            forceRender,
+            selectCate
         }
     }
 }

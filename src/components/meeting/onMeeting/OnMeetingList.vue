@@ -18,21 +18,21 @@
                         </div>
                         <div class="bandName">
                             <strong class="name">
-                                <a href="/band/73052575" class="text _bandLink" target="_blank">
+                                <router-link :to="{name: 'OnMeetingDetail', params:{id: onMeeting.onMeetingIdx}}" class="text _bandLink">
                                     
                                     {{ onMeeting.onMeetName }}
-                                </a>
+                                </router-link>
                             </strong>
                             <p class="pSubTxt">{{ onMeeting.introduction }}</p>
 
-                            <a v-if="isMain" href="/discover/search/%EA%B7%B8%EB%A6%BC%EC%9F%81%EC%9D%B4" class="moreBandLink _tagLink"><strong>{{ onMeeting.category }}</strong> 모임 더보기</a>
+                            <router-link v-if="isMain" :to="{name: 'OnMeetingSearch', query: {keywords: onMeeting.category}}" class="moreBandLink _tagLink"><strong>{{ onMeeting.category }}</strong> 모임 더보기</router-link>
                             <p v-else class="member">
                                 <span class="total">멤버 <strong class="totalNumber">{{ onMeeting.memberCnt }}</strong></span>
                                 <span class="leader">리더 <strong class="leagerName">{{ onMeeting.hostName }}</strong></span>
                             </p>
                             
                         </div>
-                        <a href="/band/73052575" class="bandLink _bandLink" target="_blank"><span class="gSrOnly">이 모임으로 이동</span></a>
+                        <router-link :to="{name: 'OnMeetingDetail', params:{id: onMeeting.onMeetingIdx}}" class="bandLink _bandLink"><span class="gSrOnly">이 모임으로 이동</span></router-link>
                     </div>
                 </li>
             </ul>
@@ -45,33 +45,44 @@
 </template>
 
 <script>
-import {ref} from 'vue'
-import {useRouter} from 'vue-router'
+import {ref, watchEffect} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
 
 export default {
     props: {
         isMain: Boolean,
-        isSearch: Boolean
+        isSearch: Boolean,
+        cate: String
     },
     emits: ['send-type'],
     setup(props, {emit}){
+        const route = useRoute();
         const router = useRouter();
         const searchResultCnt = ref(0);
         const onMeetingList = ref([
-            {onMeetingIdx: 1, onMeetName: '그려', category: '그림쟁이', introduction: '할 거 없는 그림러들끼리 놀아요', thumbnail: 'https://coresos-phinf.pstatic.net/a/35ahg5/g_1biUd018svcl03cix5xm5dp_p2f6yk.jpg?type=cover_s276', isPublic: '1', onMeetingAddr: '', memberCnt: 4815, hostName: '윤철종'},
-            {onMeetingIdx: 2, onMeetName: '필기구, 샤프, 볼펜 수집가들의 모임 [필사모]', category: '필기구', introduction: 
-                `필기구에 관심이 많으신 분들을 위한 밴드입니다!
+            {onMeetingIdx: 1, onMeetName: '비숑숑숑 모임', category: '소형견', introduction: '비숑 모임입니당', thumbnail: 'https://static-storychat.pstatic.net/2020/5/10/39/1948239_fii2bj2g50l790.png', isPublic: '1', onMeetingAddr: '연지동', memberCnt: 4617, hostName: '김밥풀'},
+            {onMeetingIdx: 2, onMeetName: '말티쥬 모임 [말모]', category: '일상', introduction: 
+                `말티쥬를 사랑하는 분들을 위한 모임입니다
 
                     들어오셔서 함께 정보도 공유하고 이야기도 나누어요!
 
-                    -필기구를 사랑하는 사람들의 모임-
-
-                    #필기구 #샤프 #볼펜 #만년필 #연필 #색연필`, thumbnail: 'https://coresos-phinf.pstatic.net/a/32jf10/0_7faUd018svc1b2rewvlgxgbi_saup48.jpg?type=cover_s276', isPublic: '1', onMeetingAddr: '', memberCnt: 1350, hostName: '필사모대장'}
+                    -말티쥬를 사랑하는 사람들의 모임-`, thumbnail: 'https://file3.instiz.net/data/cached_img/upload/2019/05/18/12/1110b3ff0bf4bd7b13a55c787e6c7483.jpg', isPublic: '1', onMeetingAddr: '가락동', memberCnt: 1716, hostName: '부 끄'},
+            {
+                onMeetingIdx: 3, onMeetName: '사료 정보 공유 모임', category: '정보', introduction: '모든 강아지가 원하는 사료를 찾을 수 있는 그날까지-', thumbnail: 'https://blog.kakaocdn.net/dn/cXhV4u/btrfBrpkLL1/jH5SKkYKoHQFkXLwYZkS1K/img.jpg', isPulic: '0', onMeetingAddr: '', memberCnt: 1717, hostName: '꾸마얌'
+            },
+            {
+                onMeetingIdx: 4, onMeetName: '연지동 정보 공유방', category: '정보', introduction: '많이 들어오셔서 정보 공유해요.', thumbnail: 'https://pbs.twimg.com/media/FtwQHBhaQAEjpae?format=jpg&name=small', isPulic: '0', onMeetingAddr: '연지동', memberCnt: 1707, hostName: '전 설'
+            }
         ]);
+
+        watchEffect(() => {
+            // 카테고리별 list 나오게
+            console.log(props.cate);
+        });
 
         const viewAll = () => {
             emit("send-type", "viewAll");
-            // router.push({name: "OnMeetingSearch"});
+            router.push({name: "OnMeeting"});
         }
         
         return{
