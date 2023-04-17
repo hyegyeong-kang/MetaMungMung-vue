@@ -1,25 +1,30 @@
 <template>
-    <button type="button" class="btnMySetting" 
-        :class="{active: isActive}" aria-haspopup="true" :aria-expanded=isActive aria-controls="gnbProfileMenuPopup" @click="menuToggle">
-            {{curLocation}}
-    </button>
-    <div class="menuModalLayer">
-        <ul class="menuModalList">
-            <li class="menuModalItem" @click="changeList">
-                <div class="menuModalText">{{selectCate}}</div>
-            </li>
-        </ul>
+    <div style="float: left">
+        <button type="button" class="btnMySetting" 
+            :class="{active: isActive}" aria-haspopup="true" :aria-expanded=isActive aria-controls="gnbProfileMenuPopup" @click="menuToggle">
+                {{curLocation}}
+        </button>
+        <div class="menuModalLayer">
+            <ul class="menuModalList">
+                <li class="menuModalItem" @click="changeList">
+                    <div class="menuModalText">{{selectCate}}</div>
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
 <script>
-import {ref} from 'vue';
+import {ref, watchEffect} from 'vue';
 
 export default {
-    setup(){
+    props: {
+        addr: String
+    },
+    setup(props){
         const isActive = ref(false);
         const selectCate = ref('모든 동네');
-        const curLocation = ref('가락동');
+        const curLocation = ref('연지동');
 
         const menuToggle = () => {
             isActive.value = !isActive.value;
@@ -33,11 +38,20 @@ export default {
             menuToggle();
         }
 
+        const locationSetting = () => {
+            console.log(props.addr);
+            curLocation.value = props.addr;
+        }
+        
+        watchEffect(() => {
+            locationSetting();
+        });
+
         return{
             isActive,
-            menuToggle,
             selectCate,
             curLocation,
+            menuToggle,
             changeList
         }
     }
@@ -83,8 +97,8 @@ export default {
     display: block!important;
 }
 .menuModalLayer {
-    top: 46px;
-    left: 100px;
+    margin-top: 46px;
+    margin-left: 20px;
 }
 .menuModalLayer {
     display: none;
@@ -105,5 +119,6 @@ export default {
 }
 .menuModalText{
     width: 80px;
+    margin-left: 10px;
 }
 </style>

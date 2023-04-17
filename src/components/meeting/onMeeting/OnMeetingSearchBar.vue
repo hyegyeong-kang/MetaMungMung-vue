@@ -13,9 +13,9 @@ import {useRoute, useRouter} from 'vue-router'
 
 export default {
     emits: ['send-type'],
-    props: {
-        isMain: Boolean
-    },
+    // props: {
+    //     isMain: Boolean
+    // },
     setup(props, {emit}) {
         const route = useRoute();
         const router = useRouter();
@@ -23,7 +23,11 @@ export default {
         // const isMain = ref(true);
 
         const init = () => {
-            searchKeyword.value = route.query.keywords;
+            if(Array.isArray(route.query.keywords) && route.query.keywords[0] === ''){
+                searchKeyword.value = '';
+            } else if(route.query.keywords != null){
+                searchKeyword.value = route.query.keywords;
+            }
         }
 
         init();
@@ -31,18 +35,22 @@ export default {
         const checkInputText = () => {
             if(searchKeyword.value !== ''){
                 emit('send-type', 'search');
-                router.push({name: 'OnMeeting', query: {keywords: searchKeyword.value}});
+                router.push({name: 'OnMeetingSearch', query: {keywords: searchKeyword.value}});
             }
             return false;
         }
 
-        watchEffect(() => {
-            // isMain: props.isMain;
-            if(props.isMain){
-                console.log("메인화면이니" + props.isMain);
-                searchKeyword.value = '';
-            }
-        });
+        // watchEffect(() => {
+        //     // isMain: props.isMain;
+        //     if(props.isMain){
+        //         console.log("메인화면이니" + props.isMain);
+        //         searchKeyword.value = '';
+        //     }
+        //     else{
+        //         searchKeyword.value = route.query.keywords;
+        //     }
+
+        // });
 
         return {
             searchKeyword,

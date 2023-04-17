@@ -2,90 +2,84 @@
     <main id="content" data-uiselector="regionContent" role="main">
         <section data-viewname="DGroupBandCreateView" class="bandMake">
             <h2 class="gSrOnly">
-                모임 생성
+                모임 
+                <span v-if="status === 'modify'">수정</span>
+                <span v-else>생성</span>
             </h2>
-            <form action="" class="_form">
+            <form class="_form" @submit.prevent="registerOnMeeting">
                 <fieldset>
                     <div class="makeCover">
-                        <label class="title" for="ex_name">모임 이름</label>
+                        <label class="title" for="ex_name">모임 이름(최대 10자)</label>
                         <div class="uInput -simpleLine inputBand">
-                            <input value="" type="text" class="_inputBandName" id="ex_name" maxlength="50" placeholder="모임 이름을 입력하세요">
+                            <input @value="name" type="text" class="_inputBandName" id="ex_name" maxlength="10" placeholder="모임 이름을 입력하세요" required>
                         </div>
-                        <AddAddressModal v-if="isOpen" :isOpen="isOpen" @is-open="modalFun" @add-address="modalFun2" />
+
+                        <AddAddressModal v-if="isOpen" @close-req="toggleMap" @send-addr="sendAddr" />
 
                         <div class="coverSelect">
                             <div class="mainCover">
                                 <span class="cover">
                     
-                                    <img data-cover="http://coresos.phinf.naver.net/a/2ih08a/c_b6hUd018adm1pd8bo8s7zqln_paxnin.jpg" src="https://coresos-phinf.pstatic.net/a/2ih08a/c_b6hUd018adm1pd8bo8s7zqln_paxnin.jpg?type=cover_a640" class="_selectedCover coverImg" width="300" height="225" alt="">
+                                    <img :data-cover="coverImg" :src="coverImg" class="_selectedCover coverImg" width="300" height="225" alt="">
                     
                                 </span>
                             </div>
+
+                            <select id="cateSelect" required>
+                                <option value="">카테고리 선택</option>
+                                <option value="소형견">소형견</option>
+                                <option value="중형견">중형견</option>
+                                <option value="대형견">대형견</option>
+                                <option value="일상">일상</option>
+                                <option value="취미">취미</option>
+                                <option value="정보">정보</option>
+                            </select>
+
                             <div class="makeType">
                                 <h2 class="title">모임 공개</h2>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                    <input class="form-check-input" type="radio" name="private" id="flexRadioDefault1">
                                     <label class="form-check-label" for="flexRadioDefault1">
                                         비공개
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                                    <input class="form-check-input" type="radio" name="public" id="flexRadioDefault2" checked>
                                     <label class="form-check-label" for="flexRadioDefault2">
                                         공개
                                     </label>
                                 </div>
                             </div>
                             <div class="coverList">
-                                <h3 class="title">커버사진</h3>
-
+                                <h3 class="title">커버사진(최대 30MB)</h3>
+                                <p class="err">{{imgMessage}}</p>
                                 <ul class="list">
                                     <li>
                                         <span class="changeCover _coverImageUploader js-fileapi-wrapper">
                                             <label for="addPhoto" class="labelAddPhoto">사진 추가</label>
-                                            <input type="file" class="imageUpload" id="addPhoto" accept="image/*" name="attachment">
+                                            <input type="file" class="imageUpload" id="addPhoto" accept="image/*" name="attachment" @change="upload">
                                         </span>
                                     </li>
                     
                         
-                                    <li class="_coverSet_0" style="">
+                                    <li v-for="image in images" :key="image.id" class="_coverSet_0" style="">
                                         
-                                        <button type="button" data-cover="http://coresos.phinf.naver.net/a/34g092/3_4a2Ud018admiqcybenasyfp_5ksoqj.png" aria-selected="false" class="_defaultCovers cover ">
-                                            <img class="coverImg" src="https://coresos-phinf.pstatic.net/a/34g092/3_4a2Ud018admiqcybenasyfp_5ksoqj.png?type=cover_a264" width="120" height="90" alt="">
+                                        <button type="button" :data-cover="image.src" aria-selected="false" class="_defaultCovers cover " @click="selectImg(image.id)">
+                                            <img class="coverImg" :src="image.src" width="120" height="90" alt="">
                                             <span class="mask"></span>
                                         </button>
                                         
                                     </li>
 
-                        
-                                    <li class="_coverSet_0" style="">
-                                        
-                                        <button type="button" data-cover="http://coresos.phinf.naver.net/a/34g02i/a_fa1Ud018adm1pbar0p6egwuz_5ksoqj.png" aria-selected="false" class="_defaultCovers cover ">
-                                            <img class="coverImg" src="https://coresos-phinf.pstatic.net/a/34g02i/a_fa1Ud018adm1pbar0p6egwuz_5ksoqj.png?type=cover_a264" width="120" height="90" alt="">
-                                            <span class="mask"></span>
-                                        </button>
-                                        
-                                    </li>
-                        
-                                
-                        
-                                    <li class="_coverSet_0" style="">
-                                        
-                                        <button type="button" data-cover="http://coresos.phinf.naver.net/a/34g01h/8_6a2Ud018adm1bhn9k9y349hq_5ksoqj.png" aria-selected="false" class="_defaultCovers cover ">
-                                            <img class="coverImg" src="https://coresos-phinf.pstatic.net/a/34g01h/8_6a2Ud018adm1bhn9k9y349hq_5ksoqj.png?type=cover_a264" width="120" height="90" alt="">
-                                            <span class="mask"></span>
-                                        </button>
-                                        
-                                    </li>
                     
                                 </ul>
                             </div>
                         </div>
 
                         <div>
-                            <h3 class="title" style="margin-top: 20px">모임 소개글</h3>
+                            <h3 class="title" style="margin-top: 20px;padding-bottom:0">모임 소개글</h3>
                             <div class="uTextarea">
-                                <textarea class="_introDescription" id="bandIntroduce" cols="30" rows="10" maxlength="500" placeholder="모임 소개글을 입력하세요." style="height:100%"></textarea>
+                                <textarea class="_introDescription" id="bandIntroduce" cols="30" rows="10" maxlength="500" placeholder="모임 소개글을 입력하세요." style="height:100%" v-model="introduction"></textarea>
                                 <span class="border"></span>
                             </div>
                         </div>
@@ -93,15 +87,15 @@
                         <div class="introOption _locationButtonWrapper" style="display: flex;">
                             <div class="introOptionBox">
                                 <div class="addressText">
-                                    <button type="button" class="textButton _btnSelectLocation" @click="openMap">주소를 등록해주세요.</button>
+                                    <button type="button" class="textButton _btnSelectLocation" @click="toggleMap">{{address}}</button>
                                 </div>
                             </div>
                         </div>
             
             
                         <div class="btnFooter">
-                            <button type="button" class="_btnCancel uButton -sizeXL -cancel">취소</button>
-                            <button type="submit" class="_btnConfirm uButton -sizeXL -disabled">완료</button>
+                            <button type="button" class="_btnCancel uButton -sizeXL -cancel" @click="cancel">취소</button>
+                            <button type="submit" class="_btnConfirm uButton -sizeXL -disabled" @click="check">완료</button>
                         </div>
                     </div>
                 </fieldset>
@@ -112,40 +106,144 @@
 
 <script>
 import AddAddressModal from './modal/AddAddressModal.vue';
-import {ref} from 'vue';
+import {ref, reactive, watchEffect} from 'vue';
+import {useRouter} from 'vue-router';
 
 export default {
     components:{
         AddAddressModal
     },
-    setup(){
+    props:{
+        status: String
+    },
+    // emits: ['toggle-modal'],
+    setup(props, {emit}){
+        const router = useRouter();
+        const status = ref('');
+        const name = ref('');
+        const introduction = ref('');
+        const coverImg = ref('https://coresos-phinf.pstatic.net/a/2ih08a/c_b6hUd018adm1pd8bo8s7zqln_paxnin.jpg?type=cover_a640');
+        const images = reactive([{
+            id: 1,
+            src: 'https://coresos-phinf.pstatic.net/a/2ih08a/c_b6hUd018adm1pd8bo8s7zqln_paxnin.jpg?type=cover_a640'
+        },
+        {
+            id: 2,
+            src: 'https://coresos-phinf.pstatic.net/a/34g092/3_4a2Ud018admiqcybenasyfp_5ksoqj.png?type=cover_a264'
+        },
+        {
+            id: 3,
+            src: 'https://coresos-phinf.pstatic.net/a/34g02i/a_fa1Ud018adm1pbar0p6egwuz_5ksoqj.png?type=cover_a264'
+        },
+        {
+            id: 4,
+            src: 'https://coresos-phinf.pstatic.net/a/34g01h/8_6a2Ud018adm1bhn9k9y349hq_5ksoqj.png?type=cover_a264'
+        }]);
+        let imgValidation = true;
+        const imgMessage = ref('');
         const isOpen = ref(false);
-        const address = ref('');
+        const address = ref('주소를 등록해주세요.');
 
-        const openMap = () => {
+        watchEffect(() => {
+            status.value = props.status;
+        });
+
+        const upload = (e) => {
+            const file = e.target.files[0];
+            if(file.size > 1024 * 1024 * 30){
+                imgMessage.value = '파일 용량은 30MB 이하만 가능합니다.';
+                imgValidation = false;
+            }
+            if(imgValidation){
+                let url = URL.createObjectURL(file);
+                coverImg.value = url;
+            }
+        }
+
+        const selectImg = (id) => {
+            coverImg.value = images[id - 1].src;
+        }
+
+        const toggleMap = () => {
             isOpen.value = !isOpen.value;
+            // emit('toggle-modal', isOpen.value);
         }
 
-        const modalFun = (status) => {
-            isOpen.value = status;
+        // const closeModal = () => {
+        //     isOpen.value = !isOpen.value;
+        //     // emit('toggle-modal', isOpen.value);
+        // }
+
+        const sendAddr = (addr) => {
+            address.value = addr;
         }
 
-        const modalFun2 = (address) => {
-            address.value = address;
+        const check = () => {
+            introduction.value = introduction.value.split('\n').join('<br>');
+        }
+
+        const cancel = () => {
+            router.go(-1);
+        }
+
+        const registerOnMeeting = () => {
+            router.push({
+                name: "OnMeeting"
+            });
         }
 
         return{
-            address,
+            status,
+            name,
+            introduction,
+            coverImg,
+            images,
+            imgMessage,
             isOpen,
-            openMap,
-            modalFun,
-            modalFun2
+            address,
+            upload,
+            selectImg,
+            toggleMap,
+            // openMap,
+            // closeModal,
+            sendAddr,
+            check,
+            cancel,
+            registerOnMeeting
         }
     }
 }
 </script>
 
 <style scoped>
+#cateSelect{
+    position: absolute;
+    left: 55%;
+    width: 20%; /* 원하는 너비설정 */
+    padding: .3em .5em; /* 여백으로 높이 설정 */
+    font-family: inherit;  /* 폰트 상속 */
+    background: url(https://farm1.staticflickr.com/379/19928272501_4ef877c265_t.jpg) no-repeat 95% 50%; /* 네이티브 화살표 대체 */  
+    border: 1px solid #999; 
+    border-radius: 0px; /* iOS 둥근모서리 제거 */
+    -webkit-appearance: none; /* 네이티브 외형 감추기 */
+    -moz-appearance: none;
+    appearance: none;
+}
+/* IE 10, 11의 네이티브 화살표 숨기기 */
+select::-ms-expand { 
+  display: none;
+}
+.err{
+    color: red;
+    display: inline;
+    margin-left: 20px;
+}
+/* 이미지 크기 맞추기 */
+._selectedCover{
+    width: 300px;
+    height: 225px;
+    object-fit: cover;
+}
 input[type='radio']{
     margin-left: -19px;
 }
@@ -164,7 +262,7 @@ input[type='radio']{
     padding-bottom: 20px;
 }
 .bandMake {
-    max-width: 840px;
+    /* max-width: 840px; */
     margin: 0 auto;
     padding-top: 58px;
 }
@@ -191,6 +289,7 @@ legend {
     display: block;
     margin-bottom: 11px;
     font-weight: 600;
+    display: inline-block;
 }
 .bandMake .title {
     font-size: 14px;
@@ -537,8 +636,8 @@ button.uButton {
     line-height: 1;
 }
 .uButton.-disabled:not(.-text), .uButton[data-status=off]:not(.-text), .uButton[disabled]:not(.-text) {
-    color: #ECEEEF!important;
-    background: #C9C9CA!important;
+    color: #F5F6F8!important;
+    background: #addaed!important;
 }
 .bandMake .btnFooter button {
     margin: 0 3px;
