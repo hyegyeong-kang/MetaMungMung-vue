@@ -1,10 +1,25 @@
-<template></template>
+<template>
+  <div class="container" style="margin-bottom: 130px">
+    <router-link :to="{ name: 'ProductDetail' }" @click="moveToPageDetail()">
+      <h1 class="services_taital">
+        <span>리뷰</span>
+        <img
+          src="@/assets/images/offMeeting/paw-print.png"
+          style="width: 70px"
+        />
+        <span style="color: #1f1f1f">상품으로 돌아가기</span>
+      </h1>
+    </router-link>
+  </div>
+</template>
 
 <script>
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
 
 export default {
   setup() {
+    const reviewList = ref([{}]);
+
     onMounted(() => {
       checkFunc();
     });
@@ -27,12 +42,6 @@ export default {
       headerSection.classList.add("background_bg");
       document.getElementById("bannerDiv").style.display = "none";
     };
-
-    return {
-      checkFunc,
-    };
   },
 };
 </script>
-
-<style></style>
