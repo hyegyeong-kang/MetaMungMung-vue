@@ -8,7 +8,7 @@ import MyPage from "../pages/member/myPage.vue";
 import OffMeeting from "../pages/meeting/offMeeting/index.vue";
 import OnMeeting from "../pages/meeting/onMeeting/index.vue";
 import OnMeetingCreate from "../pages/meeting/onMeeting/create/index.vue";
-import RegisterModal from '../pages/meeting/onMeeting/board/index.vue'
+import RegisterModal from "../pages/meeting/onMeeting/board/index.vue";
 import ProductPage from "../pages/store/product/index.vue";
 import ProductDetail from "../pages/store/product/detail/_id.vue";
 import ProductReviews from "../pages/store/product/review/index.vue";
@@ -67,12 +67,12 @@ const router = createRouter({
     {
       path: "/onMeeting/create",
       name: "OnMeetingCreate",
-      component: OnMeetingCreate
+      component: OnMeetingCreate,
     },
     {
       path: "/onMeeting/board",
       name: "RegisterModal",
-      component: RegisterModal
+      component: RegisterModal,
     },
     {
       path: "/products",
@@ -80,58 +80,58 @@ const router = createRouter({
       component: ProductPage,
     },
     {
-      path: "/products/:id",
+      path: "/product/:id",
       name: "ProductDetail",
       component: ProductDetail,
     },
     {
-      path: "/products/:id/reviews",
+      path: "/product/:id/reviews",
       name: "ProductReviews",
       component: ProductReviews,
     },
     {
       path: "/onMeeting/:id",
       name: "OnMeetingDetail",
-      component: OnMeetingDetail
+      component: OnMeetingDetail,
     },
     {
       path: "/onMeeting/search",
       name: "OnMeetingSearch",
-      component: OnMeetingSearch
+      component: OnMeetingSearch,
     },
     {
       path: "/onMeeting/:id/setting",
       name: "OnMeetingDetailSetting",
-      component: OnMeetingDetailSetting
+      component: OnMeetingDetailSetting,
     },
     {
       path: "/onMeeting/:id/modify",
       name: "OnMeetingModify",
-      component: OnMeetingModify
+      component: OnMeetingModify,
     },
     {
       path: "/store/order",
       name: "Order",
-      component: Order
+      component: Order,
     },
     {
-        path: "/store/order/success",
-        name: "OrderSuccess",
-        component: OrderSuccess
+      path: "/store/order/success",
+      name: "OrderSuccess",
+      component: OrderSuccess,
     },
     {
-        path: "/store/order/list",
-        name: "OrderList",
-        component: OrderList
+      path: "/store/order/list",
+      name: "OrderList",
+      component: OrderList,
     },
     {
-        path: "/store/order/:id",
-        name: "OrderDetail",
-        component: OrderDetail
-    }
+      path: "/store/order/:id",
+      name: "OrderDetail",
+      component: OrderDetail,
+    },
   ],
-  scrollBehavior(){
-    return { top: 0 }
+  scrollBehavior() {
+    return { top: 0 };
   },
 });
 
