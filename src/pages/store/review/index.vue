@@ -1,6 +1,6 @@
 <template>
   <div class="services_section layout_padding">
-    <ReviewHeader />
+    <ReviewHeader :productIdx="productIdx" />
     <div class="container">
       <div class="header">Write your review</div>
       <div id="app">
@@ -47,12 +47,16 @@
 <script>
 import ReviewHeader from "@/components/store/product/ReviewHeader.vue";
 import { ref } from "vue";
+import { useRoute } from "vue-router";
 
 export default {
   components: {
     ReviewHeader,
   },
   setup() {
+    const route = useRoute();
+    const productIdx = ref(0);
+
     const content = ref("");
     const name = ref("");
     const photo = ref(
@@ -88,6 +92,8 @@ export default {
         (content.value = "");
     };
 
+    productIdx.value = route.params.id;
+
     return {
       addReview,
       content,
@@ -95,6 +101,7 @@ export default {
       photo,
       city,
       list,
+      productIdx,
     };
   },
 };

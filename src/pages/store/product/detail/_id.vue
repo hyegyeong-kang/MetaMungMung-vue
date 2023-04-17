@@ -3,7 +3,7 @@
     <div class="container">
       <article class="purchase-sec">
         <div class="product_wrap">
-          <div class="shopView">
+          <div class="shopView" style="margin-bottom: -30px">
             <router-link :to="{ name: 'ProductPage' }" @click="moveToPage()">
               <h1 class="services_taital">
                 <span>스토어</span>
@@ -41,6 +41,14 @@
                   <div class="btns-box">
                     <button class="purchase_like"><span>찜하기</span></button>
                   </div>
+                </div>
+
+                <div class="fourth" style="margin-bottom: -30px">
+                  <small>상품후기</small>
+                  <p class="star">★★★★★4.9</p>
+                  <h5 @click="moveToReview" style="top: -10px">
+                    후기 보러가기
+                  </h5>
                 </div>
 
                 <div class="infoItem itemOptions">
@@ -120,33 +128,8 @@
                 </div>
               </div>
             </div>
-
-            <img
-              class="productDetailImg"
-              src="https://images-dev.wefluffy.co.kr/product-detail/1000011210/82608_detail1.webp"
-              alt=""
-            />
-            <!-- 상품정보 -->
-            <table class="table">
-              <tr>
-                <td>상품명</td>
-                <td>{{ product.productName }}</td>
-                <td>분류</td>
-                <td>{{ product.category }}</td>
-              </tr>
-              <tr>
-                <td>브랜드</td>
-                <td>{{ product.brand }}</td>
-                <td>용량</td>
-                <td>{{ product.volume }}</td>
-              </tr>
-              <tr>
-                <td>제조년월일</td>
-                <td>제조일로부터 일주일이내 포장된 제품으로 발송됩니다.</td>
-                <td>품질유지기한</td>
-                <td>제조일로부터 120일</td>
-              </tr>
-            </table>
+            <hr />
+            <ProductDescription :product="product" />
           </div>
         </div>
       </article>
@@ -157,13 +140,18 @@
 <script>
 import ProductCategory from "@/components/store/product/ProductCategory.vue";
 import ProductHeader from "@/components/store/product/ProductHeader.vue";
+import ProductDescription from "@/components/store/product/ProductDescription.vue";
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+
 export default {
   components: {
     ProductCategory,
     ProductHeader,
+    ProductDescription,
   },
   setup() {
+    const router = useRouter();
     const product = ref({
       productIdx: 1,
       category: "사료",
@@ -243,6 +231,10 @@ export default {
       resultElement.value = number;
     };
 
+    const moveToReview = () => {
+      router.push({ name: "ProductReviews", id: product.productIdx });
+    };
+
     onMounted(() => {
       checkFunc();
     });
@@ -271,9 +263,11 @@ export default {
       setSelect,
       count,
       close,
+      moveToReview,
       product,
       optionList,
       selectedOption,
+      router,
     };
   },
 };
@@ -409,7 +403,7 @@ textarea {
 }
 
 .main_primary:hover {
-  background: #5865f5;
+  background: #00bce7;
 }
 
 .main_secondry {
@@ -443,8 +437,8 @@ textarea {
 }
 
 .input_primary:hover {
-  background: #5865f5;
-  outline: 1px solid #5865f5;
+  background: #00bce7;
+  outline: 1px solid #00bce7;
 }
 
 .input_secondary {
@@ -457,8 +451,8 @@ textarea {
 }
 
 .input_secondary:hover {
-  background: #757ef7;
-  outline: 1px solid #5865f5;
+  background: #00bce7;
+  outline: 1px solid #00bce7;
 }
 
 .input_other {
@@ -466,8 +460,8 @@ textarea {
   padding: 12px;
   margin: 0 auto;
   background: #fff;
-  color: #5865f5;
-  outline: 1px solid #5865f5;
+  color: #00bce7;
+  outline: 1px solid #00bce7;
 }
 
 .input_other:hover {
@@ -496,7 +490,7 @@ textarea {
 }
 
 .inputData:focus {
-  border-bottom: 1.5px solid #5865f5;
+  border-bottom: 1.5px solid #00bce7;
 }
 
 .tab-content .input-option {
@@ -674,7 +668,7 @@ textarea {
 }
 
 .select_default:hover {
-  border: 1.5px solid #5865f5;
+  border: 1.5px solid #00bce7;
 }
 
 .option_list {
@@ -692,7 +686,7 @@ textarea {
 
 .select_default.on {
   background-size: 14px;
-  border: 1.5px solid #5865f5;
+  border: 1.5px solid #00bce7;
 }
 
 .select_default.on + .option_list {
@@ -815,7 +809,7 @@ header .head_menu .menu_item {
 }
 
 header .head_menu .menu_item:hover {
-  color: #5865f5;
+  color: #00bce7;
 }
 
 header .head_menu .menu_item.pcview {
@@ -882,7 +876,7 @@ header nav .nav-item .nav_option li {
 }
 
 header nav .nav-item .nav_option li:hover {
-  color: #5865f5;
+  color: #00bce7;
   background: #5865f511;
 }
 
@@ -909,7 +903,7 @@ header nav .nav-item .gnb .gnb-d1 span {
 }
 
 header nav .nav-item .gnb .gnb-d1 span:hover {
-  color: #5865f5;
+  color: #00bce7;
 }
 
 #mognb {
@@ -1159,7 +1153,7 @@ header .subject {
 
 .product_wrap .shopView .viewHeader .productInfo .title .deliver {
   margin-top: 30px;
-  color: #5865f5;
+  color: #00bce7;
   display: block;
 }
 
@@ -1193,7 +1187,7 @@ header .subject {
 }
 
 .product_wrap .shopView .viewHeader .productInfo .membership ul .vip {
-  color: #5865f5;
+  color: #00bce7;
 }
 
 .product_wrap .shopView .viewHeader .productInfo .colors {
@@ -1225,7 +1219,7 @@ header .subject {
   .colors
   .color-option
   li:hover {
-  border: 3px solid #5865f5;
+  border: 3px solid #00bce7;
 }
 
 .product_wrap .shopView .viewHeader .productInfo .colors .color-option .white {
@@ -1306,7 +1300,7 @@ header .subject {
   font-size: 2rem;
   font-weight: 700;
   margin-right: 3px;
-  color: #5865f5;
+  color: #00bce7;
 }
 
 .product_wrap .shopView .viewHeader .productInfo > .btns-box {
@@ -1318,7 +1312,7 @@ header .subject {
 
 #warning {
   font-weight: 400;
-  color: #5865f5;
+  color: #00bce7;
   display: none;
 }
 
@@ -1347,8 +1341,8 @@ header .subject {
 
 .purchaseinfo-sec .viewBody .tabList .list:hover,
 .purchaseinfo-sec .viewBody .tabList .list.on {
-  color: #5865f5;
-  border-bottom: 2px solid #5865f5;
+  color: #00bce7;
+  border-bottom: 2px solid #00bce7;
 }
 
 .purchaseinfo-sec .viewBody .tabCont {
@@ -1420,5 +1414,43 @@ header .subject {
     padding: 60px 0 120px 0;
     margin: 0 auto;
   }
+}
+
+.fourth h5,
+.size1 h5 {
+  font-family: "Noto Sans KR", sans-serif;
+  float: right;
+  font-size: 14px;
+  color: #999;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.third small,
+.fourth small,
+.detail small,
+.size1 small,
+.won small {
+  font-size: 14px;
+  line-height: 4rem;
+  color: #000;
+}
+
+.fourth {
+  width: 500px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+}
+
+.fourth h5 {
+  margin: 24px 10px 15px 0px;
+}
+
+.star {
+  font-size: 15px;
+  font-weight: bold;
+  color: gold;
+  cursor: pointer;
 }
 </style>

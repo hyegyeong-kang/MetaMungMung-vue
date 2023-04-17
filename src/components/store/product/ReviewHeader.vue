@@ -15,10 +15,18 @@
 
 <script>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
-  setup() {
+  props: ["productIdx"],
+  setup(props) {
     const reviewList = ref([{}]);
+    const id = props.productIdx;
+    const router = useRouter();
+
+    const moveToPageDetail = () => {
+      router.push({ name: "ProductDetail" });
+    };
 
     onMounted(() => {
       checkFunc();
@@ -41,6 +49,12 @@ export default {
 
       headerSection.classList.add("background_bg");
       document.getElementById("bannerDiv").style.display = "none";
+    };
+
+    return {
+      moveToPageDetail,
+      reviewList,
+      id,
     };
   },
 };
