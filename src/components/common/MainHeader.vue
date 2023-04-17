@@ -157,7 +157,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .logo1 {
   font-size: 35px;
   font-weight: 600;
