@@ -386,12 +386,8 @@
               <p>몽몽에 오신걸 환영합니다.</p>
             </div>
           </a>
-          <a
-            href="#"
-            class="btn blue"
-            style="background: #87cefa; text-align: center;color: #fff;"
-            >글쓰기</a
-          >
+          <hr>
+          <p align="right" style="font-size:13px"><img src="@/assets/images/onMeeting/setting.png" style="width:15px;height:15px;margin-right:10px;">모임 설정</p>
         </main>
       </section>
       <section>
