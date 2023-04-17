@@ -3,10 +3,12 @@ import Home from "../pages/index.vue";
 import Signup from "../pages/member/signup.vue";
 import Login from "../pages/member/login.vue";
 import Modify from "../pages/member/modify.vue";
+import Register from "../pages/member/pet/register.vue";
+import MyPage from "../pages/member/myPage.vue";
 import OffMeeting from "../pages/meeting/offMeeting/index.vue";
 import OnMeeting from "../pages/meeting/onMeeting/index.vue";
 import OnMeetingCreate from "../pages/meeting/onMeeting/create/index.vue";
-import RegisterModal from "../pages/meeting/onMeeting/board/index.vue";
+import RegisterModal from '../pages/meeting/onMeeting/board/index.vue'
 import ProductPage from "../pages/store/product/index.vue";
 import ProductDetail from "../pages/store/product/detail/_id.vue";
 import ProductReviews from "../pages/store/product/review/index.vue";
@@ -16,7 +18,7 @@ import OnMeetingDetailSetting from "../pages/meeting/onMeeting/modify/index.vue"
 import OnMeetingModify from "../pages/meeting/onMeeting/modify/_id.vue";
 import Order from "../pages/store/order/index.vue";
 import OrderSuccess from "../pages/store/order/success/index.vue";
-import OrdersList from "../pages/store/order/list/index.vue";
+import OrderList from "../pages/store/order/list/index.vue";
 import OrderDetail from "../pages/store/order/_id.vue";
 
 const router = createRouter({
@@ -41,6 +43,16 @@ const router = createRouter({
       path: "/members/modify",
       name: "Modify",
       component: Modify,
+    },
+    {
+      path: "/members/pet/register",
+      name: "Register",
+      component: Register,
+    },
+    {
+      path: "/members/myPage",
+      name: "MyPage",
+      component: MyPage,
     },
     {
       path: "/offMeeting",
@@ -68,12 +80,12 @@ const router = createRouter({
       component: ProductPage,
     },
     {
-      path: "/product/:id",
+      path: "/products/:id",
       name: "ProductDetail",
       component: ProductDetail,
     },
     {
-      path: "/product/:id/reviews",
+      path: "/products/:id/reviews",
       name: "ProductReviews",
       component: ProductReviews,
     },
@@ -110,7 +122,7 @@ const router = createRouter({
     {
         path: "/store/order/list",
         name: "OrderList",
-        component: OrdersList
+        component: OrderList
     },
     {
         path: "/store/order/:id",
