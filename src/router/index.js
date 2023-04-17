@@ -7,7 +7,7 @@ import Register from "../pages/member/pet/register.vue";
 import MyPage from "../pages/member/myPage.vue";
 import OffMeeting from "../pages/meeting/offMeeting/index.vue";
 import OnMeeting from "../pages/meeting/onMeeting/index.vue";
-import RegisterModal from '../pages/meeting/onMeeting/board/index.vue'
+import RegisterModal from "../pages/meeting/onMeeting/board/index.vue";
 import ProductPage from "../pages/store/product/index.vue";
 import ProductDetail from "../pages/store/product/detail/_id.vue";
 import ProductReviews from "../pages/store/product/review/index.vue";
@@ -56,22 +56,22 @@ const router = createRouter({
       component: OnMeeting,
     },
     {
-      path: '/onMeeting/board',
-      name: 'RegisterModal',
-      component: RegisterModal
+      path: "/onMeeting/board",
+      name: "RegisterModal",
+      component: RegisterModal,
     },
     {
-      path: "/products",
+      path: "/product",
       name: "ProductPage",
       component: ProductPage,
     },
     {
-      path: "/products/:id",
+      path: "/product/:id",
       name: "ProductDetail",
       component: ProductDetail,
     },
     {
-      path: "/products/:id/reviews",
+      path: "/product/:id/reviews",
       name: "ProductReviews",
       component: ProductReviews,
     },
