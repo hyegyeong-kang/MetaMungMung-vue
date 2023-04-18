@@ -8,7 +8,7 @@
                   <li> 
                         <div class="checkbox">
                             <!-- <input type="checkbox" name="all_chk" id="all_chk"  @click="checkAll($event.target.checked)"> -->
-                            <input type="checkbox" name="all_chk" id="all_chk" v-model="allChecked" @click="checkedAll($event.target.checked)">
+                            <input type="checkbox" v-model="selectAll">
                             <label for="all_chk" style="margin-left:5px">전체선택</label>
                         </div>
                         <div class="del_btn">삭제 (<span class="num">0</span>)</div>
@@ -19,13 +19,12 @@
                 <div>
                 </div>
 
-                  <div v-for="(cart, index) in carts" :key="cart.cartnum" >
+                  <div v-for="(cart, index) in cartList" :key="index" >
                       <li class="cell">
                           <!--상품 체크박스 부분-->
                           <div class="checkbox">
-                              <input type="checkbox" :id="'check_' + cart.cartnum" 
-                              value="cart.cartnum" v-model="item_selected" :key="index" @click="selected($event)">
-                              <label :for="cart" :key="index + '1'"></label>
+                              <input type="checkbox" v-model="selectedProducts" :value="index">
+                              <!-- <label :for="cart" :key="index + '1'"></label> -->
                           </div>
                     
                           <div class="item_detail">
@@ -41,21 +40,22 @@
                                   </td>
                               </tr>
                               <!--상품 이미지, 상품 이름-->
-                              <img class="cart-img" src="@/assets/images/onMeeting/map-icon.png">
-                              <p class="productName"><span>{{ cart.productName }}</span></p>
-                          </div>
+                              <img class="cart-img" :src=cart.cartProductDTOList[index].productDTO.productImg>
+                              <p class="productName"><span>{{ cart.cartProductDTOList[index].productDTO.productName }}</span></p>
+                          </div> 
                           <!--상품 갯수 변경하는 버튼과 상품 갯수에 따른 가격 변동-->
                           <div class="opt_info">
                               <div class="price_btn" style="white-space:nowrap">
-                                  <strong class="price_unit">{{ cart.productPrice }}</strong>원
-                                  <input type="button" class="minus_btn" @click="minusBtn(cart)"> 
-                                  <span class="product_count" style="margin-left:10px">{{ cart.quantity }}</span>
+                                  <strong class="price_unit">{{ cart.cartProductDTOList[index].productDTO.price }}</strong>원
+                                  <input type="button" class="minus_btn" @click="minusBtn(cart.cartProductDTOList[index])"> 
+                                  <input type="text" v-model="cart.cartProductDTOList[index].quantity" min="1" max="10">
+                                  <!-- <span class="product_count" style="margin-left:10px">{{ product.quantity }}</span> -->
                                   <!-- <input type="text" class="product_count" style="margin-left:10px">{{ cart.quantity }} -->
-                                  <input type="button" class="plus_btn" style="margin-left:10px" @click="plusBtn(cart)">
+                                  <input type="button" class="plus_btn" style="margin-left:5px" @click="plusBtn(cart.cartProductDTOList[index])">
                                 <span class="total_p">
-                                  <strong class="price_amount" style="margin-left:10px" v-modal="totalKang"><span>{{ cart.productPrice * cart.quantity }}</span></strong><span style="margin-left:10px">원</span>
+                                  <strong class="price_amount" style="margin-left:10px" ><span>{{ cart.cartProductDTOList[index].productDTO.price * cart.cartProductDTOList[index].quantity }}</span></strong><span style="margin-left:10px">원</span>
                                   <!-- <strong class="price_amount"><span>{{ cart.productList[index].price}}</span></strong>원 -->
-                                  <span type="button" @click="deleteBtn(cart, index)" class="del_li_btn"><img src="https://tictoc-web.s3.ap-northeast-2.amazonaws.com/web/img/icon/btn_del_circle.svg"></span>
+                                  <span type="button" @click="deleteBtn(product, index)" class="del_li_btn"><img src="https://tictoc-web.s3.ap-northeast-2.amazonaws.com/web/img/icon/btn_del_circle.svg"></span>
                                 </span>
                               </div>
                           </div>
@@ -66,10 +66,10 @@
     
                 <!--밑에 결제 정보 텍스트-->
                 <div class="cart_total_area">
-                    <p>결제 정보</p>
+                    <p><strong>결제 정보</strong></p>
     
                     <div class="cart_total_price">
-                        <p>총 상품금액 <strong class="item_price" style="color:#87cefa"><span>{{totalKang}}</span></strong>원<span class="plus_ic"></span></p>
+                        <p>총 상품금액 <strong class="item_price" style="color:#87cefa"><span>{{totalPrice999}}</span></strong>원<span class="plus_ic"></span></p>
                         <p><strong class="total_price color-red" style="color:#87cefa">무료배송</strong></p>
                     </div>
                 </div>
@@ -86,24 +86,68 @@
       <div class="agree"></div> <!-- 이거 지우지 마세요! -->
   </template>
   <script>
-  import { ref } from "vue";
+  import { reactive, computed, watch, ref } from "vue";
   import axios from 'axios';
   export default {
-        data () {
-
-        },
         setup() {
             const cart = ref("");
 
-            const carts = ref([
+            const productList = reactive([
                 {
-                    cartIdx:1,
-                    productName:"샐러드",
-                    productPrice:3000,
-                    quantity:1,
-
+                    imageUrl: 'product1.jpg',
+                    productName: '상품 1',
+                    productPrice: 10000,
+                    quantity: 1
+                },
+                {
+                    imageUrl: 'product2.jpg',
+                    productName: '상품 2',
+                    productPrice: 20000,
+                    quantity: 1
+                },
+                {
+                    imageUrl: 'product3.jpg',
+                    productName: '상품 3',
+                    productPrice: 30000,
+                    quantity: 1
                 }
-            ])
+                ]);
+
+            const selectedProducts = reactive([]);
+            const selectAll = reactive(true);
+
+            const totalPrice999 = computed(() => {
+
+                let total = 0;
+                for (let i = 0; i < selectedProducts.length; i++) {
+                    const index = selectedProducts[i];
+                    total += productList[index].price * productList[index].quantity;
+                    console.log(`TOTAL### ${total}`);
+                }
+
+                
+                return total;
+
+            });
+
+            watch(selectAll, () => {
+                console.log("WATCH!!!")
+                if(selectAll) {
+                    console.log("전체선택 클릭됨!")
+                    selectedProducts.length = 0;
+                    for(let i = 0; i < productList.length; i++) {
+                        selectedProducts.push(i);
+                    }
+                }else {
+                    selectedProducts.length = 0;
+                }
+            });
+
+            function deleteProduct(index) {
+                productList.splice(index, 1);
+            }
+
+
 
 
         let count = ref(1);
@@ -160,6 +204,11 @@
                 .then((response) => {
                 console.log(`KANG!!!!!! ${JSON.stringify(response, null, 2)}`);
                     cartList.value = {...response.data}
+
+
+                    console.log(`dd!!!!!! ${JSON.stringify(cartList.value[0].cartProductDTOList[1].productDTO.productName, null, 2)}`);
+
+
                 //   getTotalPrice(cartList.value);
                 
                 // for (let i = 0 ; i < Object.keys(cartList.value).length; i++) {
@@ -187,7 +236,7 @@
                 });
         };
 
-        //getCartProductList();
+        getCartProductList();
 
 
         const getTotalPrice = (cartListValue) => {
@@ -228,7 +277,7 @@
 
         return {
             cart,
-            carts,
+            productList,
             count,
             minusBtn,
             plusBtn,
@@ -240,15 +289,16 @@
             checkedAll,
             allChecked,
             getTotalPrice,
+
+
+
+            selectedProducts,
+            selectAll,
+            totalPrice999,
+            deleteProduct,
         
         };
-        },
-        computed() {
-
-
-
         }
-        
   };
   </script>
   <style scoped>
@@ -313,7 +363,7 @@
     
     .cart_table .cart_list li > div.opt_info .price_btn input {
         font-size: 25px;
-        margin-left: -1px;
+        margin-left: 2px;
         cursor: pointer;
         color: #ccc;
         width: 30px;
@@ -357,7 +407,7 @@
         padding-bottom: 20px;
     }
     .cart_table .cart_list li > div.opt_info > div.price_btn > span.total_p span {
-        width: 30px;
+        width: 40px;
         display: inline-block;
         padding-bottom: 20px;
     }
