@@ -11,7 +11,7 @@ import OnMeetingCreate from "../pages/meeting/onMeeting/create/index.vue";
 import RegisterModal from "../pages/meeting/onMeeting/board/index.vue";
 import ProductPage from "../pages/store/product/index.vue";
 import ProductDetail from "../pages/store/product/detail/_id.vue";
-import ProductReviews from "../pages/store/product/review/index.vue";
+import ProductReviews from "../pages/store/review/index.vue";
 import OnMeetingDetail from "../pages/meeting/onMeeting/_id.vue";
 import OnMeetingSearch from "../pages/meeting/onMeeting/search/index.vue";
 import OnMeetingDetailSetting from "../pages/meeting/onMeeting/modify/index.vue";
