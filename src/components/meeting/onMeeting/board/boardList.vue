@@ -404,10 +404,10 @@
 
 <script>
 //import RegisterModal from '@/components/meeting/onMeeting/board/registerModal/registerModal.vue';
-import MapModal from "@/components/meeting/onMeeting/board/registerModal/mapModal.vue";
+import MapModal from "@/components/meeting/onMeeting/board/modal/mapModal.vue";
 import ReplyList from "@/components/meeting/onMeeting/board/reply/replyList.vue";
 import CreateReply from "@/components/meeting/onMeeting/board/reply/createReply.vue";
-import BoardDetail from "@/components/meeting/onMeeting/board/boardDetail.vue";
+import BoardDetail from "@/components/meeting/onMeeting/board/boardDetailModal.vue";
 import { ref } from 'vue';
 
 
