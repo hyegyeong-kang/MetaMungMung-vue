@@ -8,8 +8,8 @@
                   <li> 
                         <div class="checkbox">
                             <!-- <input type="checkbox" name="all_chk" id="all_chk"  @click="checkAll($event.target.checked)"> -->
-                            <input type="checkbox" v-model="selectAll">
-                            <label for="all_chk" style="margin-left:5px">전체선택</label>
+                            <input type="checkbox" v-model="allSelected" @change="selectAll">
+                            <label for="all_chk" style="margin-left:5px" >전체선택</label>
                         </div>
                         <div class="del_btn">삭제 (<span class="num">0</span>)</div>
                   </li>
@@ -76,7 +76,7 @@
     
                 <!--밑에 계속 쇼핑하기, 결제하기 버튼-->
                 <div class="btn_box">
-                    <button type="button" onclick="history.go(-1);return false;" class="btn wh-btn" style="border-color:#87cefa">계속 쇼핑하기</button>
+                    <button type="button" onclick="history.go(-1);return false;" class="btn wh-btn" style="border-color:#87cefa;background:white">계속 쇼핑하기</button>
                     <button type="button" onclick="order()" class="btn black-btn" style="background-color:#87cefa">구매하기</button>
                 </div>
               </div>
@@ -86,12 +86,12 @@
       <div class="agree"></div> <!-- 이거 지우지 마세요! -->
   </template>
   <script>
-  import { reactive, computed, watch, ref } from "vue";
+  import { computed, watch, ref } from "vue";
   import axios from 'axios';
   export default {
         setup() {
-            const selectedProducts = reactive([]);
-            const selectAll = reactive(true);
+            const selectedProducts = ref([]);
+            const allSelected = ref(false);
 
             const totalPrice = computed(() => {
                 console.log(`"000000!!!" ${JSON.stringify(Object.keys(cartList.value).length, null, 2)}`)
@@ -103,18 +103,18 @@
                 return total;
             });
 
-            watch(selectAll, () => {
-                console.log("WATCH!!!")
-                if(selectAll) {
-                    console.log("전체선택 클릭됨!")
-                    selectedProducts.length = 0;
-                    for(let i = 0; i < cartList.length; i++) {
-                        selectedProducts.push(i);
-                    }
-                }else {
-                    selectedProducts.length = 0;
+            function selectAll() {
+                console.log(`"SELECT ALL" ${allSelected.value}`)
+                allSelected.value = !allSelected.value;
+
+                if (allSelected.value) {
+                    selectedProducts.value = [...Object.keys(cartList.value)];
+                    console.log(`#### ${JSON.stringify(selectedProducts.value, null, 2)}`)
+                } else {
+                    selectedProducts.value = [];
                 }
-            });
+            };
+
 
             function deleteProduct(index) {
                 cartList.splice(index, 1);
@@ -245,6 +245,7 @@
             selectAll,
             totalPrice,
             deleteProduct,
+            allSelected,
         
         };
         }
