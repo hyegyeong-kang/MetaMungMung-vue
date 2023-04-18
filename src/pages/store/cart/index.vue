@@ -9,7 +9,7 @@
                         <div class="checkbox">
                             <!-- <input type="checkbox" name="all_chk" id="all_chk"  @click="checkAll($event.target.checked)"> -->
                             <input type="checkbox" name="all_chk" id="all_chk" v-model="allChecked" @click="checkedAll($event.target.checked)">
-                            <label for="all_chk">전체선택</label>
+                            <label for="all_chk" style="margin-left:5px">전체선택</label>
                         </div>
                         <div class="del_btn">삭제 (<span class="num">0</span>)</div>
                   </li>
