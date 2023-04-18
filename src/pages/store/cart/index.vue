@@ -40,22 +40,22 @@
                                   </td>
                               </tr>
                               <!--상품 이미지, 상품 이름-->
-                              <img class="cart-img" :src=cart.cartProductDTOList[index].productDTO.productImg>
-                              <p class="productName"><span>{{ cart.cartProductDTOList[index].productDTO.productName }}</span></p>
+                              <img class="cart-img" :src=cart.productDTO.productImg>
+                              <p class="productName"><span>{{ cart.productDTO.productName}}</span></p>
                           </div> 
                           <!--상품 갯수 변경하는 버튼과 상품 갯수에 따른 가격 변동-->
                           <div class="opt_info">
                               <div class="price_btn" style="white-space:nowrap">
-                                  <strong class="price_unit">{{ cart.cartProductDTOList[index].productDTO.price }}</strong>원
-                                  <input type="button" class="minus_btn" @click="minusBtn(cart.cartProductDTOList[index])"> 
-                                  <input type="text" v-model="cart.cartProductDTOList[index].quantity" min="1" max="10">
+                                  <strong class="price_unit">{{ cart.productDTO.price }}</strong>원
+                                  <input type="button" class="minus_btn" @click="minusBtn(index)"> 
+                                  {{cart.quantity}}
+                                  <!-- <input type="text" v-model="cart.quantity" min="1" max="10"> -->
                                   <!-- <span class="product_count" style="margin-left:10px">{{ product.quantity }}</span> -->
                                   <!-- <input type="text" class="product_count" style="margin-left:10px">{{ cart.quantity }} -->
-                                  <input type="button" class="plus_btn" style="margin-left:5px" @click="plusBtn(cart.cartProductDTOList[index])">
+                                  <input type="button" class="plus_btn" style="margin-left:5px" @click="plusBtn(index)">
                                 <span class="total_p">
-                                  <strong class="price_amount" style="margin-left:10px" ><span>{{ cart.cartProductDTOList[index].productDTO.price * cart.cartProductDTOList[index].quantity }}</span></strong><span style="margin-left:10px">원</span>
-                                  <!-- <strong class="price_amount"><span>{{ cart.productList[index].price}}</span></strong>원 -->
-                                  <span type="button" @click="deleteBtn(product, index)" class="del_li_btn"><img src="https://tictoc-web.s3.ap-northeast-2.amazonaws.com/web/img/icon/btn_del_circle.svg"></span>
+                                  <strong class="price_amount" style="margin-left:10px" ><span>{{ cart.productDTO.price * cart.quantity }}</span></strong><span style="margin-left:10px">원</span>
+                                  <span type="button" @click="deleteBtn(index)" class="del_li_btn"><img src="https://tictoc-web.s3.ap-northeast-2.amazonaws.com/web/img/icon/btn_del_circle.svg"></span>
                                 </span>
                               </div>
                           </div>
@@ -69,7 +69,7 @@
                     <p><strong>결제 정보</strong></p>
     
                     <div class="cart_total_price">
-                        <p>총 상품금액 <strong class="item_price" style="color:#87cefa"><span>{{totalPrice999}}</span></strong>원<span class="plus_ic"></span></p>
+                        <p>총 상품금액 <strong class="item_price" style="color:#87cefa"><span>{{ totalPrice }}</span></strong>원<span class="plus_ic"></span></p>
                         <p><strong class="total_price color-red" style="color:#87cefa">무료배송</strong></p>
                     </div>
                 </div>
@@ -90,44 +90,17 @@
   import axios from 'axios';
   export default {
         setup() {
-            const cart = ref("");
-
-            const productList = reactive([
-                {
-                    imageUrl: 'product1.jpg',
-                    productName: '상품 1',
-                    productPrice: 10000,
-                    quantity: 1
-                },
-                {
-                    imageUrl: 'product2.jpg',
-                    productName: '상품 2',
-                    productPrice: 20000,
-                    quantity: 1
-                },
-                {
-                    imageUrl: 'product3.jpg',
-                    productName: '상품 3',
-                    productPrice: 30000,
-                    quantity: 1
-                }
-                ]);
-
             const selectedProducts = reactive([]);
             const selectAll = reactive(true);
 
-            const totalPrice999 = computed(() => {
-
-                let total = 0;
-                for (let i = 0; i < selectedProducts.length; i++) {
-                    const index = selectedProducts[i];
-                    total += productList[index].price * productList[index].quantity;
-                    console.log(`TOTAL### ${total}`);
-                }
-
+            const totalPrice = computed(() => {
+                console.log(`"000000!!!" ${JSON.stringify(Object.keys(cartList.value).length, null, 2)}`)
                 
+                let total = 0;
+                for (let i = 0; i < Object.keys(cartList.value).length; i++) {
+                    total += cartList.value[i].productDTO.price * cartList.value[i].quantity;
+                }
                 return total;
-
             });
 
             watch(selectAll, () => {
@@ -135,7 +108,7 @@
                 if(selectAll) {
                     console.log("전체선택 클릭됨!")
                     selectedProducts.length = 0;
-                    for(let i = 0; i < productList.length; i++) {
+                    for(let i = 0; i < cartList.length; i++) {
                         selectedProducts.push(i);
                     }
                 }else {
@@ -144,20 +117,22 @@
             });
 
             function deleteProduct(index) {
-                productList.splice(index, 1);
+                cartList.splice(index, 1);
             }
 
-
-
-
-        let count = ref(1);
         const cartList = ref([]);
         let allChecked = false;
 
         let total = ref(0);
 
-        const minusBtn = (cart) => {
-            return --cart.quantity;
+        const minusBtn = (index) => {
+            if (cartList.value[index].quantity > 1) {
+                return cartList.value[index].quantity--;
+             } else {
+                 // TODO: alert 창 띄우기
+                 return 0;
+             }
+            //return --cart.quantity;
             //   axios.patch('/cart', {quantity: --count})
             //     .then(res => {
             //           console.log(`HYE!! :     ${res.data}`)
@@ -167,8 +142,9 @@
             //     });
         };
     
-        const plusBtn = (cart) => {
-            return ++cart.quantity;
+        const plusBtn = (index) => {
+            return cartList.value[index].quantity++
+            //return ++cart.quantity;
             //   axios.patch('/cart', {quantity: ++count.value})
             //     .then(res => {
             //       console.log(res.data)
@@ -178,17 +154,12 @@
             //     });
         };
     
-        const deleteBtn = (cart, index) => {
-            console.log(`KANG1111111111 ${JSON.stringify(cart, null, 2)}`)
-            console.log(`KANG2222222222 ${JSON.stringify(cartList.value[index], null, 2)}`)
-            console.log(`KANG$$$$$$$$$ ${typeof cartList.value[0]}`)
+        const deleteBtn = (index) => {
+   
             delete cartList.value[index];
-            console.log(`KANG999999999 ${JSON.stringify(cartList.value, null, 2)}`)
 
-        //  getTotalPrice(cartList.value);
-        // console.log(`KANG33333333 ${JSON.stringify(cartList.value, null, 2)}`)
+       //     cartList.value.splice(index, 1)
 
-        
             //   axios.delete('/cart')
             //   .then(res => {
             //     console.log(res.data)
@@ -202,11 +173,11 @@
             
             await axios.get('/cart', {})
                 .then((response) => {
-                console.log(`KANG!!!!!! ${JSON.stringify(response, null, 2)}`);
-                    cartList.value = {...response.data}
+                    console.log(`KANG!!!!!! ${JSON.stringify(response, null, 2)}`);
+                    cartList.value = {...response.data[0].cartProductDTOList}
 
-
-                    console.log(`dd!!!!!! ${JSON.stringify(cartList.value[0].cartProductDTOList[1].productDTO.productName, null, 2)}`);
+                    console.log(`HGHG!!!!!! ${JSON.stringify(cartList.value, null, 2)}`);
+                    console.log(`dd!!!!!! ${JSON.stringify(cartList.value[0], null, 2)}`);
 
 
                 //   getTotalPrice(cartList.value);
@@ -239,22 +210,6 @@
         getCartProductList();
 
 
-        const getTotalPrice = (cartListValue) => {
-            console.log(`GETTTTTTTTTT: ${Object.keys(cartListValue).length}`);
-            let total = 0;
-            for (let i = 0 ; i < Object.keys(cartListValue).length; i++) {
-                console.log(`GYEIGN: ${cartListValue[i].productList[0].price}`)
-                    console.log(`%%3%%  ${JSON.stringify(cartListValue[i].productList[0].price, null, 2)}`);
-                    const cart = cartListValue[i];
-                    console.log(`*************** ${cart.productList[0].price}`)
-                    total += cart.productList[0].price; // 장바구니에 담긴 제품들 모두 합친 가격.
-                }
-                console.log(`@@@@KANG@@@@ ${total}`);
-                return total;
-        // this.total.value = total;
-        }
-
-
         const checkedAll = (checked) => {
             this.allChecked = checked
                 for (let i in this.cartList) {
@@ -276,25 +231,19 @@
     
 
         return {
-            cart,
-            productList,
-            count,
+            cartList,
+            getCartProductList,
             minusBtn,
             plusBtn,
             deleteBtn,
-            getCartProductList,
-            cartList,
             total,
             selected,
             checkedAll,
             allChecked,
-            getTotalPrice,
-
-
 
             selectedProducts,
             selectAll,
-            totalPrice999,
+            totalPrice,
             deleteProduct,
         
         };
