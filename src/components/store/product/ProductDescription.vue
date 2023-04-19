@@ -1,9 +1,11 @@
 <template>
-  <img
-    class="productDetailImg"
-    src="https://images-dev.wefluffy.co.kr/product-detail/1000011210/82608_detail1.webp"
-    alt=""
-  />
+  <div style="margin-top: 50px; margin-bottom: 50px">
+    <img
+      class="productDetailImg"
+      src="https://images-dev.wefluffy.co.kr/product-detail/1000003425/1000003425-0.webp"
+      alt=""
+    />
+  </div>
 
   <div class="shCMSshop">
     <div class="shopView">
