@@ -24,7 +24,7 @@
 
                 <div>
                     <div>비밀번호</div>
-                    <input id="password" v-model="member.password" type="password" placeholder="8자이상 16자 이하이며 대/소문자/숫자 1개 이상" @blur="passwordValid">
+                    <input id="password" v-model="member.password" type="text" placeholder="8자이상 16자 이하이며 대/소문자/숫자 1개 이상" @blur="passwordValid">
                      <div v-if="!passwordValidFlag" style="color: #F55050;">
                       유효하지 않은 비밀번호입니다.
                     </div>
@@ -32,7 +32,7 @@
 
                 <div>
                     <div>비밀번호 확인</div>
-                    <input id="passwordCheck" v-model="passwordCheck" type="password" placeholder="비밀번호 확인" @blur="passwordCheckValid">
+                    <input id="passwordCheck" v-model="passwordCheck" type="text" placeholder="비밀번호 확인" @blur="passwordCheckValid">
                     <div v-if="!passwordCheckFlag" style="color: #F55050;">
                       비밀번호가 동일하지 않습니다.
                     </div>
@@ -126,8 +126,6 @@ export default {
         passwordCheckFlag.value = false
       }
     }
-
-    console.log(member.value.birth)
 
     const signupForm = async() => {
       try {
