@@ -77,7 +77,7 @@
                 <!--밑에 계속 쇼핑하기, 결제하기 버튼-->
                 <div class="btn_box">
                     <button type="button" onclick="history.go(-1);return false;" class="btn wh-btn" style="border-color:#87cefa;background:white">계속 쇼핑하기</button>
-                    <button type="button" onclick="order()" class="btn black-btn" style="background-color:#87cefa">구매하기</button>
+                    <button type="button" @click="order()" class="btn black-btn" style="background-color:#87cefa">구매하기</button>
                 </div>
               </div>
             </div>
@@ -246,6 +246,22 @@
                 }
         };
 
+        // !!!!!!현주 구매하기 버튼!!!!!! cartList 보내주기
+        const order = () => {
+            console.log(`@@@ ${JSON.stringify(cartList.value, null, 2)}`)
+
+            axios.post('/orders/', 
+                {
+                    cartList: cartList.value,
+                    
+                }).then(res => {
+                    console.log(`order ERR!! : ${res.data}`)
+                })
+                .catch((error) => {
+                console.log(error);
+                });
+        };
+
     
 
         return {
@@ -264,6 +280,8 @@
             totalPrice,
             deleteProduct,
             allSelected,
+
+            order,
         
         };
         }
