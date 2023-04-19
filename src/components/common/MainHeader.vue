@@ -25,14 +25,10 @@
               <div class="togle_3">
                 <div class="menu_main">
                   <div class="padding_left0">
-                    <router-link :to="{ name: 'Signup' }" @click="moveToPage"
-                      >Signup</router-link
-                    >
-                    <span class="padding_left0"
-                      ><router-link :to="{ name: 'Login' }" @click="moveToPage"
-                        >Login</router-link
-                      ></span
-                    >
+                    <router-link v-if="!loggedIn" :to="{ name: 'Signup' }" @click="moveToPage">Signup</router-link>
+                    <span class="padding_left0"><router-link v-if="!loggedIn" :to="{ name: 'Login' }" @click="moveToPage">Login</router-link></span>
+                    <router-link v-if="loggedIn" :to="{ name: 'MyPage' }" @click="moveToPage">{{memberId}} 님</router-link>
+                    <span class="padding_left0"><router-link v-if="loggedIn" :to="{ name: 'Home' }" @click="logout">Logout</router-link></span>
                   </div>
                 </div>
                 <div class="shoping_bag">
@@ -114,9 +110,26 @@
 </template>
 
 <script>
+import { computed, onMounted } from 'vue';
+
 export default {
   name: "MainHeader",
   setup() {
+    const token = sessionStorage.getItem("token");
+    const memberId = sessionStorage.getItem("memberId");
+
+    console.log(memberId);
+
+    const loggedIn = computed(() => {
+      return token !== null;
+    });
+
+    onMounted(() => {
+      if (token == null) {
+        sessionStorage.removeItem("memberId");
+      }
+    });
+
     let overlay = null;
     let headerSection = null;
 
@@ -147,11 +160,22 @@ export default {
       headerSection.classList.add("background_bg");
       document.getElementById("bannerDiv").style.display = "none";
     };
+
+    const logout = () => {
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("memberId");
+      window.location.reload(true);
+    };
+
     return {
+      loggedIn,
+      token,
+      memberId,
       openNav,
       closeNav,
       moveToMain,
       moveToPage,
+      logout
     };
   },
 };
