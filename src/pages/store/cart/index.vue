@@ -127,49 +127,64 @@
 
         const minusBtn = (index) => {
             if (cartList.value[index].quantity > 1) {
-                return cartList.value[index].quantity--;
+                const cnt = --cartList.value[index].quantity;
+
+                const cartIdx = cartList.value[index].cartIdx;
+                const productIdx = cartList.value[index].productIdx;
+
+                axios.patch('/cart/' + cartIdx, 
+                    {
+                        quantity: cnt,
+                        productIdx: productIdx
+                    }).then(res => {
+                        console.log(`HYE!! :     ${res.data}`)
+                    })
+                    .catch((error) => {
+                    console.log(error);
+                    });
              } else {
                  // TODO: alert 창 띄우기
                  return 0;
              }
-            //return --cart.quantity;
-            //   axios.patch('/cart', {quantity: --count})
-            //     .then(res => {
-            //           console.log(`HYE!! :     ${res.data}`)
-            //     })
-            //     .catch((error) => {
-            //       console.log(error);
-            //     });
         };
     
         const plusBtn = (index) => {
-            const cnt = cartList.value[index].quantity++
+            const cnt = ++cartList.value[index].quantity
 
-            axios.patch('/cart/', {quantity: cnt})
-                 .then(res => {
-                   console.log(`!! ${res.data}`)
-                 })
-                 .catch((error) => {
-                   console.log(error);
-                 });
+            const cartIdx = cartList.value[index].cartIdx;
+            const productIdx = cartList.value[index].productIdx;
+
+            axios.patch('/cart/' + cartIdx , 
+            {
+                quantity: cnt,
+                productIdx: productIdx
+            }
+            ).then(res => {
+                console.log(`!! ${res.data}`)
+            })
+            .catch((error) => {
+            console.log(error);
+            });
 
             return cnt;
-            //return ++cart.quantity;
         };
     
         const deleteBtn = (index) => {
-   
+            const cnt = cartList.value[index].quantity
+            const cartIdx = cartList.value[index].cartIdx;
+            const productIdx = cartList.value[index].productIdx;
+
             delete cartList.value[index];
 
        //     cartList.value.splice(index, 1)
 
-            //   axios.delete('/cart')
-            //   .then(res => {
-            //     console.log(res.data)
-            //   })
-            //   .catch((error) => {
-            //     console.log(error);
-            //   });
+               axios.delete('/cart/' + cartIdx, {productIdx:productIdx, quantity:cnt})
+                .then(res => {
+                    console.log(res.data)
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         };
     
         const getCartProductList = async() => {
