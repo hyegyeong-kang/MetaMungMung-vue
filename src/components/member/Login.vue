@@ -35,14 +35,17 @@
 import {useRoute, useRouter} from 'vue-router';
 import { ref } from 'vue';
 import axios from 'axios';
+import Swal from "sweetalert2";
+
 export default {
   setup() {
-    const route = useRoute();
     const router = useRouter();
     const member = ref({
       memberId: '',
       password: '',
     });
+
+    const token = sessionStorage.getItem('token');
 
     const loginForm = async() => {
       try {
@@ -53,18 +56,23 @@ export default {
           password: member.value.password
         });
 
-        sessionStorage.setItem("memberId", res.data.memberId);
-        sessionStorage.setItem("authority", res.data.authority);
-        sessionStorage.setItem("memberInfo", JSON.stringify(res.data));
+        sessionStorage.setItem('token', res.headers.token);
+        sessionStorage.setItem('memberId', member.value.memberId);
+
+        console.log(sessionStorage);
         
-        alert(res.data.memberName + " 님 메타멍멍에 오신 것을 환영합니다!");
-        router.push({ name: 'Home' });
+        alert(member.value.memberId + " 님 메타멍멍에 오신 것을 환영합니다!");
+        window.location.reload(true);
+        router.push({ name: 'Home'});
         
       } catch (error) {
           console.log(error);
           router.push({ name: 'Login' });
-          alert("잘못된 로그인 정보입니다.")
-          
+
+          Swal.fire({
+            icon: 'error',
+            title: '잘못된 로그인'
+          });
       } 
         
         // console.log(member.value);
@@ -72,6 +80,7 @@ export default {
 
     return {
       member,
+      token,
       loginForm,
     };
   }
