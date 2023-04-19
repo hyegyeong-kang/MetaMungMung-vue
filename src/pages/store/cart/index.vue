@@ -40,13 +40,13 @@
                                   </td>
                               </tr>
                               <!--상품 이미지, 상품 이름-->
-                              <img class="cart-img" :src=cart.productDTO.productImg>
-                              <p class="productName"><span>{{ cart.productDTO.productName}}</span></p>
+                              <img class="cart-img" :src=cart.productList[0].productImg>
+                              <p class="productName"><span>{{ cart.productList[0].productName }}</span></p>
                           </div> 
                           <!--상품 갯수 변경하는 버튼과 상품 갯수에 따른 가격 변동-->
                           <div class="opt_info">
                               <div class="price_btn" style="white-space:nowrap">
-                                  <strong class="price_unit">{{ cart.productDTO.price }}</strong>원
+                                  <strong class="price_unit">{{ cart.productList[0].price }}</strong>원
                                   <input type="button" class="minus_btn" @click="minusBtn(index)"> 
                                   {{cart.quantity}}
                                   <!-- <input type="text" v-model="cart.quantity" min="1" max="10"> -->
@@ -54,7 +54,7 @@
                                   <!-- <input type="text" class="product_count" style="margin-left:10px">{{ cart.quantity }} -->
                                   <input type="button" class="plus_btn" style="margin-left:5px" @click="plusBtn(index)">
                                 <span class="total_p">
-                                  <strong class="price_amount" style="margin-left:10px" ><span>{{ cart.productDTO.price * cart.quantity }}</span></strong><span style="margin-left:10px">원</span>
+                                  <strong class="price_amount" style="margin-left:10px" ><span>{{ cart.productList[0].price * cart.quantity }}</span></strong><span style="margin-left:10px">원</span>
                                   <span type="button" @click="deleteBtn(index)" class="del_li_btn"><img src="https://tictoc-web.s3.ap-northeast-2.amazonaws.com/web/img/icon/btn_del_circle.svg"></span>
                                 </span>
                               </div>
@@ -98,7 +98,7 @@
                 
                 let total = 0;
                 for (let i = 0; i < Object.keys(cartList.value).length; i++) {
-                    total += cartList.value[i].productDTO.price * cartList.value[i].quantity;
+                    total += cartList.value[i].productList[0].price * cartList.value[i].quantity;
                 }
                 return total;
             });
@@ -143,15 +143,18 @@
         };
     
         const plusBtn = (index) => {
-            return cartList.value[index].quantity++
+            const cnt = cartList.value[index].quantity++
+
+            axios.patch('/cart/', {quantity: cnt})
+                 .then(res => {
+                   console.log(`!! ${res.data}`)
+                 })
+                 .catch((error) => {
+                   console.log(error);
+                 });
+
+            return cnt;
             //return ++cart.quantity;
-            //   axios.patch('/cart', {quantity: ++count.value})
-            //     .then(res => {
-            //       console.log(res.data)
-            //     })
-            //     .catch((error) => {
-            //       console.log(error);
-            //     });
         };
     
         const deleteBtn = (index) => {
@@ -173,8 +176,8 @@
             
             await axios.get('/cart', {})
                 .then((response) => {
-                    console.log(`KANG!!!!!! ${JSON.stringify(response, null, 2)}`);
-                    cartList.value = {...response.data[0].cartProductDTOList}
+                    console.log(`KANG!!!!!! ${JSON.stringify(response.data, null, 2)}`);
+                    cartList.value = {...response.data}
 
                     console.log(`HGHG!!!!!! ${JSON.stringify(cartList.value, null, 2)}`);
                     console.log(`dd!!!!!! ${JSON.stringify(cartList.value[0], null, 2)}`);
