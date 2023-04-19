@@ -21,20 +21,20 @@
                     </div>
                 </li>
                 
-                <li v-for="onMeet in myOnMeetings" :key="onMeet.id" class="bandCardItem">
+                <li v-for="onMeet in myOnMeetings" :key="onMeet.onMeetingIdx" class="bandCardItem">
                     <div class="uCover -main">
                         <div class="bandInner">
-                            <router-link :to="{name: 'OnMeetingDetail', params: {id: onMeet.id}}" class="bandCover _link">
+                            <router-link :to="{name: 'OnMeetingDetail', params: {id: onMeet.onMeetingIdx}}" class="bandCover _link">
                                 <div class="cover">
                                     <div class="uCoverImage -border -w186 ">
                                         <span class="coverInner">
-                                            <img class="coverImg" :src="onMeet.url" alt="">
+                                            <img class="coverImg" :src="onMeet.thumbnail" alt="">
                                         </span> 
                                     </div>
                                 </div>
                                 <div class="bandName">
                                     <p class="uriText">
-                                        {{onMeet.name}}
+                                        {{onMeet.onMeetName}}
                                     </p>
                                     <span class="member">
                                         
@@ -74,22 +74,39 @@
 </template>
 
 <script>
-import {reactive} from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+import {ref} from 'vue';
 
 export default {
     setup(){
-        const myOnMeetings = reactive([{
-            id: 1,
-            name: '뭉뭉',
-            url: 'https://coresos-phinf.pstatic.net/a/34g0j0/b_fa2Ud018adm10u2w62ocihzm_5ksoqj.png?type=cover_a264',
-            memberCnt: 3
-        },
-        {
-            id: 2,
-            name: '갱얼쥐꒪ꄱ꒪',
-            url: 'https://rgo4.com/files/attach/images/2681740/682/850/029/5993dcd644b29c202130d9204e876693.jpeg',
-            memberCnt: 2400
-        }]);
+        const router = useRouter();
+        const myOnMeetings = ref([
+            // {
+            //     id: 1,
+            //     name: '뭉뭉',
+            //     url: 'https://coresos-phinf.pstatic.net/a/34g0j0/b_fa2Ud018adm10u2w62ocihzm_5ksoqj.png?type=cover_a264',
+            //     memberCnt: 3
+            // },
+            // {
+            //     id: 2,
+            //     name: '갱얼쥐꒪ꄱ꒪',
+            //     url: 'https://rgo4.com/files/attach/images/2681740/682/850/029/5993dcd644b29c202130d9204e876693.jpeg',
+            //     memberCnt: 2400
+            // }
+        ]);
+
+        const getOnMeetingList = async () => {
+            try{
+                const res = await axios.get('/onMeetings');
+                myOnMeetings.value = {...res.data.myList};
+                console.log(res);
+            } catch(err){
+                console.log(err);
+            }
+        }
+
+        getOnMeetingList();
 
         return{
             myOnMeetings

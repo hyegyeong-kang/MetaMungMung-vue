@@ -7,8 +7,8 @@
             </div>
 
             <ul data-viewname="DDiscoverRecommendBandListView" class="cCoverList">
-                <li v-for="onMeeting in onMeetingList" :key="onMeeting.onMeetingIdx" data-viewname="DDiscoverRecommendBandItemView" class="cCoverItem">
-                    <div class="bandUri">
+                <li v-for="(onMeeting, index) in onMeetingList" :key="onMeeting.onMeetingIdx" data-viewname="DDiscoverRecommendBandItemView" class="cCoverItem">
+                    <div v-if="isMain ? index <= 5 : 1" class="bandUri">
                         <div class="cover">
                             <div class="uCoverImage -border -borderR12 -w80">
                                 <span class="coverInner">
@@ -47,6 +47,7 @@
 <script>
 import {ref, watchEffect} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
+import axios from 'axios';
 
 export default {
     props: {
@@ -60,35 +61,66 @@ export default {
         const router = useRouter();
         const searchResultCnt = ref(0);
         const onMeetingList = ref([
-            {onMeetingIdx: 1, onMeetName: '비숑숑숑 모임', category: '소형견', introduction: '비숑 모임입니당', thumbnail: 'https://static-storychat.pstatic.net/2020/5/10/39/1948239_fii2bj2g50l790.png', isPublic: '1', onMeetingAddr: '연지동', memberCnt: 4617, hostName: '김밥풀'},
-            {onMeetingIdx: 2, onMeetName: '말티쥬 모임 [말모]', category: '일상', introduction: 
-                `말티쥬를 사랑하는 분들을 위한 모임입니다
+            // {onMeetingIdx: 1, onMeetName: '비숑숑숑 모임', category: '소형견', introduction: '비숑 모임입니당', thumbnail: 'https://static-storychat.pstatic.net/2020/5/10/39/1948239_fii2bj2g50l790.png', isPublic: '1', onMeetingAddr: '연지동', memberCnt: 4617, hostName: '김밥풀'},
+            // {onMeetingIdx: 2, onMeetName: '말티쥬 모임 [말모]', category: '일상', introduction: 
+            //     `말티쥬를 사랑하는 분들을 위한 모임입니다
 
-                    들어오셔서 함께 정보도 공유하고 이야기도 나누어요!
+            //         들어오셔서 함께 정보도 공유하고 이야기도 나누어요!
 
-                    -말티쥬를 사랑하는 사람들의 모임-`, thumbnail: 'https://file3.instiz.net/data/cached_img/upload/2019/05/18/12/1110b3ff0bf4bd7b13a55c787e6c7483.jpg', isPublic: '1', onMeetingAddr: '가락동', memberCnt: 1716, hostName: '부 끄'},
-            {
-                onMeetingIdx: 3, onMeetName: '사료 정보 공유 모임', category: '정보', introduction: '모든 강아지가 원하는 사료를 찾을 수 있는 그날까지-', thumbnail: 'https://blog.kakaocdn.net/dn/cXhV4u/btrfBrpkLL1/jH5SKkYKoHQFkXLwYZkS1K/img.jpg', isPulic: '0', onMeetingAddr: '', memberCnt: 1717, hostName: '꾸마얌'
-            },
-            {
-                onMeetingIdx: 4, onMeetName: '연지동 정보 공유방', category: '정보', introduction: '많이 들어오셔서 정보 공유해요.', thumbnail: 'https://pbs.twimg.com/media/FtwQHBhaQAEjpae?format=jpg&name=small', isPulic: '0', onMeetingAddr: '연지동', memberCnt: 1707, hostName: '전 설'
-            }
+            //         -말티쥬를 사랑하는 사람들의 모임-`, thumbnail: 'https://file3.instiz.net/data/cached_img/upload/2019/05/18/12/1110b3ff0bf4bd7b13a55c787e6c7483.jpg', isPublic: '1', onMeetingAddr: '가락동', memberCnt: 1716, hostName: '부 끄'},
+            // {
+            //     onMeetingIdx: 3, onMeetName: '사료 정보 공유 모임', category: '정보', introduction: '모든 강아지가 원하는 사료를 찾을 수 있는 그날까지-', thumbnail: 'https://blog.kakaocdn.net/dn/cXhV4u/btrfBrpkLL1/jH5SKkYKoHQFkXLwYZkS1K/img.jpg', isPulic: '0', onMeetingAddr: '', memberCnt: 1717, hostName: '꾸마얌'
+            // },
+            // {
+            //     onMeetingIdx: 4, onMeetName: '연지동 정보 공유방', category: '정보', introduction: '많이 들어오셔서 정보 공유해요.', thumbnail: 'https://pbs.twimg.com/media/FtwQHBhaQAEjpae?format=jpg&name=small', isPulic: '0', onMeetingAddr: '연지동', memberCnt: 1707, hostName: '전 설'
+            // }
         ]);
 
         watchEffect(() => {
             // 카테고리별 list 나오게
             console.log(props.cate);
+            
+
+            // <br>수정하기
+            // console.log(document.getElementsByClassName('pSubTxt'));
+            // console.log(document.getElementsByClassName('pSubTxt').length);
+            // const elem = document.getElementsByClassName('pSubTxt');
+            // for(let i = 0; i < elem.length; i++){
+            //     console.log(i);
+            // }
         });
 
         const viewAll = () => {
             emit("send-type", "viewAll");
             router.push({name: "OnMeeting"});
         }
+
+        const getOnMeetingList = async () => {
+            try{
+                const res = await axios.get('/onMeetings');
+                onMeetingList.value = {...res.data.recommendList};
+            } catch(err){
+                console.log(err);
+            }
+        }
+
+        getOnMeetingList();
+
+        // const getSearchResultList = async () => {
+        //     try{
+        //         const res = await axios.get('/onMeetings/search',{
+        //             keyword: 
+        //         });
+        //         onMeetingList.value = {...res.data.recommendList};
+        //     } catch(err){
+        //         console.log(err);
+        //     }
+        // }
         
         return{
             searchResultCnt,
             onMeetingList,
-            viewAll
+            viewAll,
         }
     }
 }
