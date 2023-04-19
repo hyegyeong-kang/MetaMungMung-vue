@@ -1,41 +1,40 @@
 <template>
   <div class="services_section layout_padding">
-    <ReviewHeader />
+    <ReviewHeader :productIdx="productIdx" />
     <div class="container">
-      <div class="header">Write your review</div>
       <div id="app">
-        <label>Insert your Name:</label>
-        <input name="name" type="text" v-model="name" /><br />
-        <label>Insert your City:</label>
-        <input name="city" type="text" v-model="city" /><br />
-        <label>Insert your Review:</label>
-        <textarea name="content" v-model="content"></textarea>
+        <label>제목</label>
+        <input title="title" type="text" v-model="title" /><br />
+        <label>내용</label>
+        <textarea title="content" v-model="content"></textarea>
 
-        <button v-on:click="addReview()">Send</button>
+        <button v-on:click="[addReview(), checkContentLength()]">
+          리뷰등록
+        </button>
 
-        <div v-for="item in list" :key="item.name" class="review">
-          <div class="review-photo">
-            <img v-bind:src="item.photo" />
+        <div v-for="review in reviewList" :key="review.title" class="review">
+          <div class="review-memberImg">
+            <img v-bind:src="review.memberImg" />
           </div>
 
           <div class="review-box">
             <div class="review-author">
               <p>
-                <strong>{{ item.name }}</strong> -
+                <strong>{{ review.title }}</strong> -
                 <i class="fa fa-star" aria-hidden="true"></i>
                 <i class="fa fa-star" aria-hidden="true"></i>
                 <i class="fa fa-star" aria-hidden="true"></i>
                 <i class="fa fa-star" aria-hidden="true"></i>
                 <i class="fa fa-star" aria-hidden="true"></i>
-                - {{ item.city }}
+                - {{ review.writer }}
               </p>
             </div>
             <div class="review-comment">
-              <p>{{ item.content }}</p>
+              <p>{{ review.content }}</p>
             </div>
 
             <div class="review-date">
-              <time>July, 27th, 2016</time>
+              <time>{{ review.reviewDate }}</time>
             </div>
           </div>
         </div>
@@ -47,54 +46,78 @@
 <script>
 import ReviewHeader from "@/components/store/product/ReviewHeader.vue";
 import { ref } from "vue";
+import { useRoute } from "vue-router";
 
 export default {
   components: {
     ReviewHeader,
   },
   setup() {
+    const route = useRoute();
+
+    const productIdx = ref(0);
     const content = ref("");
-    const name = ref("");
-    const photo = ref(
-      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+    const title = ref("");
+    const memberImg = ref(
+      "https://i.pinimg.com/474x/d7/70/33/d7703333ad8ba85827b60fccf42f9c25.jpg"
     );
-    const city = ref("");
-    const list = ref([
+    const writer = ref("");
+    const reviewDate = ref("");
+
+    const reviewList = ref([
       {
-        name: "Hélio Marcondes",
+        title: "또 시킬래요..",
         content:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur consequat magna ut dui egestas, in varius diam ultricies. Phasellus suscipit magna id arcu auctor, nec vulputate dolor elementum.",
-        photo: "https://randomuser.me/api/portraits/men/88.jpg",
-        city: "São Paulo, SP",
+        memberImg:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ1shBdJ7nUA44VMTPv0-ceFSfSHk_L7ViMw&usqp=CAU",
+        writer: "개죽이",
+        reviewDate: "2023-04-20",
       },
       {
-        name: "Arya Stark",
+        title: "진짜 잘먹어요!",
         content:
           "Minhas cadeiras chegaram no prazo e super bem embaladas!!! Além das cadeiras serem lindas, os preços são ótimos! Indico, com certeza!",
-        photo: "https://randomuser.me/api/portraits/women/54.jpg",
-        city: "Winterfell, LO",
+        memberImg:
+          "https://img2.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202105/25/holapet/20210525081724428qquq.jpg",
+        writer: "밍망",
+        reviewDate: "2023-04-20",
       },
     ]);
 
+    const checkContentLength = () => {
+      if (content.value.length > 65) {
+        const newContent =
+          content.value.substring(0, 65) + "\n" + content.value.substring(65);
+        content.value = newContent;
+      }
+    };
+
     const addReview = () => {
-      list.value.push({
-        name: name.value,
-        city: city.value,
-        photo: photo.value,
+      reviewList.value.push({
+        title: title.value,
+        writer: writer.value,
+        memberImg: memberImg.value,
         content: content.value,
+        reviewDate: reviewDate.value,
       }),
-        (name.value = ""),
-        (city.value = ""),
+        (title.value = ""),
+        (writer.value = ""),
         (content.value = "");
     };
 
+    productIdx.value = route.params.id;
+
     return {
       addReview,
+      checkContentLength,
       content,
-      name,
-      photo,
-      city,
-      list,
+      title,
+      memberImg,
+      writer,
+      reviewList,
+      productIdx,
+      reviewDate,
     };
   },
 };
@@ -164,9 +187,10 @@ button {
   display: inline-block;
   margin: 10px 0;
 }
-.review-photo {
+.review-memberImg {
   height: 80px;
   width: 80px;
+  object-fit: cover;
   display: inline-block;
   float: left;
   margin-right: 3em;
