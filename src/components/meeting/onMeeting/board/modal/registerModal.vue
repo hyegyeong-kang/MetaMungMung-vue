@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import MapModal from "@/components/meeting/onMeeting/board/registerModal/mapModal.vue";
+import MapModal from "@/components/meeting/onMeeting/board/modal/mapModal.vue";
 
 export default {
   name: "RegisterModal",
