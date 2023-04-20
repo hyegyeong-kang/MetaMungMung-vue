@@ -161,8 +161,8 @@ export default {
       modal[0].style.display = "none";
     };
 
-    const submitOffMeetingForm = () => {
-      console.log("제목!!! " + title.value);
+    const submitOffMeetingForm = async () => {
+      // console.log("제목!!! " + title.value);
       // console.log("위치!!!   " + props.currentLocation);
       // console.log("제한인원!!!  " + limit.value);
       // console.log("날짜!!! " + date.value);
@@ -171,7 +171,27 @@ export default {
       // console.log("위도 " + props.currentLat);
       // console.log("경도 " + props.currentLng);
 
-      router.go();
+      axios.defaults.headers.common["AUTHORIZATION"] =
+        sessionStorage.getItem("token");
+
+      axios
+        .post("/offMeetings", {
+          title: title.value,
+          meetingDate: date.value,
+          limit: limit.value,
+          contents: content.value,
+          latitude: props.currentLat,
+          longitude: props.currentLng,
+          locationAddress: props.currentLocation,
+          startTime: startTime.value,
+        })
+        .then(function (response) {
+          console.log("response => " + JSON.stringify(response, null, 2));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      router.go(0);
     };
 
     for (let i = 0; i < clickable.length; i++) {

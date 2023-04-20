@@ -40,8 +40,8 @@
             disabled
           />
         </div>
-        <!--
-        <div class="form-group">
+
+        <!-- <div class="form-group">
           <label for="host">🙋🏻 호스트</label>
           <input
             type="text"
@@ -132,18 +132,29 @@
             class="form-control inputText"
             id="content"
             rows="5"
-            placeholder="내용을 입력해주세요."
             v-model="contents"
             disabled
           ></textarea>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn modifyBtn">수정</button>
-        <button class="btn deleteBtn">삭제</button>
-        <!-- <button @click="closeDetailModalFunc" class="btn cancelBtn">
+        <button
+          v-if="myIdx === offMeetingIdx"
+          @click="modifyOffMeeting"
+          class="btn modifyBtn"
+        >
+          수정
+        </button>
+        <button
+          v-if="myIdx === offMeetingIdx"
+          @click="deleteOffMeeting"
+          class="btn deleteBtn"
+        >
+          삭제
+        </button>
+        <button @click="closeDetailModalFunc" class="btn cancelBtn">
           닫기
-        </button> -->
+        </button>
       </div>
     </div>
   </div>
@@ -163,6 +174,7 @@ export default {
     JoinMemberModal,
   },
   setup(props) {
+    const myIdx = Number(sessionStorage.getItem("memberIdx"));
     let offMeetingIdx = ref(0);
     let title = ref("");
     let meetingDate = ref("");
@@ -203,12 +215,16 @@ export default {
     const openDetailModalFunc = (selectedMarker) => {
       modal[0].style.display = "block";
       // console.log("props로 받은 title값 : " + selectedMarker.getTitle() + " ");
-
+      // console.log(
+      //   "Object.keys(props.boardDetails).length + " +
+      //     Object.keys(props.boardDetails).length
+      // );
       try {
         for (let i = 0; i < Object.keys(props.boardDetails).length; i++) {
-          if (
-            selectedMarker.getTitle() == props.boardDetails[i]["offMeetingIdx"]
-          ) {
+          // if (
+          //   selectedMarker.getTitle() == props.boardDetails[i]["offMeetingIdx"]
+          // )
+          {
             offMeetingIdx.value = props.boardDetails[i].offMeetingIdx;
             title.value = props.boardDetails[i].title;
             meetingDate.value = props.boardDetails[i].meetingDate;
@@ -223,13 +239,14 @@ export default {
             locationAddress.value = props.boardDetails[i].locationAddress;
             startTime.value = props.boardDetails[i].startTime;
             headcount.value = props.boardDetails[i].headcount;
+            // } else {
+            //   console.log("값이 안들어와..");
           }
         }
       } catch (err) {
         console.log("err!!!!" + err);
       }
     };
-
     substring = () => {
       meetingDate.value = meetingDate.value.substring(0, 10);
     };
@@ -270,6 +287,7 @@ export default {
       startTime,
       headcount,
       likeBtn,
+      myIdx,
     };
   },
 };

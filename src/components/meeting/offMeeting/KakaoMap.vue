@@ -216,11 +216,13 @@ export default {
           boardMarkerPosition = new kakao.maps.LatLng(
             base.boardDetails[i].latitude,
             base.boardDetails[i].longitude
-            // console.log(
-            //   base.boardDetails[i].latitude,
-            //   base.boardDetails[i].longitude
-            // )
           );
+
+          // console.log(
+          //   base.boardDetails[i].latitude + + + base.boardDetails[i].longitude
+          //   // base.boardDetails[i].
+          // );
+
           const boardMarker = new kakao.maps.Marker({
             position: boardMarkerPosition,
             title: cnt + i,
