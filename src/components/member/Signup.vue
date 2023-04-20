@@ -73,7 +73,7 @@
                     <input name="address2" v-model="member.address2" type="text" placeholder="상세 주소지 입력" required>
                 </div>
 
-                <button type="submit" id="btnSignup">가입하기</button>
+                <button type="submit" id="btnSignup" >가입하기</button>
                 </div>
 
                 </form>
@@ -130,7 +130,6 @@ export default {
     const signupForm = async() => {
       try {
         console.log(member.value);
-
         const res = await axios.post('/members/signup', {
           memberId: member.value.memberId,
           password: member.value.password,
@@ -141,12 +140,13 @@ export default {
           phone: member.value.phone,
           address1: member.value.address1,
           address2: member.value.address2
-        });
+        })              
         
-        console.log(res.data);
-        console.log(member.value);
-        router.push({ name: 'Login' });
+        console.log(res)
         alert("회원가입이 완료되었습니다!")
+        // console.log(res.data);
+        // console.log(member.value);
+        
 
         } catch (error) {
             console.log(error.message);
