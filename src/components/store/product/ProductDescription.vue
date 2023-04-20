@@ -1,10 +1,6 @@
 <template>
   <div style="margin-top: 50px; margin-bottom: 50px">
-    <img
-      class="productDetailImg"
-      src="https://images-dev.wefluffy.co.kr/product-detail/1000003425/1000003425-0.webp"
-      alt=""
-    />
+    <img class="productDetailImg" :src="product.productDetailImg" alt="" />
   </div>
 
   <div class="shCMSshop">
@@ -49,6 +45,7 @@ export default {
     let productImg = ref("");
     let productDetail = ref("");
     let volume = ref("");
+    let productDetailImg = ref("");
 
     productIdx.value = props.product.productIdx;
     category.value = props.product.category;
@@ -58,6 +55,7 @@ export default {
     productImg.value = props.product.productImg;
     productDetail.value = props.product.productDetail;
     volume.value = props.product.volume;
+    productDetailImg.value = props.product.productDetailImg;
 
     return {
       productIdx,
@@ -68,6 +66,7 @@ export default {
       productImg,
       productDetail,
       volume,
+      productDetailImg,
     };
   },
 };
