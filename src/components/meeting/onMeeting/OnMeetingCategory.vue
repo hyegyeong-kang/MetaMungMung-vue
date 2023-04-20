@@ -38,7 +38,9 @@ export default {
         let prevIdx = 0;
 
         const getCate = () => {
-            
+            for(let item in document.getElementsByClassName("searchedSortBand")){
+                console.log(item);
+            }
         }
 
         getCate();

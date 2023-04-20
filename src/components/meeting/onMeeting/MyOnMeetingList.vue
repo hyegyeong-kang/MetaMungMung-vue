@@ -98,6 +98,9 @@ export default {
 
         const getOnMeetingList = async () => {
             try{
+                axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+                const memberIdx = sessionStorage.getItem('memberIdx');
+
                 const res = await axios.get('/onMeetings');
                 myOnMeetings.value = {...res.data.myList};
                 console.log(res);

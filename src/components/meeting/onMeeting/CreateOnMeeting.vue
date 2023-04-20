@@ -157,6 +157,7 @@ export default {
                 name.value = meetingInfo.value.onMeetName;
                 introduction.value = description.replace(/<br>/g, '\n');
                 console.log(introduction.value);
+
                 coverImg.value = meetingInfo.value.thumbnail;
                 address.value = meetingInfo.value.onMeetingAddr;
                 category.value = meetingInfo.value.category;
@@ -227,8 +228,7 @@ export default {
                     const res = await axios.put('/onMeetings/' + route.params.id, meetingInfo.value);
                     console.log("수정된 온모임 : " + res.data);
                     router.push({
-                        name: "OnMeetingDetail",
-                        params: {id: res.data.onMeetingIdx}
+                        name: "OnMeeting"
                     });
                 } catch(err){
                     console.log(err);
@@ -242,8 +242,7 @@ export default {
                     const res = await axios.post('/onMeetings', meetingInfo.value);
                     console.log("생성된 온모임 : " + res.data);
                     router.push({
-                        name: "OnMeetingDetail",
-                        params: {id: res.data.onMeetingIdx}
+                        name: "OnMeeting"
                     });
                 } catch(err){
                     console.log(err);
@@ -257,9 +256,13 @@ export default {
         const getMyOnMeetingInfo = async () => {
             if(status.value === 'modify'){
                 try{
+                    axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+                    const memberIdx = sessionStorage.getItem('memberIdx');
+
                     const res = await axios.get('/onMeetings/' + route.params.id);
                     meetingInfo.value = {...res.data};
                     description = meetingInfo.value.introduction;
+                    console.log(meetingInfo.value );
                 } catch(err){
                     console.log(err);
                 }

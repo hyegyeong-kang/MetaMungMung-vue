@@ -25,7 +25,7 @@
                             </strong>
                             <p class="pSubTxt">{{ onMeeting.introduction }}</p>
 
-                            <router-link v-if="isMain" :to="{name: 'OnMeetingSearch', query: {keywords: onMeeting.category}}" class="moreMeetingLink _tagLink"><strong>{{ onMeeting.category }}</strong> 모임 더보기</router-link>
+                            <router-link v-if="isMain" :to="{name: 'OnMeetingSearch', query: {keywords: '', category: onMeeting.category, address: addr}}" class="moreMeetingLink _tagLink"><strong>{{ onMeeting.category }}</strong> 모임 더보기</router-link>
                             <p v-else class="member">
                                 <span class="total">멤버 <strong class="totalNumber">{{ onMeeting.memberCnt }}</strong></span>
                                 <span class="leader">리더 <strong class="leagerName">{{ onMeeting.hostName }}</strong></span>
@@ -97,6 +97,10 @@ export default {
             }
             console.log("주소주소주소 " + address);
             try{
+                axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+                const memberIdx = sessionStorage.getItem('memberIdx');
+                console.log(memberIdx);
+
                 const res = await axios.get('/onMeetings');
                 onMeetingList.value = {...res.data.recommendList};
                 
@@ -109,55 +113,33 @@ export default {
         }
         // getOnMeetingList();
 
+        
+
         const getSearchResultList = async () => {
-            console.log(props.cate);
+            let keywords = route.query.keywords;
             let category = props.cate;
             let address = props.addr;
+            
+            console.log("전 카테 " + category);
+            console.log("전 주소 " + address);
+            console.log("전 키워드 " + keywords);
+
+            if(!keywords){
+                keywords = '';
+            }
             if(category === '전체' || !category){
                 category = '';
             }
             if(address === '모든 동네' || !address){
                 address = '';
             }
+            
             console.log("입력할 카테 " + category);
             console.log("입력할 주소 " + address);
-            console.log("입력할 키워드 " + route.query.keywords);
+            console.log("입력할 키워드 " + keywords);
             
             try{
-                const res = await axios.get('/onMeetings/search', {params: {keywords: route.query.keywords}});
-                onMeetingList.value = {...res.data};
-
-                console.log(res.data);
-                
-                for(let i in res.data){
-                    if(res.data[i].introduction != null){
-                        onMeetingList.value[i].introduction = res.data[i].introduction.replace(/<br>/g, ' ');
-                    } 
-                }
-                console.log(res.data.length);
-
-                searchResultCnt.value = res.data.length;
-            } catch(err){
-                console.log(err);
-            }
-        }
-
-        const getCateResultList = async () => {
-            console.log(props.cate);
-            let category = props.cate;
-            let address = props.addr;
-            if(category === '전체' || !category){
-                category = '';
-            }
-            if(address === '모든 동네' || !address){
-                address = '';
-            }
-            console.log("입력할 카테 " + category);
-            console.log("입력할 주소 " + address);
-            console.log("입력할 키워드 " + route.query.keywords);
-            
-            try{
-                const res = await axios.get('/onMeetings/category', {params: {category: category}});
+                const res = await axios.get('/onMeetings/search', {params: {keywords: keywords, category: category, address: address}});
                 onMeetingList.value = {...res.data};
 
                 console.log(res.data);
@@ -182,14 +164,8 @@ export default {
                 console.log("메인");
                 getOnMeetingList();
             }
-            // 검색 화면
-            else if(props.isSearch){
-                console.log("검색");
-                getSearchResultList();
-            }
-            // 모두보기 화면
             else{
-                getCateResultList();
+                getSearchResultList();
             }
         });
         // getList();
