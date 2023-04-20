@@ -54,14 +54,27 @@ export default {
             }
         });
 
-        const joinGroup = () => {
+        const joinGroup = async () => {
             isApply.value = !isApply.value;
-            setTimeout(() => {
-              router.push({
-                name: "RegisterModal",
-                params: {id: onMeeting.onMeetingIdx}
-              })
-            }, 3000);
+            try{
+              axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+              const memberIdx = sessionStorage.getItem('memberIdx');
+
+              const res = await axios.post('/onMeetings/' + route.params.id + '/join');
+              console.log(res.data);
+              onMeeting.value = {...res.data};
+              console.log(onMeeting.value);
+
+              setTimeout(() => {
+                router.push({
+                  name: "RegisterModal",
+                  params: {id: onMeeting.onMeetingIdx}
+                })
+              }, 3000);
+              
+            } catch(err){
+              console.log(err);
+            }
         }
 
         return{
