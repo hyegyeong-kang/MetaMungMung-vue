@@ -48,15 +48,15 @@ export default {
   setup(){
     const route = useRoute();
     const router = useRouter();
-    const pid = route.params.id;
+    const productIdx = route.params.id;
     const quantity = route.params.quantity;
     // const orderProducts = ref([]);
     const member = ref(
        {id: 1, name: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address: '서울', point: 0}
     );
     const orderDetails = ref([
-      {id: 1, quantity: 2, 
-        productDTO: {id: 1, brand: '스윗밸런스', price: 5900, name: '오늘의 샐러드', img_url: 'https://img-cf.kurly.com/shop/data/goods/1655775819130l0.jpg'}}
+      // {id: 1, quantity: 2, 
+      //   productDTO: {id: 1, brand: '스윗밸런스', price: 5900, name: '오늘의 샐러드', img_url: 'https://img-cf.kurly.com/shop/data/goods/1655775819130l0.jpg'}}
     ]);
     const usePoint = ref(0);
     const totalPrice = ref(0);
@@ -85,44 +85,48 @@ export default {
       }
     }
 
-    // const getProductsInfo = () => {
-    //   orderProducts.add({
-    //     p_id: pid,
-    //     quantity: quantity
-    //   });
-    // }
+    // 주문상품 정보
+    const getProductsInfo = () => {
+      orderProducts.add({
+        productIdx: productIdx,
+        orderQuantity: orderQuantity
+      });
+    }
 
-    // getProductsInfo();
+    getProductsInfo();
 
+    // 주문서 페이지
     const getOrderPage = async () => {
-    //   try{
-    //     const res = await axios.post('/members/21/orders', {
-    //         orderProductList: [
-    //             {
-    //                 p_id: pid,
-    //                 quantity: quantity
-    //             }
-    //         ]
-    //     });
-    //     console.log(res.data.length);
-    //     orderDetails.value = {...res.data};
-    //     console.log(orderDetails.value);
-    //     for(let i = 0; i < res.data.length; i++){
-    //       totalPrice.value = totalPrice.value + orderDetails.value[i].totalPrice;
-    //       console.log(totalPrice.value);
-    //     }
-    //     paymentAmount.value = totalPrice.value;
+      try{
+        const res = await axios.post('/orders', {
+            // orderProductList: [
+            //     {
+            //         p_id: pid,
+            //         orderQuantity: orderQuantity
+            //     }
+            // ]
+            orderProductList: orderProducts
+        });
+        console.log(res.data.length);
+        orderDetails.value = {...res.data};
+        console.log(orderDetails.value);
+        for(let i = 0; i < res.data.length; i++){
+          totalPrice.value = totalPrice.value + orderDetails.value[i].totalPrice;
+          console.log(totalPrice.value);
+        }
+        paymentAmount.value = totalPrice.value;
 
-    //     console.log('paymentAmount : ' + paymentAmount.value);
-    //     //console.log(orderDetails.length);
-    //   } catch(err) {
-    //     console.log(err);
-    //   }
+        console.log('paymentAmount : ' + paymentAmount.value);
+        //console.log(orderDetails.length);
+      } catch(err) {
+        console.log(err);
+      }
       
     }
 
     getOrderPage();
 
+    // 결제
     const doPay = async () => {
     //   try{
     //     const res = await axios.post('/members/21/orders/payment', {
