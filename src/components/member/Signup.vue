@@ -89,6 +89,7 @@
 import {useRoute, useRouter} from 'vue-router';
 import { ref } from 'vue';
 import axios from 'axios';
+import Swal from "sweetalert2";
 
 export default {
   name: 'SignupForm',
@@ -142,11 +143,13 @@ export default {
           address2: member.value.address2
         })              
         
-        console.log(res)
-        alert("회원가입이 완료되었습니다!")
-        // console.log(res.data);
-        // console.log(member.value);
+        Swal.fire({
+            icon: 'success',
+            title: '회원가입 완료',
+            text:'반려견 등록은 로그인 후 진행해 주세요!'
+        });
         
+        setTimeout("location.href='Login'", 1000);
 
         } catch (error) {
             console.log(error.message);
@@ -157,7 +160,10 @@ export default {
 
     const idCheck = async () => {
         try {
-            const res = await axios.post('/members/idCheck', { memberId: member.value.memberId });
+            const res = await axios.post('/members/idCheck', { 
+              memberId: member.value.memberId 
+            });
+
             if (res.data === 0) {
                 alert("사용 가능한 아이디입니다.");
             } else {
