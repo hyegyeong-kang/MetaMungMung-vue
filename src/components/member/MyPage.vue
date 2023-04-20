@@ -17,11 +17,10 @@
             </div>
             <div class="menu">
                 <ul>
-                <li><router-link :to="{ name: 'Modify' }">Edit Member Info</router-link></li>
-                <li><a href="#">My Pet</a></li>
-                <li><a href="#">My Meet</a></li>
-                <li><a href="#">My Order</a></li>
-                <li><a href="#">Sign out</a></li>
+                <li><router-link :to="{ name: 'Modify' }">회원정보 수정 및 탈퇴</router-link></li>
+                <li><router-link :to="{ name: 'Register' }">나의 반려견</router-link></li>
+                <li><router-link :to="{ name: 'Modify' }">나의 모임</router-link></li>
+                <li><router-link :to="{ name: 'Modify' }">내 주문</router-link></li>
                 </ul>
             </div>
             </div>
