@@ -45,8 +45,6 @@ export default {
       password: '',
     });
 
-    const token = sessionStorage.getItem('token');
-
     const loginForm = async() => {
       try {
         console.log(member.value);
@@ -55,14 +53,13 @@ export default {
           memberId: member.value.memberId,
           password: member.value.password
         });
-
         sessionStorage.setItem('token', res.headers.token);
-        sessionStorage.setItem('memberId', member.value.memberId);
+        sessionStorage.setItem('memberIdx', res.headers.memberidx);
 
-        console.log(sessionStorage);
+        axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+
         
         alert(member.value.memberId + " 님 메타멍멍에 오신 것을 환영합니다!");
-        window.location.reload(true);
         router.push({ name: 'Home'});
         
       } catch (error) {
@@ -74,13 +71,10 @@ export default {
             title: '잘못된 로그인'
           });
       } 
-        
-        // console.log(member.value);
     };
 
     return {
       member,
-      token,
       loginForm,
     };
   }

@@ -86,13 +86,6 @@ export default {
       }
     }
 
-
-    const memberInfo = JSON.parse(sessionStorage.getItem("memberInfo"));
-
-    // console.log(memberInfo.memberIdx);
-    // console.log(memberInfo.memberName);
-    // console.log(memberInfo.authority);
-
     const member = ref({
       password: '',
       email: '',
@@ -104,7 +97,10 @@ export default {
     const modifyForm = async() => {
       try {
         console.log(member.value);
-        const res = await axios.patch('/members/modify/' + memberInfo.memberIdx, {
+        axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+        const memberId = sessionStorage.getItem('memberIdx');
+
+        const res = await axios.patch(`/members/modify/${memberId}`, {
           password: member.value.password,
           email: member.value.email,
           phone: member.value.phone,
@@ -112,7 +108,7 @@ export default {
           address2: member.value.address2
         });
         console.log(res.data);
-        alert(memberInfo.memberName + ' 님의 회원 정보가 수정되었습니다!')
+        //alert(memberInfo.memberName + ' 님의 회원 정보가 수정되었습니다!')
         //router.push({ name: 'Login' });
         //location.href = '/members/login';
 
@@ -125,7 +121,6 @@ export default {
 
     
     return {
-      memberInfo,
       member,
       modifyForm,
       passwordValid,

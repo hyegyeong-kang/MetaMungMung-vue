@@ -219,6 +219,7 @@
 <script>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import axios from "axios";
 
 export default {
   props: {
@@ -327,6 +328,19 @@ export default {
         volume: "-",
       },
     ]);
+
+    /* axios!!!!!!!!!!! */
+    // const productListPage = async () => {
+    //   console.log("ok!!!!!!!!!");
+    //   try {
+    //     const res = await axios.get("/products");
+    //     productList.value = { ...res.data };
+    //     console.log(res);
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // };
+    // productListPage();
 
     const moveToDetailPage = (productIdx) => {
       console.log(productIdx);

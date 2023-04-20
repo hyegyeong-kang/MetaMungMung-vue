@@ -16,29 +16,29 @@
                 <br/>
                 <label for="input-image">반려견 이미지 선택:</label>
                 <br>
-                <input id="input-image" type="file" accept="image/*" ref="inputImage" @change="readImage" />
+                <input id="input-image" type="file" accept="image/*" ref="inputImage" @change="readImage"/>
                 
             </div>
 
             <div>
                 <div>동물 등록 번호</div>
-                <input name="no" type="text" placeholder="반려 동물 등록 번호 입력" required>
+                <input name="no" v-model="pet.animalRegistrationNo" type="text" placeholder="반려 동물 등록 번호 입력" required>
             </div>
 
             <div>
                 <div>이름</div>
-                <input name="name" type="text" placeholder="반려견 이름 입력" required>
+                <input name="name" v-model="pet.petName" type="text" placeholder="반려견 이름 입력" required>
             </div>
 
             <div>
                 <div>성별</div>
-                <input type="radio" class="female" required> 여
-                <input type="radio" class="male" required> 남
+                <input type="radio" v-model="pet.sex" class="female" required> 여
+                <input type="radio" v-model="pet.sex" class="male" required> 남
             </div>
 
             <div>
                 <div>생년월일</div>
-                <input name="birth" type="text" placeholder="생년월일 입력" required>
+                <input name="birth" v-model="pet.birth" type="text" placeholder="생년월일 입력" required>
             </div>
 
             <button type="submit" id="btnRegister">등록하기</button>
@@ -57,16 +57,17 @@ import { ref } from 'vue';
 import axios from 'axios';
 
 export default {
-  name: 'AddForm',
+  name: 'RegisterForm',
   setup() {
     const router = useRouter();
+
     const pet = ref({
       memberIdx: '',
-      animalRegisterationNo:'',
+      animalRegistrationNo:'',
       petName: '',
       sex:'',
       birth:'',
-      petImg: ''
+      //petImg: ''
     });
 
     // 이미지 파일 첨부
@@ -76,6 +77,9 @@ export default {
         previewSrc.value = require(`@/assets/images/member/pet-image.png`);
     }
 
+    const file = document.getElementById('inputImage');
+    
+
     function readImage() {
       const input = inputImage.value;
 
@@ -84,20 +88,32 @@ export default {
 
         reader.onload = (e) => {
           previewSrc.value = e.target.result;
+
+          console.log("Uploaded file data: ", input.files[0]);
         };
 
         reader.readAsDataURL(input.files[0]);
       }
-    }
+    };
+
+    //const memberInfo = JSON.parse(sessionStorage.getItem("memberInfo"));
 
     const registerForm = async() => {
       try {
-        console.log(member.value);
-        const res = await axios.patch('/members/pet/' + memberInfo.memberIdx, {
+        const memberIdx = sessionStorage.getItem('memberIdx');
+        axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
 
+        const res = await axios.post('/members/pets/register', {
+          memberIdx: memberIdx,
+          animalRegistrationNo: pet.value.animalRegistrationNo,
+          petName: pet.value.petName,
+          sex: pet.value.sex,
+          birth: pet.value.birth
         });
+
+        //const update = await axios.patch('members/update')
         console.log(res.data);
-        alert(memberInfo.memberName + ' 님의 반려견 정보가 등록 되었습니다!')
+        alert(' 님의 반려견 정보가 등록 되었습니다!')
         //router.push({ name: 'MyPage' });
 
         } catch (error) {
@@ -109,6 +125,8 @@ export default {
     
 
     return {
+        pet,
+        file,
         defaultImage,
         inputImage,
         previewSrc,

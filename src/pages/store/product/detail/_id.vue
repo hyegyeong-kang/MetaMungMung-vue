@@ -142,7 +142,8 @@ import ProductCategory from "@/components/store/product/ProductCategory.vue";
 import ProductHeader from "@/components/store/product/ProductHeader.vue";
 import ProductDescription from "@/components/store/product/ProductDescription.vue";
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
+import axios from "axios";
 
 export default {
   components: {
@@ -152,6 +153,9 @@ export default {
   },
   setup() {
     const router = useRouter();
+    const route = useRoute();
+    const productIdx = route.params.id;
+
     const product = ref({
       productIdx: 1,
       category: "사료",
@@ -164,6 +168,21 @@ export default {
         "프로플랜 센서티브 스킨 앤 스토막 어덜트프로플랜 센서티브 스킨 앤 스토막 어덜트",
       volume: "12kg",
     });
+
+    /* axios 사용!!! */
+    // const productDetailPage = async () => {
+    //   console.log("ok!!!!!");
+    //   try {
+    //     console.log("상세페이지 productIdx~~!! : " + productIdx);
+    //     const res = await axios.get(`/products/${productIdx}`);
+    //     product.value = { ...res.data };
+    //     console.log(res);
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // };
+
+    // productDetailPage();
 
     const optionList = ref([
       { name: "선택해주세요.", value: "" },
