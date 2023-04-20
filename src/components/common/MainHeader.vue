@@ -27,7 +27,7 @@
                   <div class="padding_left0">
                     <router-link v-if="!loggedIn" :to="{ name: 'Signup' }" @click="moveToPage">Signup</router-link>
                     <span class="padding_left0"><router-link v-if="!loggedIn" :to="{ name: 'Login' }" @click="moveToPage">Login</router-link></span>
-                    <router-link v-if="loggedIn" :to="{ name: 'MyPage' }" @click="moveToPage">{{memberId}} 님</router-link>
+                    <router-link v-if="loggedIn" :to="{ name: 'MyPage' }" @click="moveToPage" style="color:black"><img src="@/assets/images/member/my.png"/> My</router-link>
                     <span class="padding_left0"><router-link v-if="loggedIn" :to="{ name: 'Home' }" @click="logout">Logout</router-link></span>
                   </div>
                 </div>
@@ -117,6 +117,7 @@ export default {
   setup() {
     const token = sessionStorage.getItem("token");
     const memberId = sessionStorage.getItem("memberId");
+    const memberIdx = sessionStorage.getItem("memberIdx");
 
     console.log(memberId);
 
@@ -127,6 +128,7 @@ export default {
     onMounted(() => {
       if (token == null) {
         sessionStorage.removeItem("memberId");
+        sessionStorage.removeItem("memberIdx");
       }
     });
 
@@ -163,7 +165,8 @@ export default {
 
     const logout = () => {
       sessionStorage.removeItem("token");
-      sessionStorage.removeItem("memberId");
+      sessionStorage.removeItem("memberIdx");
+      sessionStorage.removeItem("status");
       window.location.reload(true);
     };
 
@@ -171,6 +174,7 @@ export default {
       loggedIn,
       token,
       memberId,
+      memberIdx,
       openNav,
       closeNav,
       moveToMain,
