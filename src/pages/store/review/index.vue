@@ -30,7 +30,9 @@
               </p>
             </div>
             <div class="review-comment">
-              <p>{{ review.content }}</p>
+              <div>
+                <p>{{ review.content }}</p>
+              </div>
             </div>
 
             <div class="review-date">
@@ -45,6 +47,7 @@
 
 <script>
 import ReviewHeader from "@/components/store/product/ReviewHeader.vue";
+import axios from "axios";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 
@@ -55,7 +58,7 @@ export default {
   setup() {
     const route = useRoute();
 
-    const productIdx = ref(0);
+    const productIdx = route.params.id;
     const content = ref("");
     const title = ref("");
     const memberImg = ref(
@@ -85,6 +88,21 @@ export default {
       },
     ]);
 
+    /* axios 사용!!! */
+    // const reviewDetailPage = async () => {
+    //   console.log("ok!!!!!");
+    //   try {
+    //     console.log("리뷰페이지 productIdx~~!! : " + productIdx);
+    //     const res = await axios.get(`/products/${productIdx}/reviews`);
+    //     reviewList.value = { ...res.data };
+    //     console.log(res);
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // };
+
+    // reviewDetailPage();
+
     const checkContentLength = () => {
       if (content.value.length > 65) {
         const newContent =
@@ -105,8 +123,6 @@ export default {
         (writer.value = ""),
         (content.value = "");
     };
-
-    productIdx.value = route.params.id;
 
     return {
       addReview,

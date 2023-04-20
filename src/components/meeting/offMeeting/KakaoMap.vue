@@ -57,7 +57,8 @@
 <script>
 import CreateModal from "@/components/meeting/offMeeting/modal/createModal.vue";
 import DetailModal from "@/components/meeting/offMeeting/modal/detailModal.vue";
-// import {ref} from 'vue';
+import axios from "axios";
+
 export default {
   name: "KakaoMap",
   components: {
@@ -136,12 +137,9 @@ export default {
           content: "카페는 역시 스타벅스죠~~~~~ 여기 어떠세요????!!!!!",
         },
       ],
+      offMeetingPage: null,
     };
   },
-  // created() {
-  //   let base = this;
-  //   //비동기적으로 selectedMarker를 업데이트
-  // },
   mounted() {
     // api 스크립트 소스 불러오기 및 지도 출력
     if (window.kakao && window.kakao.maps) {
@@ -152,8 +150,40 @@ export default {
     let base = this;
     base.openCreateModal = this.$refs.createModal.openCreateModalFunc;
     base.openDetailModal = this.$refs.detailModal.openDetailModalFunc;
-    console.log(base.openCreateModal);
-    console.log(base.openDetailModal);
+    // console.log(base.openCreateModal);
+    // console.log(base.openDetailModal);
+
+    // base.offMeetingPage = async () => {
+    //   console.log("ok");
+
+    //   try {
+    //     const res = await axios.get("/offMeetings");
+    //     base.boardDetails = { ...res.data };
+    //     console.log(res);
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // };
+
+    // 이코드 !!!!
+    // base.offMeetingPage = axios
+    //   .get("/offMeetings")
+    //   .then((res) => {
+    //     base.boardDetails = res.data;
+    //     console.log("base.boardDetails" + base.boardDetails);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+
+    // base.offMeetingPage();
+
+    // async function getData() {
+    //   base.boardDetails = axios.get("/offMeetings").then((res) => {
+    //     console.log("boardDetail : " + res.data);
+    //   });
+    // }
+    // getData();
   },
   methods: {
     openCreateModal() {
