@@ -239,30 +239,34 @@
           </div>
           <div class="message" @click="openBoardModal">
             <p>{{ board.contents }}</p>
-            <img
+            <!-- <img
               src="https://img.dogpre.com/web/dogpre/event/popular_keyword_theme/43_pc_main_page_banner_0036.jpg"
-            />
+            /> -->
           </div>
           <div class="btns">
-            <button class="blue" type="button">
+            <!--댓글 클릭했을 때 모당창 뜨게 -->
+            <button class="blue" type="button" @click="openBoardModal">
               <img
                 src="@/assets/images/onMeeting/reply-icon.png"
                 height="20"
                 width="20"
                 style="margin-right: 10px"
-              />2(댓글 갯수)
+              />{{ replyCnt }}
             </button>
           </div>
-                <div>
+                <!-- <div>
                     <ReplyList/>
-                </div>
+                </div> -->
                 <div>
-                    <CreateReply/>  
+                    <!--댓글창이었음.. -->
+                    <!-- <CreateReply/>   -->
                 </div>
-         </div>
+                 <hr>
+        </div>
           <BoardDetail ref="boardDetail" @close="closeBoardModal" />
         </div>
         <!-- 하나의 트윗이 끝나는 곳-->
+       
 
         
 
@@ -350,14 +354,13 @@
           <a href="#">View All</a>
         </header>
         <main>
+          <!--카페 멤버-->
           <a href="#" v-for="(member, index) in registerMems" :key="index">
-            <!--여기서 카페 멤버 반복으로 돌려주면 됨 -->
             <img
               src=member.memberList[0].memberImg
             />
             <div class="user">
               <p>{{ member.memberList[0].memberName }}</p>
-              <!-- <span>강아지를 사랑합니다.</span> -->
             </div>
           </a>
         </main>
@@ -372,7 +375,7 @@ import MapModal from "@/components/meeting/onMeeting/board/modal/mapModal.vue";
 import ReplyList from "@/components/meeting/onMeeting/board/reply/replyList.vue";
 import CreateReply from "@/components/meeting/onMeeting/board/reply/createReply.vue";
 import BoardDetail from "@/components/meeting/onMeeting/board/boardDetailModal.vue";
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import axios from 'axios';
 
 
@@ -417,7 +420,7 @@ export default {
   },
   mounted() {
       let base = this;
-     // base.openBoardModal = this.$refs.boardDetail.openBoardModalFunc;
+    //  base.openBoardModal = this.$refs.boardDetail.openBoardModalFunc;
      // base.openMapModal = this.$refs.map.openMapModalFunc;
 
      // console.log(`!!! ${base.openMapModal}`);
@@ -448,6 +451,8 @@ export default {
 
           boards.value = {...response.data[0].boardList};
           onMeetingInfo.value = {...response.data[0]};
+
+          console.log(`^^^^^^^BOARD^^^^^^ ${JSON.stringify(boards.value, null, 2)}`);
 
           boardCnt.value = Object.keys(boards.value).length;
 
@@ -487,24 +492,50 @@ export default {
     const inputText = ref(''); 
     console.log(`+++++ ${JSON.stringify(registerMems.value, null, 2)}`);
   
+    // 게시글 추가
     const postData = async() => {
 
       console.log(`asasdsads ${inputText.value}`);
+
+      // boards.value 에서 필요한 값 빼서 data 에 넣어주기
 
       const data = {
 
         contents: inputText.value
       };
 
-      await axios.post('/onMeetings/1/board', data)
-        .then((response) => {
-          console.log(`POST RESPONSE: ${response}`);
+      // await axios.post('/onMeetings/1/board', data)
+      //   .then((response) => {
+      //     console.log(`POST RESPONSE: ${response}`);
 
-        })
-        .catch((error) => {
-          console.log(`POST DATE ERR: ${error}`);
-        })
+      //   })
+      //   .catch((error) => {
+      //     console.log(`POST DATE ERR: ${error}`);
+      //   })
     };
+
+    const replies = ref([]);
+
+      const getReplyList = async() => {
+
+        await axios.get('/onMeetings/1/board/1/reply', {})
+            .then((response) => {
+                replies.value = {...response.data.replyList}
+
+                console.log(`###REPLY ${JSON.stringify(replies.value, null, 2)}`)
+            })
+            .catch ((error) => {
+                console.log(`REPLY ERR: ${error}`);
+            });
+      };
+      getReplyList();
+    // 댓글 갯수
+    const replyCnt = computed(() => {
+      let cnt = Object.keys(replies.value).length;
+      console.log("8------"+cnt)
+      return cnt;
+     });
+     
 
 
 
@@ -521,6 +552,7 @@ export default {
       registerMemsCnt,
       inputText,
       postData,
+      replyCnt,
     }
   }
 };
@@ -1035,6 +1067,7 @@ header.nav-closed {
       margin-top: 15px;
       display: flex;
       align-items: center;
+      cursor: pointer;
       button {
         background: transparent;
         border: none;
