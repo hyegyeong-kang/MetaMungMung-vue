@@ -1,14 +1,14 @@
 <template>
-    <div data-viewname="DBandListSubRecommendBandsView" class="discoverBandList">
+    <div data-viewname="DmeetingListSubRecommendMeetingsView" class="discoverMeetingList">
         <div class="mainWrap">
             <div class="sectionTitleArea gMab19">
                 <h2 class="sectionTitle" v-if="isMain">이런 모임은 어때요</h2>
                 <h2 class="sectionTitle" v-else-if="isSearch">검색 결과 {{ searchResultCnt }}개</h2>
             </div>
 
-            <ul data-viewname="DDiscoverRecommendBandListView" class="cCoverList">
-                <li v-for="(onMeeting, index) in onMeetingList" :key="onMeeting.onMeetingIdx" data-viewname="DDiscoverRecommendBandItemView" class="cCoverItem">
-                    <div v-if="isMain ? index <= 5 : 1" class="bandUri">
+            <ul data-viewname="DDiscoverRecommendMeetingListView" class="cCoverList">
+                <li v-for="(onMeeting, index) in onMeetingList" :key="onMeeting.onMeetingIdx" data-viewname="DDiscoverRecommendMeetingItemView" class="cCoverItem">
+                    <div v-if="isMain ? index <= 5 : 1" class="meetingUri">
                         <div class="cover">
                             <div class="uCoverImage -border -borderR12 -w80">
                                 <span class="coverInner">
@@ -16,23 +16,23 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="bandName">
+                        <div class="meetingName">
                             <strong class="name">
-                                <router-link :to="{name: 'OnMeetingDetail', params:{id: onMeeting.onMeetingIdx}}" class="text _bandLink">
+                                <router-link :to="{name: 'OnMeetingDetail', params:{id: onMeeting.onMeetingIdx}}" class="text _meetingLink">
                                     
                                     {{ onMeeting.onMeetName }}
                                 </router-link>
                             </strong>
                             <p class="pSubTxt">{{ onMeeting.introduction }}</p>
 
-                            <router-link v-if="isMain" :to="{name: 'OnMeetingSearch', query: {keywords: onMeeting.category}}" class="moreBandLink _tagLink"><strong>{{ onMeeting.category }}</strong> 모임 더보기</router-link>
+                            <router-link v-if="isMain" :to="{name: 'OnMeetingSearch', query: {keywords: onMeeting.category}}" class="moreMeetingLink _tagLink"><strong>{{ onMeeting.category }}</strong> 모임 더보기</router-link>
                             <p v-else class="member">
                                 <span class="total">멤버 <strong class="totalNumber">{{ onMeeting.memberCnt }}</strong></span>
                                 <span class="leader">리더 <strong class="leagerName">{{ onMeeting.hostName }}</strong></span>
                             </p>
                             
                         </div>
-                        <router-link :to="{name: 'OnMeetingDetail', params:{id: onMeeting.onMeetingIdx}}" class="bandLink _bandLink"><span class="gSrOnly">이 모임으로 이동</span></router-link>
+                        <router-link :to="{name: 'OnMeetingDetail', params:{id: onMeeting.onMeetingIdx}}" class="meetingLink _meetingLink"><span class="gSrOnly">이 모임으로 이동</span></router-link>
                     </div>
                 </li>
             </ul>
@@ -45,15 +45,16 @@
 </template>
 
 <script>
-import {ref, watchEffect} from 'vue'
-import {useRoute, useRouter} from 'vue-router'
+import {ref, watchEffect, computed} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
 import axios from 'axios';
 
 export default {
     props: {
         isMain: Boolean,
         isSearch: Boolean,
-        cate: String
+        cate: String,
+        addr: String
     },
     emits: ['send-type'],
     setup(props, {emit}){
@@ -76,19 +77,13 @@ export default {
             // }
         ]);
 
-        watchEffect(() => {
-            // 카테고리별 list 나오게
-            console.log(props.cate);
-            
-
-            // <br>수정하기
-            // console.log(document.getElementsByClassName('pSubTxt'));
-            // console.log(document.getElementsByClassName('pSubTxt').length);
-            // const elem = document.getElementsByClassName('pSubTxt');
-            // for(let i = 0; i < elem.length; i++){
-            //     console.log(i);
-            // }
-        });
+        // watchEffect(() => {
+        //     // 카테고리별 list 나오게
+        //     // console.log(props.cate);
+        //     if(route.query.keywords){
+        //         searchResultCnt.value;
+        //     }
+        // });
 
         const viewAll = () => {
             emit("send-type", "viewAll");
@@ -96,31 +91,113 @@ export default {
         }
 
         const getOnMeetingList = async () => {
+            let address = props.addr;
+            if(address === '모든 동네'){
+                address = '';
+            }
+            console.log("주소주소주소 " + address);
             try{
                 const res = await axios.get('/onMeetings');
                 onMeetingList.value = {...res.data.recommendList};
+                
+                for(let i in res.data.recommendList){
+                    onMeetingList.value[i].introduction = res.data.recommendList[i].introduction.replace(/<br>/g, ' ');
+                }
+            } catch(err){
+                console.log(err);
+            }
+        }
+        // getOnMeetingList();
+
+        const getSearchResultList = async () => {
+            console.log(props.cate);
+            let category = props.cate;
+            let address = props.addr;
+            if(category === '전체' || !category){
+                category = '';
+            }
+            if(address === '모든 동네' || !address){
+                address = '';
+            }
+            console.log("입력할 카테 " + category);
+            console.log("입력할 주소 " + address);
+            console.log("입력할 키워드 " + route.query.keywords);
+            
+            try{
+                const res = await axios.get('/onMeetings/search', {params: {keywords: route.query.keywords}});
+                onMeetingList.value = {...res.data};
+
+                console.log(res.data);
+                
+                for(let i in res.data){
+                    if(res.data[i].introduction != null){
+                        onMeetingList.value[i].introduction = res.data[i].introduction.replace(/<br>/g, ' ');
+                    } 
+                }
+                console.log(res.data.length);
+
+                searchResultCnt.value = res.data.length;
             } catch(err){
                 console.log(err);
             }
         }
 
-        getOnMeetingList();
+        const getCateResultList = async () => {
+            console.log(props.cate);
+            let category = props.cate;
+            let address = props.addr;
+            if(category === '전체' || !category){
+                category = '';
+            }
+            if(address === '모든 동네' || !address){
+                address = '';
+            }
+            console.log("입력할 카테 " + category);
+            console.log("입력할 주소 " + address);
+            console.log("입력할 키워드 " + route.query.keywords);
+            
+            try{
+                const res = await axios.get('/onMeetings/category', {params: {category: category}});
+                onMeetingList.value = {...res.data};
 
-        // const getSearchResultList = async () => {
-        //     try{
-        //         const res = await axios.get('/onMeetings/search',{
-        //             keyword: 
-        //         });
-        //         onMeetingList.value = {...res.data.recommendList};
-        //     } catch(err){
-        //         console.log(err);
-        //     }
-        // }
+                console.log(res.data);
+                
+                for(let i in res.data){
+                    if(res.data[i].introduction != null){
+                        onMeetingList.value[i].introduction = res.data[i].introduction.replace(/<br>/g, ' ');
+                    } 
+                }
+                console.log(res.data.length);
+
+                searchResultCnt.value = res.data.length;
+            } catch(err){
+                console.log(err);
+            }
+        }
+
+        watchEffect(() => {
+            console.log("주소 " + props.addr);
+            // 메인 화면
+            if(props.isMain){
+                console.log("메인");
+                getOnMeetingList();
+            }
+            // 검색 화면
+            else if(props.isSearch){
+                console.log("검색");
+                getSearchResultList();
+            }
+            // 모두보기 화면
+            else{
+                getCateResultList();
+            }
+        });
+        // getList();
         
         return{
             searchResultCnt,
             onMeetingList,
-            viewAll,
+            viewAll
         }
     }
 }
@@ -131,10 +208,10 @@ button, dd, dl, dt, fieldset, ol, p, ul {
     margin: 0;
     padding: 0;
 }
-.createBand+.discoverBandList, .createBand+.openBandList {
+.createMeeting+.discoverMeetingList, .createMeeting+.openMeetingList {
     background: rgba(0,0,0,0.03);
 }
-.discoverBandList {
+.discoverMeetingList {
     position: relative;
     padding: 35px 0 20px 0;
 }
@@ -180,7 +257,7 @@ button, dd, dl, dt, fieldset, ol, p, ul {
     box-sizing: border-box;
     padding-right: 20px;
 }
-.cCoverList .cCoverItem .bandUri {
+.cCoverList .cCoverItem .meetingUri {
     display: -webkit-box;
     display: flex;
     -webkit-box-align: center;
@@ -195,7 +272,7 @@ button, dd, dl, dt, fieldset, ol, p, ul {
     position: relative;
     vertical-align: top;
 }
-.discoverBandList .uCoverImage.-border .coverInner {
+.discoverMeetingList .uCoverImage.-border .coverInner {
     border-radius: 12px;
 }
 .uCoverImage.-w80 .coverInner {
@@ -214,12 +291,12 @@ button, dd, dl, dt, fieldset, ol, p, ul {
     font-size: 0;
     background-color: #F5F6F8;
 }
-.cCoverList .cCoverItem .bandName {
+.cCoverList .cCoverItem .meetingName {
     -webkit-box-flex: 1;
     flex: 1 1;
     min-width: 0;
 }
-.cCoverList .cCoverItem .bandName .name {
+.cCoverList .cCoverItem .meetingName .name {
     display: -webkit-box;
     display: flex;
     -webkit-box-align: center;
@@ -228,7 +305,7 @@ button, dd, dl, dt, fieldset, ol, p, ul {
 b, strong {
     font-weight: bolder;
 }
-.cCoverList .cCoverItem .bandName .name .text {
+.cCoverList .cCoverItem .meetingName .name .text {
     font-size: 14px;
     font-weight: 600;
     color: #222;
@@ -245,7 +322,7 @@ b, strong {
     line-height: 1.4;
     z-index: 1;
 }
-.cCoverList .cCoverItem .bandName .pSubTxt:not(.-multiLine) {
+.cCoverList .cCoverItem .meetingName .pSubTxt:not(.-multiLine) {
     display: block;
     overflow: hidden;
     max-width: 100%;
@@ -255,13 +332,13 @@ b, strong {
     -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
 }
-.cCoverList .cCoverItem .bandName .pSubTxt {
+.cCoverList .cCoverItem .meetingName .pSubTxt {
     margin-top: 5px;
     font-size: 13px;
     font-weight: 400;
     color: #555;
 }
-.cCoverList .cCoverItem .bandName .moreBandLink {
+.cCoverList .cCoverItem .meetingName .moreMeetingLink {
     font-size: 12px;
     font-weight: 400;
     color: #777;
@@ -276,7 +353,7 @@ b, strong {
     background: #fff;
     z-index: 1;
 }
-.cCoverList .cCoverItem .bandLink {
+.cCoverList .cCoverItem .meetingLink {
     position: absolute;
     top: 0;
     right: 0;
@@ -318,14 +395,14 @@ b, strong {
     text-align: left;
 }
 
-.uIconAcrossBand, .uIconAppDownload, .uIconBandCreate, .uIconBandGuide, .uIconBandListSetting, .uIconCommentFile, .uIconCommentImage, .uIconCommentPlus, .uIconCommentSecret, .uIconCommentSticker, .uIconComments, .uIconConfirmCheck, .uIconFaceEmotion, .uIconFeedSearch, .uIconGps, .uIconGroupCallShare, .uIconGroupCallVideo, .uIconGroupCallVideoOff, .uIconGroupCallVoice, .uIconGroupCallVoiceOff, .uIconMapFill, .uIconMissionBandSetting, .uIconNormalCheckPersonFill, .uIconNormalCheckSquareFill, .uIconNormalLink, .uIconNormalLockFill, .uIconNormalMailFill, .uIconNormalMailPersonFill, .uIconNormalQr, .uIconNormalQuestion, .uIconNormalSeveralPeopleFill, .uIconOfficialBand, .uIconOption, .uIconPlusSquare, .uIconPostWriteDivision, .uIconPostWriteMap, .uIconPostWriteMarkdown, .uIconPostWriteSurvey, .uIconPrivacyMenu, .uIconQuestionCircleFill, .uIconSettingFill, .uIconShare, .uIconTrash, .uIconWidgetAlbum, .uIconWidgetAttendance, .uIconWidgetDivision, .uIconWidgetFile, .uIconWidgetMarkdown, .uIconWidgetMutiSchedule, .uIconWidgetPayment, .uIconWidgetQuiz, .uIconWidgetSignup, .uIconWidgetSurvey, .uIconWidgetTodo, .uIconWidgetVote {
+.uIconAcrossMeeting, .uIconAppDownload, .uIconMeetingCreate, .uIconMeetingGuide, .uIconMeetingListSetting, .uIconCommentFile, .uIconCommentImage, .uIconCommentPlus, .uIconCommentSecret, .uIconCommentSticker, .uIconComments, .uIconConfirmCheck, .uIconFaceEmotion, .uIconFeedSearch, .uIconGps, .uIconGroupCallShare, .uIconGroupCallVideo, .uIconGroupCallVideoOff, .uIconGroupCallVoice, .uIconGroupCallVoiceOff, .uIconMapFill, .uIconMissionmeetingSetting, .uIconNormalCheckPersonFill, .uIconNormalCheckSquareFill, .uIconNormalLink, .uIconNormalLockFill, .uIconNormalMailFill, .uIconNormalMailPersonFill, .uIconNormalQr, .uIconNormalQuestion, .uIconNormalSeveralPeopleFill, .uIconOfficialmeeting, .uIconOption, .uIconPlusSquare, .uIconPostWriteDivision, .uIconPostWriteMap, .uIconPostWriteMarkdown, .uIconPostWriteSurvey, .uIconPrivacyMenu, .uIconQuestionCircleFill, .uIconSettingFill, .uIconShare, .uIconTrash, .uIconWidgetAlbum, .uIconWidgetAttendance, .uIconWidgetDivision, .uIconWidgetFile, .uIconWidgetMarkdown, .uIconWidgetMutiSchedule, .uIconWidgetPayment, .uIconWidgetQuiz, .uIconWidgetSignup, .uIconWidgetSurvey, .uIconWidgetTodo, .uIconWidgetVote {
     display: inline-block;
     vertical-align: top;
 }
 
 
 
-.cCoverList .cCoverItem .bandName .date, .cCoverList .cCoverItem .bandName .member {
+.cCoverList .cCoverItem .meetingName .date, .cCoverList .cCoverItem .meetingName .member {
     margin-top: 4px;
     line-height: 1.5;
     font-size: 12px;
@@ -340,10 +417,10 @@ b, strong {
     -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
 }
-.cCoverList .cCoverItem .bandName .date strong, .cCoverList .cCoverItem .bandName .member strong {
+.cCoverList .cCoverItem .meetingName .date strong, .cCoverList .cCoverItem .meetingName .member strong {
     font-weight: 400;
 }
-.cCoverList .cCoverItem .bandName .date .leader:before, .cCoverList .cCoverItem .bandName .member .leader:before {
+.cCoverList .cCoverItem .meetingName .date .leader:before, .cCoverList .cCoverItem .meetingName .member .leader:before {
     display: inline-block;
     margin: 7px 6px 0 3px;
     width: 2px;

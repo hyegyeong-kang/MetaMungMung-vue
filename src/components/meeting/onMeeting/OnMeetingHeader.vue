@@ -6,7 +6,7 @@
                 <img src="@/assets/images/offMeeting/paw-print.png" style="width: 70px"/>
             </div>
             </router-link>
-        <SearchLocationBtn :addr="addr" v-if="showLoc"/>
+        <SearchLocationBtn :addr="addr" v-if="showLoc" @send-location="sendLocation"/>
         <OnMeetingSearchBar @send-type="sendType" :isMain="isMain"/>
     </div>
 </template>
@@ -47,6 +47,10 @@ export default {
                 showLoc.value = true;
             }
         });
+
+        const sendLocation = (location) => {
+            emit('send-location', location);
+        }
 
         const sendType = () => {
             emit('send-type', 'search');
@@ -114,6 +118,7 @@ export default {
         return{
             showLoc,
             addr,
+            sendLocation,
             sendType,
             moveToPage,
             loadScript,

@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import {ref} from 'vue';
+import {ref, watchEffect} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 
 export default {
@@ -37,6 +37,12 @@ export default {
         const isActive = ref(false);
         let prevIdx = 0;
 
+        const getCate = () => {
+            
+        }
+
+        getCate();
+
         const cateToggle = (idx) => {
             const parent = document.getElementsByClassName("searchedSortBand")[0];
             if(idx != prevIdx){
@@ -45,31 +51,31 @@ export default {
                 selectElem.classList.add('active');
                 prevIdx = idx;
 
-
-                if(props.isViewAll){
-                    viewCate(selectElem.innerText);
-                }
-                else{
-                    viewSearchResult(selectElem.innerText);
-                }
+                // if(props.isViewAll){
+                //     viewCate(selectElem.innerText);
+                // }
+                // else{
+                //     viewSearchResult(selectElem.innerText);
+                // }
+                emit('select-cate', selectElem.innerText);
             }
         }
 
-        const viewCate = (cate) => {
-            if(cate === '전체'){
-                router.push({
-                    name: 'OnMeeting'
-                });
-            }
-            else{
-                router.push({
-                    name: 'OnMeeting',
-                    query: {
-                        category: cate
-                    }
-                });
-            }
-        }
+        // const viewCate = (cate) => {
+        //     if(cate === '전체'){
+        //         router.push({
+        //             name: 'OnMeeting'
+        //         });
+        //     }
+        //     else{
+        //         router.push({
+        //             name: 'OnMeetingSearch',
+        //             query: {
+        //                 category: cate
+        //             }
+        //         });
+        //     }
+        // }
 
         const viewSearchResult = (cate) => {
             // let searchKeyword = '';

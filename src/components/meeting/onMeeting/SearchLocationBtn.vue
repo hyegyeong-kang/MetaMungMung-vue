@@ -21,14 +21,16 @@ export default {
     props: {
         addr: String
     },
-    setup(props){
+    emits: ['send-location'],
+    setup(props, {emit}){
         const isActive = ref(false);
         const selectCate = ref('모든 동네');
         const curLocation = ref('연지동');
 
         const menuToggle = () => {
             isActive.value = !isActive.value;
-            console.log(isActive.value);
+            console.log("보낸다 이거 " + curLocation.value);
+            emit('send-location', curLocation.value);
         }
 
         const changeList = () => {
@@ -41,6 +43,7 @@ export default {
         const locationSetting = () => {
             console.log(props.addr);
             curLocation.value = props.addr;
+            // emit('send-location', curLocation.value);
         }
         
         watchEffect(() => {

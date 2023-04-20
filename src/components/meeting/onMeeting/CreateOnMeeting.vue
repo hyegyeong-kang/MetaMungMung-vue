@@ -38,13 +38,13 @@
                             <div class="makeType">
                                 <h2 class="title">모임 공개</h2>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="scope" id="flexRadioDefault1" value="private" v-model="isPublic">
+                                    <input class="form-check-input" type="radio" name="scope" id="flexRadioDefault1" value="0" v-model="isPublic">
                                     <label class="form-check-label" for="flexRadioDefault1">
                                         비공개
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="scope" id="flexRadioDefault2" value="public" v-model="isPublic">
+                                    <input class="form-check-input" type="radio" name="scope" id="flexRadioDefault2" value="1" v-model="isPublic">
                                     <label class="form-check-label" for="flexRadioDefault2">
                                         공개
                                     </label>
@@ -95,7 +95,7 @@
             
                         <div class="btnFooter">
                             <button type="button" class="_btnCancel uButton -sizeXL -cancel" @click="cancel">취소</button>
-                            <button type="submit" class="_btnConfirm uButton -sizeXL -disabled" @click="check">완료</button>
+                            <button type="submit" class="_btnConfirm uButton -sizeXL -disabled" >완료</button>
                         </div>
                     </div>
                 </fieldset>
@@ -146,13 +146,13 @@ export default {
         const isOpen = ref(false);
         const address = ref('주소를 등록해주세요.');
         const category = ref('');
-        const isPublic = ref('public');
+        const isPublic = ref('1');
         let description = '';
-
         const meetingInfo = ref({});
 
         watchEffect(() => {
             status.value = props.status;
+
             if(status.value === 'modify'){
                 name.value = meetingInfo.value.onMeetName;
                 introduction.value = description.replace(/<br>/g, '\n');
@@ -160,12 +160,8 @@ export default {
                 coverImg.value = meetingInfo.value.thumbnail;
                 address.value = meetingInfo.value.onMeetingAddr;
                 category.value = meetingInfo.value.category;
-                if(meetingInfo.value.isPublic === '0'){
-                    isPublic.value = 'private';
-                }
+                isPublic.value = meetingInfo.value.isPublic;
             }
-            
-            // console.log(meetingInfo.value.onMeetName);
         });
 
         const upload = (e) => {
@@ -198,7 +194,23 @@ export default {
             address.value = addr;
         }
 
-        const check = async () => {
+        // const check = async () => {
+        //     introduction.value = introduction.value.split('\n').join('<br>');
+        //     meetingInfo.value = {
+        //         onMeetName: name.value,
+        //         category: category.value,
+        //         introduction: introduction.value,
+        //         thumbnail: coverImg.value,
+        //         isPublic: isPublic.value,
+        //         onMeetingAddr: address.value
+        //     };
+        // }
+
+        const cancel = () => {
+            router.go(-1);
+        }
+
+        const registerOnMeeting = async () => {
             introduction.value = introduction.value.split('\n').join('<br>');
             meetingInfo.value = {
                 onMeetName: name.value,
@@ -208,21 +220,15 @@ export default {
                 isPublic: isPublic.value,
                 onMeetingAddr: address.value
             };
-        }
-
-        const cancel = () => {
-            router.go(-1);
-        }
-
-        const registerOnMeeting = async () => {
             // 수정
             if(status.value === 'modify'){
+                console.log("수정하세요");
                 try{
                     const res = await axios.put('/onMeetings/' + route.params.id, meetingInfo.value);
                     console.log("수정된 온모임 : " + res.data);
                     router.push({
                         name: "OnMeetingDetail",
-                        params: {id: res.data.onMeetIdx}
+                        params: {id: res.data.onMeetingIdx}
                     });
                 } catch(err){
                     console.log(err);
@@ -230,12 +236,14 @@ export default {
             }
             // 생성
             else{
+                console.log("생성하세요");
                 try{
+                    console.log(meetingInfo.value);
                     const res = await axios.post('/onMeetings', meetingInfo.value);
                     console.log("생성된 온모임 : " + res.data);
                     router.push({
                         name: "OnMeetingDetail",
-                        params: {id: res.data.onMeetIdx}
+                        params: {id: res.data.onMeetingIdx}
                     });
                 } catch(err){
                     console.log(err);
@@ -257,7 +265,6 @@ export default {
                 }
             }
         }
-
         getMyOnMeetingInfo();
 
         return{
@@ -278,7 +285,7 @@ export default {
             // openMap,
             // closeModal,
             sendAddr,
-            check,
+            // check,
             cancel,
             registerOnMeeting
         }

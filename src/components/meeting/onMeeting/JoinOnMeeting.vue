@@ -5,7 +5,7 @@
         <h2>{{ onMeeting.onMeetName }}</h2>
         <div class="group-stats">
             <p>게시글 {{ postCount }} 개</p>
-            <p>멤버 {{ onMeeting.memberCnt }} / {{onMeeting.maximum}}</p>
+            <p>멤버 {{ onMeeting.memberCnt }} / {{onMeeting.personnel}}</p>
         </div>
         <p class="group-description" v-html="onMeeting.introduction"></p>
         <button v-if="!isApply && !isFull" @click="joinGroup">가입 신청</button>
@@ -14,28 +14,54 @@
 </template>
 
 <script>
-import {ref, reactive, watchEffect} from 'vue';
+import {ref, watchEffect} from 'vue';
+import axios from 'axios';
+import { useRoute, useRouter } from 'vue-router';
 
 export default {
     setup(){
-        const onMeeting = reactive({onMeetingIdx: 2, onMeetName: '말티쥬 모임 [말모]', category: '일상', introduction: 
-                `말티쥬를 사랑하는 분들을 위한 모임입니다<br><Br>들어오셔서 함께 정보도 공유하고 이야기도 나누어요!<br><br><br>-말티쥬를 사랑하는 사람들의 모임-`, 
-                thumbnail: 'https://file3.instiz.net/data/cached_img/upload/2019/05/18/12/1110b3ff0bf4bd7b13a55c787e6c7483.jpg', isPublic: '1', 
-                onMeetingAddr: '가락동', memberCnt: 1716, hostName: '부 끄', maximum: 5000},
-            );
+      const route = useRoute();
+      const router = useRouter();
+        const onMeeting = ref({}
+          // {
+          //   onMeetingIdx: 2, onMeetName: '말티쥬 모임 [말모]', category: '일상', introduction: 
+          //   `말티쥬를 사랑하는 분들을 위한 모임입니다<br><Br>들어오셔서 함께 정보도 공유하고 이야기도 나누어요!<br><br><br>-말티쥬를 사랑하는 사람들의 모임-`, 
+          //   thumbnail: 'https://file3.instiz.net/data/cached_img/upload/2019/05/18/12/1110b3ff0bf4bd7b13a55c787e6c7483.jpg', isPublic: '1', 
+          //   onMeetingAddr: '가락동', memberCnt: 1716, hostName: '부 끄', maximum: 5000
+          // }
+        );
         const postCount = ref(406);
         // const memberCount = ref(0);
         const isApply = ref(false);
         const isFull = ref(false);
+
+        const getOnMeetingDetail = async () => {
+          try{
+            const res = await axios.get('/onMeetings/' + route.params.id);
+            console.log(res.data);
+            onMeeting.value = {...res.data};
+            console.log(onMeeting.value);
+          } catch(err){
+            console.log(err);
+          }
+        }
+
+        getOnMeetingDetail();
         
         watchEffect(() => {
-            if(onMeeting.maximum <= onMeeting.memberCnt){
+            if(onMeeting.personnel <= onMeeting.memberCnt){
                 isFull.value = true;
             }
         });
 
         const joinGroup = () => {
             isApply.value = !isApply.value;
+            setTimeout(() => {
+              router.push({
+                name: "RegisterModal",
+                params: {id: onMeeting.onMeetingIdx}
+              })
+            }, 3000);
         }
 
         return{
