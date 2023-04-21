@@ -73,6 +73,7 @@ export default {
       openDetailModal: null,
       openCreateModal: null,
       selectedMarker: null,
+      lastCreatedLatlng: [],
       boardMarkers: [],
       boardDetails: [],
       boardDetailsLength: 0,
@@ -194,10 +195,6 @@ export default {
 
           const res = await axios.get("/offMeetings");
           base.boardDetails = { ...res.data };
-          console.log(JSON.stringify(res, null, 2));
-          // console.log(Object.keys(base.boardDetails[0]));
-          // console.log(base.boardDetails[1]["latitude"]);
-          // console.log(Object.keys(base.boardDetails).length);
           base.boardDetailsLength = Object.keys(base.boardDetails).length;
           addBoardMarker();
         } catch (err) {
@@ -210,7 +207,6 @@ export default {
       /* DB에 등록된 게시물의 좌표를 통해 마커 생성하는 코드 */
       function addBoardMarker() {
         let boardMarkerPosition = 0;
-        let cnt = 1;
 
         for (let i = 0; i < base.boardDetailsLength; i++) {
           boardMarkerPosition = new kakao.maps.LatLng(
@@ -218,17 +214,14 @@ export default {
             base.boardDetails[i].longitude
           );
 
-          // console.log(
-          //   base.boardDetails[i].latitude + + + base.boardDetails[i].longitude
-          //   // base.boardDetails[i].
-          // );
-
           const boardMarker = new kakao.maps.Marker({
             position: boardMarkerPosition,
-            title: cnt + i,
+            title: base.boardDetails[i].offMeetingIdx,
           });
+
           boardMarker.setMap(map);
           base.boardMarkers.push(boardMarker);
+
           /* 등록된 게시글의 마커를 클릭 시 발생하는 이벤트 */
           kakao.maps.event.addListener(boardMarker, "click", function () {
             if (base.selectedMarker || base.selectedMarker !== boardMarker) {
@@ -237,6 +230,12 @@ export default {
             }
           });
         }
+
+        /* 마지막 위치 찾기 */
+        // base.lastCreatedLatlng.push(boardMarkerPosition);
+        // console.log(base.lastCreatedLatlng[0]);
+        // console.log(base.lastCreatedLatlng[0].La);
+        // console.log(base.lastCreatedLatlng[0].Ma);
       }
 
       //강혜경

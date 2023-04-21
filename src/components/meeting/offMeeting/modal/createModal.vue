@@ -191,7 +191,6 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-      router.go(0);
     };
 
     for (let i = 0; i < clickable.length; i++) {

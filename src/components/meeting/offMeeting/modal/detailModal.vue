@@ -191,6 +191,7 @@ export default {
     let likeBtn = null;
     let joinMemberModal = ref(null);
     let substring = null;
+    let board = ref({});
 
     // const checkJoinMember = () => {
     //   let openIt = () => {
@@ -214,39 +215,45 @@ export default {
 
     const openDetailModalFunc = (selectedMarker) => {
       modal[0].style.display = "block";
-      // console.log("props로 받은 title값 : " + selectedMarker.getTitle() + " ");
-      // console.log(
-      //   "Object.keys(props.boardDetails).length + " +
-      //     Object.keys(props.boardDetails).length
-      // );
+
       try {
-        for (let i = 0; i < Object.keys(props.boardDetails).length; i++) {
-          // if (
-          //   selectedMarker.getTitle() == props.boardDetails[i]["offMeetingIdx"]
-          // )
-          {
-            offMeetingIdx.value = props.boardDetails[i].offMeetingIdx;
-            title.value = props.boardDetails[i].title;
-            meetingDate.value = props.boardDetails[i].meetingDate;
+        /* axios 비동기통신 */
+        const getOffMeetingDetailPage = async () => {
+          try {
+            axios.defaults.headers.common["AUTHORIZATION"] =
+              sessionStorage.getItem("token");
+
+            const res = await axios.get(
+              `/offMeetings/${selectedMarker.getTitle()}`
+            );
+            board.value = { ...res.data };
+            console.log("board => " + JSON.stringify(board.value, null, 2));
+
+            offMeetingIdx.value = board.value.offMeetingIdx;
+            title.value = board.value.title;
+            meetingDate.value = board.value.meetingDate;
             substring();
-            limit.value = props.boardDetails[i].limit;
-            contents.value = props.boardDetails[i].contents;
-            createDate.value = props.boardDetails[i].createDate;
-            updateDate.value = props.boardDetails[i].updateDate;
-            status.value = props.boardDetails[i].status;
-            latitude.value = props.boardDetails[i].latitude;
-            longitude.value = props.boardDetails[i].longitude;
-            locationAddress.value = props.boardDetails[i].locationAddress;
-            startTime.value = props.boardDetails[i].startTime;
-            headcount.value = props.boardDetails[i].headcount;
-            // } else {
-            //   console.log("값이 안들어와..");
+            limit.value = board.value.limit;
+            contents.value = board.value.contents;
+            createDate.value = board.value.createDate;
+            updateDate.value = board.value.updateDate;
+            status.value = board.value.status;
+            latitude.value = board.value.latitude;
+            longitude.value = board.value.longitude;
+            locationAddress.value = board.value.locationAddress;
+            startTime.value = board.value.startTime;
+            headcount.value = board.value.headcount;
+          } catch (err) {
+            console.log(err);
           }
-        }
+        };
+
+        getOffMeetingDetailPage();
       } catch (err) {
         console.log("err!!!!" + err);
       }
     };
+
     substring = () => {
       meetingDate.value = meetingDate.value.substring(0, 10);
     };
