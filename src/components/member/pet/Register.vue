@@ -32,13 +32,13 @@
 
             <div>
                 <div>성별</div>
-                <input type="radio" v-model="pet.sex" class="female" required> 여
-                <input type="radio" v-model="pet.sex" class="male" required> 남
+                <input type="radio" v-model="pet.sex" class="female" value="female" required> 여
+                <input type="radio" v-model="pet.sex" class="male" value="male" required> 남
             </div>
 
             <div>
                 <div>생년월일</div>
-                <input name="birth" v-model="pet.birth" type="text" placeholder="생년월일 입력" required>
+                <input name="birth" v-model="pet.birth" type="date" placeholder="생년월일 입력" min="2000-01-01" max="2023-04-01" required>
             </div>
 
             <button type="submit" id="btnRegister">등록하기</button>
@@ -111,8 +111,14 @@ export default {
           birth: pet.value.birth
         });
 
+        const result = await axios.patch(`/members/pets/register/${memberIdx}`, {
+          authority: 'ROLE_DOGOWNER'
+        });
+
         //const update = await axios.patch('members/update')
         console.log(res.data);
+        console.log(result.data);
+
         alert(' 님의 반려견 정보가 등록 되었습니다!')
         //router.push({ name: 'MyPage' });
 
