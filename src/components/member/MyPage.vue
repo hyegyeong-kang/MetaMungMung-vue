@@ -3,26 +3,45 @@
         <div class="container">
             
             <div class="content">
+
             <div class="profile">
                 <div class="profile-image">
                 <img id="preview-image" :src="profileImgSrc" @error="defaultImage">
                 <br>
-                <label for="input-image">
-                    <img src="@/assets/images/member/plus.png" id="edit">
-                </label>
-                <input id="input-image" type="file" accept="image/*" ref="inputImage" @change="readImage" style="display:none"/>
                 </div>
-                <h1>회원 이름</h1>
-                <p>소개글</p>
+                <h1>{{memberName}} 님</h1>
             </div>
-            <div class="menu">
+
+
+            <div class="main-content">
+              <div class="menu">
                 <ul>
-                <li><router-link :to="{ name: 'Modify' }">회원정보 수정 및 탈퇴</router-link></li>
                 <li><router-link :to="{ name: 'Register' }">나의 반려견</router-link></li>
                 <li><router-link :to="{ name: 'Modify' }">나의 모임</router-link></li>
                 <li><router-link :to="{ name: 'Modify' }">내 주문</router-link></li>
+                <li><router-link :to="{ name: 'Modify' }">회원정보 수정 및 탈퇴</router-link></li>
                 </ul>
+              </div>
+              
+              <div class="profile-wrapper">
+                <div class="card-news" v-for="myPet in myPetList" :key="myPet.petIdx">
+                  <!-- <h2><img :src="myPet.petImg"/></h2> -->
+                  <div class="card-container">
+                    <div class="card">
+                      <div class="petImgBox">
+                        <img :src="myPet.petImg" alt="Card image 1" class="petImg">
+                      </div>
+                      <div class="petInfo">
+                        <h3>이름: {{ myPet.petName }}</h3>
+                        <p>성별: {{ myPet.sex }}</p>
+                        <p>태어난 날: {{ myPet.birth.split('T')[0] }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+
             </div>
 
         </div>
@@ -30,7 +49,7 @@
 </template>
 
 <script>
-import {useRoute, useRouter} from 'vue-router';
+import { useRouter} from 'vue-router';
 import { ref } from 'vue';
 import axios from 'axios';
 
@@ -38,34 +57,62 @@ export default {
   name: 'MyPage',
   setup() {
     const router = useRouter();
+    const memberName = ref('');
+
+    const memberIdx = sessionStorage.getItem('memberIdx');
+    axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
 
     // 이미지 파일 첨부
-    const inputImage = ref(null);
     const profileImgSrc = ref('');
     const defaultImage = () => {
         profileImgSrc.value = require(`@/assets/images/member/profile.png`);
     }
 
-    function readImage() {
-      const input = inputImage.value;
+    const info = async () => {
+      try {
+          const res = await axios.get('/members/my', {
+            params: {
+              memberIdx: memberIdx
+            }
+          });
+          memberName.value = res.data.memberName;
+          console.log(res.data);
 
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-
-        reader.onload = (e) => {
-            profileImgSrc.value = e.target.result;
-        };
-
-        reader.readAsDataURL(input.files[0]);
+      } catch (error) {
+        console.error(error);
       }
     }
-    
 
+    info();
+
+    const myPetList = ref([]);
+
+    const getMyPets = async () => {
+      try {
+        const response = await axios.get('/members/pets', {
+          params: {
+            memberIdx: memberIdx
+          }
+        });
+        console.log(response.data);
+
+        myPetList.value = response.data;
+
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    
+    getMyPets();
+    
     return {
-        defaultImage,
-        inputImage,
-        profileImgSrc,
-        readImage,
+      memberName,
+      defaultImage,
+      memberIdx,
+      info,
+      myPetList,
+      getMyPets,
+      profileImgSrc,
     };
   }
 }

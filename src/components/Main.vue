@@ -13,8 +13,8 @@
                   <div class="col-md-6">
                     <div class="box_section active">
                       <div class="tiles_img"></div>
-                      <h3 class="tile_text active">Tile & Grout</h3>
-                      <p class="lorem_text active">Exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor </p>
+                      <h3 class="tile_text active">On & Off Meet!</h3>
+                      <p class="lorem_text active"> </p>
                     </div>
                   </div>
                   <div class="col-md-6">
