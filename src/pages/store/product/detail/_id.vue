@@ -124,7 +124,7 @@
 
                 <div class="btns-box">
                   <button class="input_other">장바구니 담기</button>
-                  <button class="input_primary">바로 구매하기</button>
+                  <button class="input_primary" @click="order">바로 구매하기</button>
                 </div>
               </div>
             </div>
@@ -277,6 +277,14 @@ export default {
       document.getElementById("bannerDiv").style.display = "none";
     };
 
+    const order = () => {
+      let resultCnt = document.getElementById("result").value;
+      router.push({
+        name: "Order",
+        query: {id: productIdx, quantity: resultCnt}
+      });
+    }
+
     return {
       checkFunc,
       setSelect,
@@ -287,6 +295,7 @@ export default {
       optionList,
       selectedOption,
       router,
+      order,
     };
   },
 };

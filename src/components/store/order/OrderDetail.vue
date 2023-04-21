@@ -35,7 +35,7 @@
                 <h6 class="post-title">배송지 {{member.address1}} {{member.address2}}</h6>
                 <div class="divider"></div>
                 
-                <h4 class="widget-title">결제정보</h4>
+                <h4 class="widget-title">{{subTitle}}</h4>
                 <h6 class="post-title" style="margin:0">{{payment.paymentPrice}}원</h6>
                     {{payment.method}}
                     <p v-if="payment.method === '카드'" style="margin: 0;">
@@ -43,6 +43,9 @@
                     </p>
                     <p v-else-if="payment.method === '계좌이체'" style="margin: 0;">
                         입금 완료({{payment.createDate.split('T')[0]}})
+                    </p>
+                    <p v-else-if="cancel" style="margin: 0;">
+                        환불 완료({{payment.createDate.split('T')[0]}})
                     </p>
                 <h6 class="post-title" style="margin-top:10px">적립 포인트 <span style="font-weight: bolder;">{{ payment.accPoint }}</span>원</h6>
                 <div class="btn">
@@ -58,7 +61,7 @@
 
 <script>
 import {useRoute, useRouter} from 'vue-router';
-import {ref} from 'vue';
+import {ref, watchEffect} from 'vue';
 import axios from 'axios';
 
 export default {
@@ -69,6 +72,7 @@ export default {
         const route = useRoute();
         const router = useRouter();
         const oid = route.params.id;
+        const cancel = ref(false);
 
         const member = ref({}
             // {id: 1, memberName: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address: '서울', point: 0}
@@ -116,6 +120,7 @@ export default {
             try{
                 const res = await axios.patch('/orders/' + oid);
                 visible.value = false;
+                cancel.value = true;
                 console.log(res);
                 router.go();
             } catch(err){
@@ -154,7 +159,7 @@ export default {
                 name: 'OrderList'
             });
         }
-
+        
         return{
             oid,
             visible,

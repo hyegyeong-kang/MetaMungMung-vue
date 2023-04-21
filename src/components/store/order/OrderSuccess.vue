@@ -303,8 +303,8 @@ export default {
         const memberIdx = sessionStorage.getItem('memberIdx');
 
         const route = useRoute();
-		const member = ref(
-			{memberIdx: 1, memberName: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address1: '서울', address2: '5동 206호', point: 0}
+		const member = ref({}
+			// {memberIdx: 1, memberName: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address1: '서울', address2: '5동 206호', point: 0}
 		);
 		const products = ref([
 			// {id: 3, brand: '크리넥스', price: 28800, name: '데코앤소프트 화장지', img_url: '1637926173262l0.jpeg', quantity: 1}
@@ -335,8 +335,18 @@ export default {
 				console.log("err !!!!!!!!!!!! :  " + err);
 			}
 		}
-
 		getSuccessPage();
+
+        //회원 정보
+        const getMemberInfo = async () => {
+            try{
+                const res = await axios.get('/members/my');
+                member.value = {...res.data};
+            } catch(err) {
+                console.log(err);
+            }
+        }
+        getMemberInfo();
 
 		return{
 			member,
