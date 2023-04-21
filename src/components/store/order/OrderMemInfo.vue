@@ -17,7 +17,7 @@
                     </th>
                     <td
                         style="width: 558px; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; padding: 14px 0 16px 16px; line-height: 20px; color: #333; border-bottom: 1px solid #e6e6e6;">
-                        {{member.name}}
+                        {{member.memberName}}
                     </td>
                 </tr>
                 <tr>
@@ -42,7 +42,7 @@
                         style="width: 558px; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; padding: 14px 0 16px 16px; line-height: 20px; color: #333; border-bottom: 1px solid #e6e6e6;">
                         <strong
                         style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; color: #89cbeb; letter-spacing: 0;">
-                            {{member.address}}
+                            {{ member.address1 }} {{ member.address2 }}
                         </strong>
                     </td>
                 </tr>
@@ -62,16 +62,28 @@
 </template>
 
 <script>
-import {ref} from 'vue';
+import {ref, watchEffect} from 'vue';
 
 export default {
-    setup(){
-        const member = ref(
-            {id: 1, name: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address: '서울', point: 0}
-        );
+    props: {
+        member: Object
+    },
+    emits: ['send-msg'],
+    setup(props, {emit}){
+        const msg = ref('');
+        // const member = ref(
+        //     // {id: 1, name: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address: '서울', point: 0}
+        // );
+
+        // return{
+        //     member
+        // }
+        watchEffect(() => {
+            emit('send-msg', msg.value);
+        });
 
         return{
-            member
+            msg
         }
     }
 

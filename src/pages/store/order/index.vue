@@ -15,12 +15,12 @@
       <!-- <form> -->
         <div class="contents">
 
-          <OrderMemInfo/>
-          <OrderProductInfo/>
-          <OrderPayInfo/>
+          <OrderMemInfo :member="memberInfo" @send-msg="sendMsg"/>
+          <OrderProductInfo :orderDetails="orderDetails"/>
+          <OrderPayInfo :orderDetails="orderDetails" @send-payInfo="sendPayInfo"/>
           
-          <input type="hidden" name="payment_amount" id="paymentAmountInput" v-model="paymentAmount"/>
-          <input type="hidden" name="usePoint" id="usePointInput" v-model="usePoint"/>
+          <!-- <input type="hidden" name="payment_amount" id="paymentAmountInput" v-model="paymentAmount"/>
+          <input type="hidden" name="usePoint" id="usePointInput" v-model="usePoint"/> -->
           <div class="btnFooter">
             <button type="button" class="_btnCancel uButton -sizeXL -cancel" @click="cancel">취소</button>
             <button type="submit" class="_btnConfirm uButton -sizeXL -disabled" id="paymentBtn" @click="check">결제</button>
@@ -40,132 +40,135 @@ import OrderProductInfo from '../../../components/store/order/OrderProductInfo.v
 import OrderPayInfo from '../../../components/store/order/OrderPayInfo.vue';
 
 export default {
-    components:{
-        OrderMemInfo,
-        OrderProductInfo,
-        OrderPayInfo
-    },
+  components:{
+      OrderMemInfo,
+      OrderProductInfo,
+      OrderPayInfo
+  },
   setup(){
     const route = useRoute();
     const router = useRouter();
-    const productIdx = route.params.id;
-    const quantity = route.params.quantity;
+    const productIdx = route.query.id;
+    const orderQuantity = route.query.quantity;
     // const orderProducts = ref([]);
-    const member = ref(
-       {id: 1, name: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address: '서울', point: 0}
+    const memberInfo = ref(
+       {memberIdx: 1, memberName: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address1: '서울', address2: '5동 206호', point: 0}
     );
     const orderDetails = ref([
       // {id: 1, quantity: 2, 
       //   productDTO: {id: 1, brand: '스윗밸런스', price: 5900, name: '오늘의 샐러드', img_url: 'https://img-cf.kurly.com/shop/data/goods/1655775819130l0.jpg'}}
     ]);
     const usePoint = ref(0);
+    const paymentAmount = ref(0);
     const totalPrice = ref(0);
-    const paymentAmount = ref();
-    const toggleErrorMsg = ref(false);
-    const selected = ref('선택');
-    const toggleDisabledPayMethod = ref(false);
     const msg = ref('');
- 
-
-    const inputPoint = () => {
-      selected.value = '';
-      toggleDisabledPayMethod.value = false;
-      if(totalPrice.value < usePoint.value || member.value.point < usePoint.value){
-        toggleErrorMsg.value = true;
-        usePoint.value = 0;
-        paymentAmount.value = totalPrice.value - usePoint.value;
-      }
-      else{
-        toggleErrorMsg.value = false;
-        paymentAmount.value = totalPrice.value - usePoint.value;
-        if(paymentAmount.value == 0){
-          selected.value = '적립금';
-          toggleDisabledPayMethod.value = true;
-        }
-      }
-    }
+    const selected = ref('');
+    axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+    const memberIdx = sessionStorage.getItem('memberIdx');
+    
 
     // 주문상품 정보
-    const getProductsInfo = () => {
-      orderProducts.add({
-        productIdx: productIdx,
-        orderQuantity: orderQuantity
-      });
-    }
+    // const getProductsInfo = () => {
+    //   orderProducts.add({
+    //     productIdx: route.params.id,
+    //     orderQuantity: route.params.quantity
+    //   });
+    // }
 
-    getProductsInfo();
+    // getProductsInfo();
 
     // 주문서 페이지
     const getOrderPage = async () => {
       try{
         const res = await axios.post('/orders', {
-            // orderProductList: [
-            //     {
-            //         p_id: pid,
-            //         orderQuantity: orderQuantity
-            //     }
-            // ]
-            orderProductList: orderProducts
+            orderProductList: [
+                {
+                  productIdx: productIdx,
+                  orderQuantity: orderQuantity
+                }
+            ]
         });
         console.log(res.data.length);
         orderDetails.value = {...res.data};
         console.log(orderDetails.value);
-        for(let i = 0; i < res.data.length; i++){
-          totalPrice.value = totalPrice.value + orderDetails.value[i].totalPrice;
-          console.log(totalPrice.value);
-        }
-        paymentAmount.value = totalPrice.value;
-
-        console.log('paymentAmount : ' + paymentAmount.value);
-        //console.log(orderDetails.length);
       } catch(err) {
         console.log(err);
       }
-      
     }
 
     getOrderPage();
 
     // 결제
     const doPay = async () => {
-    //   try{
-    //     const res = await axios.post('/members/21/orders/payment', {
-    //       deliveryMsg: msg.value,
-    //       orderProductList: [
-    //         {
-    //           p_id: pid,
-    //           quantity: quantity,
-    //           totalPrice: totalPrice.value
-    //         }
-    //       ],
-    //       total_amount: quantity,
-    //       price: totalPrice.value,
-    //       method: selected.value,
-    //       payment_amount: paymentAmount.value,
-    //       usePoint: usePoint.value
-    //     });
-    //   }catch(err) {
-    //     console.log("err !!!!!!!!!!!! :  " + err);
-    //   }
-      router.push({
-        name: 'OrderSuccess'
-      });
+      if(paymentAmount.value !== 0 && selected.value === '선택'){
+        return;
+      }
+      if(selected.value === '선택'){
+        selected.value = '';
+      }
+      
+      let totalQuantity = 0;
+      let arr = [];
+      for(let i = 0; i < Object.keys(orderDetails.value).length; i++){
+        totalQuantity = totalQuantity + orderDetails.value[i].orderQuantity;
+        let obj = {
+          productIdx: orderDetails.value[i].productIdx,
+          orderQuantity: orderDetails.value[i].orderQuantity
+        }
+        arr.push(obj);
+      }
+
+      console.log("총 수량: "+ totalQuantity);
+
+      try{
+        const res = await axios.post('/orders/payment', {
+          deliveryMsg: msg.value,
+          orderProductList: arr,
+          orderQuantity: totalQuantity,
+          orderPrice: totalPrice.value,
+          method: selected.value,
+          paymentPrice: paymentAmount.value,
+          usePoint: usePoint.value
+        });
+        console.log("주문번호: " + res.data.order.orderIdx);
+        router.push({
+          name: 'OrderSuccess',
+          params: {
+            id: res.data.order.orderIdx
+          }
+        });
+      }catch(err) {
+        console.log("err !!!!!!!!!!!! :  " + err);
+      }
+      
     }
 
+    const sendMsg = (deliveryMsg) => {
+      msg.value = deliveryMsg;
+    }
+
+    const sendPayInfo = (obj) => {
+      totalPrice.value = obj.totalPrice;
+      selected.value = obj.method;
+      paymentAmount.value = obj.paymentPrice;
+      usePoint.value = obj.usePoint;
+    }
+
+    const cancel = () => {
+      router.go(-1);
+    }
 
     return {
-      route,
-      member,
-      orderDetails,
       usePoint,
+      memberInfo,
+      orderDetails,
       totalPrice,
       paymentAmount,
-      inputPoint,
-      toggleErrorMsg,
-      selected,
-      toggleDisabledPayMethod,
       msg,
       doPay,
+      sendMsg,
+      sendPayInfo,
+      cancel,
     }
   }
 }

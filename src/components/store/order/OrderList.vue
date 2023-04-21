@@ -125,8 +125,8 @@ export default {
 }
 
 .blog-item .post-thumb img {
-    width: auto;
-    height: 100%;
+    /* width: auto;
+    height: 100%; */
 }
 
 .post-title {
@@ -135,7 +135,7 @@ export default {
 }
 
 .blog-item .post-title a {
-    color: #007bff;
+    /* color: #007bff; */
     transition: all .2s ease;
 }
 
@@ -147,7 +147,7 @@ export default {
 .blog-item .meta a {
     margin-right: 6px;
     font-size: 12px;
-    color: #89cbeb;
+    /* color: #89cbeb   ; */
 }
 
 .blog-item .meta a:hover {

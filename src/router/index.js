@@ -115,7 +115,7 @@ const router = createRouter({
       component: Order,
     },
     {
-      path: "/store/order/success",
+      path: "/store/order/success/:id",
       name: "OrderSuccess",
       component: OrderSuccess,
     },

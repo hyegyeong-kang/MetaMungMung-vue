@@ -20,11 +20,12 @@
                             :to="`/products/` + detail.productDTO.productIdx">
                             {{detail.productDTO.brand}} {{detail.productDTO.productName}}
                         </router-link>
+                        {{detail.quantity}}개<br>
                         <strong>{{order.orderPrice}}</strong>
                         <em
                             style="display: inline-block; color: #b0b0b0; font-style: normal; font-size: 12px; vertical-align: 1px; color: #333 !important; padding: 0 0 0 2px; vertical-align: 2px !important;">
                             원
-                        </em> {{detail.quantity}}개
+                        </em>
                     </div>
                 </div>
                 <div class="divider"></div>
@@ -35,12 +36,19 @@
                 <div class="divider"></div>
                 
                 <h4 class="widget-title">결제정보</h4>
-                <h6 class="post-title">{{payment.paymentPrice}}원</h6>
+                <h6 class="post-title" style="margin:0">{{payment.paymentPrice}}원</h6>
                     {{payment.method}}
-                <h6 class="post-title">적립예정 포인트 <span style="font-weight: bolder;">{{ payment.accPoint }}</span>원</h6>
+                    <p v-if="payment.method === '카드'" style="margin: 0;">
+                        일시불({{payment.createDate}})
+                    </p>
+                    <p v-else-if="payment.method === '계좌이체'" style="margin: 0;">
+                        입금 완료({{payment.createDate}})
+                    </p>
+                <h6 class="post-title" style="margin-top:10px">적립 포인트 <span style="font-weight: bolder;">{{ payment.accPoint }}</span>원</h6>
                 <div class="btn">
-                    <button id="cancelBtn" v-if="visible()" @click="cancelOrder(orderIdx)">주문취소</button>
-                    <button id="confirmBtn" v-if="visible()" @click="confirmOrder(orderIdx)">구매확정</button>
+                    <button id="cancelBtn" v-if="visible()" @click="cancelOrder(oid)">주문취소</button>
+                    <button id="confirmBtn" v-if="visible()" @click="confirmOrder(oid)">구매확정</button>
+                    <button id="confirmBtn" v-if="order.status === '구매확정'" @click="registerReview">리뷰 작성</button>
                     <button id="listBtn" @click="moveToList">주문목록</button>
                 </div>
             </div>
@@ -55,6 +63,9 @@ import axios from 'axios';
 
 export default {
     setup(){
+        axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+        const memberIdx = sessionStorage.getItem('memberIdx');
+
         const route = useRoute();
         const router = useRouter();
         const oid = route.params.id;
@@ -82,12 +93,16 @@ export default {
             }
         }
 
+        // 리뷰 작성 페이지로 이동
+        const registerReview = () => {
+            // router.push({
+
+            // });
+        }
+
 
         const cancelOrder = async (oid) => {
             try{
-                axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
-                const memberIdx = sessionStorage.getItem('memberIdx');
-
                 const res = await axios.patch('/orders/' + oid);
                 visible.value = false;
                 console.log(res);
@@ -99,9 +114,6 @@ export default {
 
         const confirmOrder = async (oid) => {
             try{
-                axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
-                const memberIdx = sessionStorage.getItem('memberIdx');
-
                 const res = await axios.patch('/orders/' + oid + '/confirm');
                 visible.value = false;
                 console.log(res);
@@ -142,6 +154,7 @@ export default {
             cancelOrder,
             confirmOrder,
             moveToList,
+            registerReview
         }
     }
 }
@@ -190,8 +203,8 @@ div.btn{
 }
 
 .blog-item .post-thumb img {
-    width: auto;
-    height: 100%;
+    /* width: auto;
+    height: 100%; */
 }
 
 .post-title {
