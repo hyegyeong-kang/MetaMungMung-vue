@@ -13,11 +13,11 @@
                             <img :src="`${order.orderDetailList[0].productDTO.productImg}`" alt="">
                         </a>
                         <div class="content">
-                            <div class="meta">
+                            <div class="meta" style="font-size: 18px">
                                 {{order.status}}
                             </div>
                             <h6 class="post-title">
-                                <a @click="moveToOrdersDetail(order.orderIdx)">
+                                <a @click="moveToOrdersDetail(order.orderIdx)" style="font-size: 17px">
                                 <!-- <router-link :to="{name: 'OrdersDetail', params: {id: order.o_id}}"> -->
                                     [{{order.orderDetailList[0].productDTO.brand}}] {{order.orderDetailList[0].productDTO.productName}}
                                     <span v-if="order.orderDetailList.length != 1"> 외 {{order.orderDetailList.length - 1}}개</span>
@@ -25,8 +25,8 @@
                             </h6>
                             <div class="meta">
                             <!-- <a href="#"><span class="mai-person"></span> Admin</a> -->
-                                <a href='#'>주문번호 {{order.orderIdx}}</a>
-                                <span class="mai-calendar">📅{{order.createDate}}</span>
+                                <a href='#' style="font-size: 17px">주문번호 {{order.orderIdx}}</a>
+                                <span class="mai-calendar" style="font-size: 17px"  >📅{{order.createDate.split('T')[0]}}</span>
                             <!-- <a href="#"><span class="mai-chatbubbles"></span> 19</a> -->
                             </div>
                         </div>
@@ -97,12 +97,21 @@ export default {
 </script>
 
 <style scoped>
+h4{
+    font-size: 24px;
+}
+h6{
+    font-size: 16px;
+}
+a{
+    font-size: 15px;
+}
 .page-section {
     position: relative;
-    padding-top: 80px;
+    /* padding-top: 110px; */
     padding-bottom: 80px;
     background-color: #fff;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 .blog-item {
     position: relative;
@@ -140,7 +149,7 @@ export default {
 }
 
 .blog-item .post-title a:hover {
-    color: #0072ff;
+    color: #55b9eb;
     text-decoration: none;
 }
 
@@ -163,7 +172,7 @@ export default {
 }
   
 .widget-title {
-    color: #007bff;
+    color: #55b9eb;
     font-weight: 800;
 }
 
