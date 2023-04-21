@@ -58,8 +58,6 @@
 import CreateModal from "@/components/meeting/offMeeting/modal/createModal.vue";
 import DetailModal from "@/components/meeting/offMeeting/modal/detailModal.vue";
 import axios from "axios";
-import { watchEffect } from "vue";
-
 export default {
   name: "KakaoMap",
   components: {
@@ -89,7 +87,6 @@ export default {
       this.loadScript();
     }
     let base = this;
-
     /* 자식 함수 호출 */
     base.openCreateModal = this.$refs.createModal.openCreateModalFunc;
     base.openDetailModal = this.$refs.detailModal.openDetailModalFunc;
@@ -118,7 +115,6 @@ export default {
       // 지도 확대 축소를 제어할 수 있는 줌 컨트롤을 생성합니다
       var zoomControl = new kakao.maps.ZoomControl();
       map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-
       geolocationFunc();
       /* 지도에 마커와 인포윈도우를 표시하는 함수 */
       function displayMarker(locPosition, message) {
@@ -154,13 +150,11 @@ export default {
           displayMarker(locPostion, message);
         }
       }
-
       /* 내 위치 찾기 버튼 클릭 시 현재 위치로 지도 이동하는 코드 start */
       currentBtn.addEventListener("click", function (event) {
         const locPosition = new kakao.maps.LatLng(lat, lon);
         map.setCenter(locPosition);
       });
-
       /* 지도 중심좌표 찾는 코드 start */
       // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
       kakao.maps.event.addListener(map, "center_changed", function () {
@@ -170,10 +164,8 @@ export default {
         const longitude = latlng.getLng();
         base.currentLat = latitude;
         base.currentLng = longitude;
-
         /* 주소 얻어오기(주소-좌표 변환) */
         getAddr(latitude, longitude);
-
         function getAddr(lat, lon) {
           /* 주소-좌표 변환 객체 생성 */
           let geocoder = new kakao.maps.services.Geocoder();
@@ -187,13 +179,11 @@ export default {
           geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
         }
       });
-
       /* axios 비동기 통신 */
       base.offMeetingPage = async () => {
         try {
           axios.defaults.headers.common["AUTHORIZATION"] =
             sessionStorage.getItem("token");
-
           const res = await axios.get("/offMeetings");
           base.boardDetails = { ...res.data };
           base.boardDetailsLength = Object.keys(base.boardDetails).length;
@@ -202,27 +192,21 @@ export default {
           console.log(err);
         }
       };
-
       base.offMeetingPage();
-
       /* DB에 등록된 게시물의 좌표를 통해 마커 생성하는 코드 */
       function addBoardMarker() {
         let boardMarkerPosition = 0;
-
         for (let i = 0; i < base.boardDetailsLength; i++) {
           boardMarkerPosition = new kakao.maps.LatLng(
             base.boardDetails[i].latitude,
             base.boardDetails[i].longitude
           );
-
           const boardMarker = new kakao.maps.Marker({
             position: boardMarkerPosition,
             title: base.boardDetails[i].offMeetingIdx,
           });
-
           boardMarker.setMap(map);
           base.boardMarkers.push(boardMarker);
-
           /* 등록된 게시글의 마커를 클릭 시 발생하는 이벤트 */
           kakao.maps.event.addListener(boardMarker, "click", function () {
             if (base.selectedMarker || base.selectedMarker !== boardMarker) {
@@ -231,14 +215,12 @@ export default {
             }
           });
         }
-
         /* 마지막 위치 찾기 */
         // base.lastCreatedLatlng.push(boardMarkerPosition);
         // console.log(base.lastCreatedLatlng[0]);
         // console.log(base.lastCreatedLatlng[0].La);
         // console.log(base.lastCreatedLatlng[0].Ma);
       }
-
       //강혜경
       selectCategory();
       function selectCategory() {

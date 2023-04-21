@@ -111,24 +111,16 @@
               <input
                 type="file"
                 class="custom-file-input"
-                accept="image/*"
                 id="inputGroupFile04"
-                name="attachment"
-                @change="upload"
               />
-              <label
-                v-bind="fileName"
-                class="custom-file-label inputText"
-                for="inputGroupFile04"
-                >{{ fileName }}</label
+              <label class="custom-file-label inputText" for="inputGroupFile04"
+                >파일을 선택하세요.</label
               >
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button @click="createOffMeeting" type="submit" class="btn createBtn">
-            모임생성
-          </button>
+          <button type="submit" class="btn createBtn">모임생성</button>
           <a
             @click="closeModalFunc"
             style="color: white; width: 100px"
@@ -146,46 +138,28 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-
 export default {
   name: "OffMeetingModal",
   props: ["currentLocation", "currentLat", "currentLng"],
   setup(props) {
+    const myIdx = Number(sessionStorage.getItem("memberIdx"));
     let title = ref("");
     let date = ref("");
     let startTime = ref("");
     let content = ref("");
     let limit = ref("2");
     const router = useRouter();
-    const myIdx = Number(sessionStorage.getItem("memberIdx"));
-    // const fileName = ref("파일을 선택해주세요.");
-    // const files = ref([]);
-
     const modal = document.getElementsByClassName("modal");
     const clickable = document.querySelectorAll(".clickable");
-
-    // const upload = (e) => {
-    //   fileName = e.target.fiels[0].name;
-    // };
-
     const openCreateModalFunc = () => {
       modal[0].style.display = "block";
     };
-
     const closeModalFunc = () => {
       modal[0].style.display = "none";
     };
-
-    const createOffMeeting = () => {
-      submitOffMeetingForm();
-      closeModalFunc();
-      router.go();
-    };
-
     const submitOffMeetingForm = async () => {
       axios.defaults.headers.common["AUTHORIZATION"] =
         sessionStorage.getItem("token");
-
       axios
         .post("/offMeetings", {
           title: title.value,
@@ -197,7 +171,7 @@ export default {
           locationAddress: props.currentLocation,
           startTime: startTime.value,
           memberIdx: myIdx,
-          onMeetingIdx: 8,
+          onMeetingIdx: 14,
         })
         .then(function (response) {
           console.log("response => " + JSON.stringify(response, null, 2));
@@ -206,11 +180,9 @@ export default {
           console.log(error);
         });
     };
-
     for (let i = 0; i < clickable.length; i++) {
       clickable[i].openModalFunc;
     }
-
     onMounted(() => {
       window.onclick = function (event) {
         if (event.target == modal[0]) {
@@ -218,21 +190,16 @@ export default {
         }
       };
     });
-
     return {
       openCreateModalFunc,
       closeModalFunc,
       submitOffMeetingForm,
-      createOffMeeting,
-      // upload,
       title,
       date,
       startTime,
       content,
       limit,
       myIdx,
-      // fileName,
-      // files,
     };
   },
 };
@@ -247,13 +214,11 @@ export default {
   color: #555;
   border: 1px solid transparent;
 }
-
 .ivory {
   background-color: #fcf8e3;
   border-color: #faebcc;
   color: #8a6d3b;
 }
-
 .createBtn {
   border-radius: 20px;
   font-size: 13px;
@@ -261,7 +226,6 @@ export default {
   width: 100px;
   background-color: cornflowerblue;
 }
-
 .cancelBtn {
   border-radius: 20px;
   font-size: 13px;

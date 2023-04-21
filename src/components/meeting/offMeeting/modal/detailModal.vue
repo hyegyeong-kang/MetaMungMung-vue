@@ -1,6 +1,6 @@
 <template>
   <!-- 모임상세 모달 start -->
-  <div id="myModal" class="detailModal">
+  <div id="detailModal" class="detailModal">
     <!-- Modal content -->
     <div class="modal-content slideDown">
       <div class="modal-header">
@@ -66,7 +66,12 @@
 
         <div class="form-group">
           <label for="limit" style="margin-right: 10px">💁🏼‍♀️ 제한인원</label>
-          <button @click="activeJoin" class="heart-button" id="likeBtn">
+          <button
+            v-if="myIdx != hostMemberIdx"
+            @click="activeJoin"
+            class="heart-button"
+            id="likeBtn"
+          >
             <div class="heart-flip"></div>
             <span>참여<span>완료</span></span>
           </button>
@@ -170,7 +175,6 @@
 import JoinMemberModal from "@/components/meeting/offMeeting/modal/JoinMemberModal.vue";
 import axios from "axios";
 import { ref, onMounted } from "vue";
-
 export default {
   name: "OffMeetingModal",
   props: ["selectedMarker", "boardDetails"],
@@ -198,13 +202,17 @@ export default {
     let board = ref({});
     let hostMemberIdx = ref(0);
     let hostId = ref("");
-
     // const checkJoinMember = () => {
     //   let openIt = () => {
     //     joinMemberModal.openJoinMemberModal();
     //   };
     //   console.log(openIt + "ok!!!!!!");
     // };
+
+    const modifyOffMeeting = () => {
+      const modalId = document.getElementById("detailModal");
+      modalId.style.display = "none";
+    };
 
     const checkJoinMember = () => {
       joinMemberModal.value.openJoinMemberModal();
@@ -221,26 +229,22 @@ export default {
 
     const openDetailModalFunc = (selectedMarker) => {
       modal[0].style.display = "block";
-
       try {
         /* axios 비동기통신 */
         const getOffMeetingDetailPage = async () => {
           try {
             axios.defaults.headers.common["AUTHORIZATION"] =
               sessionStorage.getItem("token");
-
             const res = await axios.get(
               `/offMeetings/${selectedMarker.getTitle()}`
             );
             board.value = { ...res.data };
             console.log("board => " + JSON.stringify(board.value, null, 2));
-
             offMeetingIdx.value = board.value.offMeetingIdx;
             hostMemberIdx.value = board.value.host.memberIdx;
             hostId.value = board.value.host.memberId;
             console.log("호스트 idx : " + hostMemberIdx.value);
             console.log("호스트 아이디 : " + hostId.value);
-            console.log("세션멤버 idx : " + myIdx);
             title.value = board.value.title;
             meetingDate.value = board.value.meetingDate;
             substring();
@@ -258,25 +262,20 @@ export default {
             console.log(err);
           }
         };
-
         getOffMeetingDetailPage();
       } catch (err) {
         console.log("err!!!!" + err);
       }
     };
-
     substring = () => {
       meetingDate.value = meetingDate.value.substring(0, 10);
     };
-
     const closeDetailModalFunc = () => {
       modal[0].style.display = "none";
     };
-
     for (let i = 0; i < clickable.length; i++) {
       clickable[i].openModalFunc;
     }
-
     onMounted(() => {
       window.onclick = function (event) {
         if (event.target == modal[0]) {
@@ -284,7 +283,6 @@ export default {
         }
       };
     });
-
     return {
       openDetailModalFunc,
       closeDetailModalFunc,
@@ -308,6 +306,7 @@ export default {
       myIdx,
       hostMemberIdx,
       hostId,
+      modifyOffMeeting,
     };
   },
 };
@@ -322,13 +321,11 @@ export default {
   color: #555;
   border: 1px solid transparent;
 }
-
 .ivory {
   background-color: #fcf8e3;
   border-color: #faebcc;
   color: #8a6d3b;
 }
-
 .joinBtn {
   margin-left: 20px;
   height: 30px;
@@ -338,7 +335,6 @@ export default {
   width: 70px;
   background-color: lightpink;
 }
-
 .modifyBtn {
   border-radius: 20px;
   font-size: 13px;
@@ -346,7 +342,6 @@ export default {
   width: 100px;
   background-color: rgb(130, 199, 145);
 }
-
 .deleteBtn {
   border-radius: 20px;
   font-size: 13px;
@@ -354,7 +349,6 @@ export default {
   width: 100px;
   background-color: lightslategray;
 }
-
 .cancelBtn {
   border-radius: 20px;
   font-size: 13px;
@@ -362,11 +356,9 @@ export default {
   width: 100px;
   background-color: lightgray;
 }
-
 .inputText {
   background-color: transparent;
 }
-
 /* 찜하기 버튼 */
 .heart-button {
   cursor: pointer;
@@ -428,7 +420,6 @@ export default {
     }
   }
 }
-
 .heart-button {
   --duration: 0.4s;
   --color: #404660;
@@ -491,7 +482,6 @@ export default {
     --span-x: 0;
   }
 }
-
 .detailBadge {
   background-color: mediumaquamarine;
   color: white;
