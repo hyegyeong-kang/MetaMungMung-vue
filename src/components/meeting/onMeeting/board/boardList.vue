@@ -166,7 +166,7 @@
     <div class="wrapper" style="margin-left: 20px">
       <div class="top">
         <img
-          :src=onMeetingInfo.thumbnail
+          :src="onMeetingInfo.thumbnail"
         />
         <div class="user">
           <h2 style="color: white">{{ onMeetingInfo.onMeetName }}</h2>
@@ -174,11 +174,12 @@
       </div>
       <div class="bottom">
         <a href="#">
-          <p>총 게시글</p>
-          <h3 style="color: white;text-align:center;">{{ boardCnt }}</h3>
+          <p><strong>총 게시글</strong></p>
+           <!-- {{ boards[0].boardList.length }} Object.keys(onMeetingInfo.replyList).lengt -->
+          <h3 style="color: white;text-align:center;">{{  boardCNT }}</h3>
         </a>
         <a href="#">
-          <p>멤버</p>
+          <p><strong>멤버</strong></p>
           <h3 style="color: white;text-align:center;">{{ registerMemsCnt }}</h3>
         </a>
       </div>
@@ -196,6 +197,7 @@
         <div class="btns">
           <div class="btn">
             <button>
+              <input type="file" class="imageUpload" id="addPhoto" accept="image/*" name="attachment" @change="upload">
               <img
                 src="@/assets/images/onMeeting/upload-file-icon.png"
                 alt=""
@@ -224,51 +226,102 @@
         
 
 
+
+
+
       <!--게시물 올라오는 곳 --> <!--이게 반복되면 되는 것임!! -->
       <!-- 이거 클릭하면 해당 게시물 디테일 나오면 됨..--> 
-      <div class="tweet" v-for="(board, index) in boards" :key="index">
+      <div class="wrap">
+      <div class="tweet" v-for="(board, index) in onMeetingInfo.boardList" :key="board.onMeetingBoardIdx" :board="board">
         <div class="left">
           <img
-            src=board.onMeetingMember.memberImg
+            :src="board.boardMember.memberImg"
           />
         </div>
-        <div class="right">
+        <div class="right" @click="boardDetailModal()">
           <div class="info">
-            <p><strong>{{ board.writer }}</strong></p>
-            <time>11m</time>
+            <p><strong>{{ board.boardWriter }}</strong></p>
+            <time>{{ board.boardCreateDate.split('T')[0] }}</time>
           </div>
-          <div class="message" @click="openBoardModal">
-            <p>{{ board.contents }}</p>
+          <div class="message">
+            <p>{{ board.boardContents }}</p>
+            {{ typeof board.replyList }}
             <!-- <img
               src="https://img.dogpre.com/web/dogpre/event/popular_keyword_theme/43_pc_main_page_banner_0036.jpg"
             /> -->
           </div>
-          <div class="btns">
-            <!--댓글 클릭했을 때 모당창 뜨게 -->
-            <button class="blue" type="button" @click="openBoardModal">
+
+
+          <!--댓글 클릭했을 때 모당창 뜨게 -->
+          <div class="btns" >
+            <button class="blue" type="button">
               <img
                 src="@/assets/images/onMeeting/reply-icon.png"
                 height="20"
                 width="20"
                 style="margin-right: 10px"
-              />{{ replyCnt }}
+              />dd
             </button>
           </div>
-                <!-- <div>
-                    <ReplyList/>
-                </div> -->
-                <div>
-                    <!--댓글창이었음.. -->
-                    <!-- <CreateReply/>   -->
-                </div>
-                 <hr>
+
+          <!--!!!!댓글 출력 // getCommentsByPostId(board.onMeetingBoardIdx)!!!!-->
+          <!-- <ul v-if="board.replyList.length > 0"> -->
+            <ul>
+            <li v-for="reply in board.replyList" :key="reply.onMeetingReplyIdx" class="commentItem"> 
+                <!--댓글창이었음.. -->
+                <!-- <CreateReply/>   --><div class="left">
+                  <img
+                      :src="reply.replyWriterImg"
+                  />
+                  </div>
+                  <div class="right">
+                      <div class="info">
+                          <!-- {{ 이름 }} -->
+                          <span style="color:black"><strong>{{ reply.replyWriter }}</strong></span>
+                          <!-- {{ 게시일 }} -->
+                          <span style="color:#C0C0C0;font-size:13px">{{ reply.replyCreateDate.split('T')[0] }}</span>
+                          <!-- {{ 내용 }} -->
+                          <span style="color:black">{{ reply.replyContents }}</span>
+                      </div>
+                  </div>
+                  <div class="btns">
+                  <b-button style="text-align:right;width:100%" class="btn" @click="updateReply()">수정</b-button>
+                  <b-button style="text-align:right;width:100%" class="btn" @click="deleteReply()">삭제</b-button>        
+                  </div>
+            </li>
+            </ul>
+          <!-- </ul> -->
+
+          <hr>
+
+             <!-- 댓글 작성하는 곳 -->
+            <div class="reply">
+                <span>
+                    <textarea
+                        placeholder="댓글을 입력하세요"
+                        v-model="contents"
+                        style="border: 1px solid;border-radius: 2em;color:#C0C0C0;"
+                        ></textarea>
+                </span>
+                <span>
+                    <button @click="addReply()" style="border: 1px solid;border-radius: 2em;color:#fff">보내기</button>
+                </span>
+            </div>
+
+
+                 
         </div>
-          <BoardDetail ref="boardDetail" @close="closeBoardModal" />
+          <!-- <BoardDetail ref="boardDetail" @close="closeBoardModal" /> -->
         </div>
         <!-- 하나의 트윗이 끝나는 곳-->
-       
+      </div>
+       <!-- <CreateReply v-if="isOpenDetail" @close="boardDetailModal()" /> -->
 
         
+
+
+
+
 
         <footer>
             <!-- <i class="fab fa-twitter"></i>
@@ -357,7 +410,7 @@
           <!--카페 멤버-->
           <a href="#" v-for="(member, index) in registerMems" :key="index">
             <img
-              src=member.memberList[0].memberImg
+              :src="member.memberList[0].memberImg"
             />
             <div class="user">
               <p>{{ member.memberList[0].memberName }}</p>
@@ -374,9 +427,10 @@
 import MapModal from "@/components/meeting/onMeeting/board/modal/mapModal.vue";
 import ReplyList from "@/components/meeting/onMeeting/board/reply/replyList.vue";
 import CreateReply from "@/components/meeting/onMeeting/board/reply/createReply.vue";
-import BoardDetail from "@/components/meeting/onMeeting/board/boardDetailModal.vue";
+//import BoardDetail from "@/components/meeting/onMeeting/board/boardDetailModal.vue";
 import { ref, computed } from 'vue';
 import axios from 'axios';
+import { useRoute } from "vue-router";
 
 
 export default {
@@ -386,37 +440,37 @@ export default {
     MapModal,
     ReplyList,
     CreateReply,
-    BoardDetail,
+   // BoardDetail,
   },
   data() {
     return {
       mapModal: false,
       boardModal: false,
       registerModal: false,
-      openBoardModal: null,
+     // openBoardModal: null,
     };
   },
   methods: {
-    openMapModal() {
-      this.mapModal = true;
-    },
-    closeMapModal() {
-      this.mapModal = false;
-    },
-    openBoardModal() {
-        base.openBoardModal();
-    //     console.log("###")
-    //   this.boardModal = true;
-    },
-    closeBoardModal() {
-      this.boardModal = false;
-    },
-    openRegisterModal() {
-      this.registerModal = true;
-    },
-    closeRegisterModal() {
-      this.registerModal = false;
-    },
+    // openMapModal() {
+    //   this.mapModal = true;
+    // },
+    // closeMapModal() {
+    //   this.mapModal = false;
+    // },
+    // openBoardModal() {
+    //     base.openBoardModal();
+    // //     console.log("###")
+    // //   this.boardModal = true;
+    // },
+    // closeBoardModal() {
+    //   this.boardModal = false;
+    // },
+    // openRegisterModal() {
+    //   this.registerModal = true;
+    // },
+    // closeRegisterModal() {
+    //   this.registerModal = false;
+    // },
   },
   mounted() {
       let base = this;
@@ -427,34 +481,53 @@ export default {
 
   },
   setup() {
+    const route = useRoute();
     const isOpen = ref(false);
+    const isOpenDetail = ref(false);
+    const onMeetingIdx = ref("");
+
+    onMeetingIdx.value = route.params.onMeetingIdx;
+
     const onMeetingInfo = ref([]);
 
     const toggleMap = () => {
       console.log("KANG!!!")
             isOpen.value = !isOpen.value;
             // emit('toggle-modal', isOpen.value);
-        }
+    }
+
+     const boardDetailModal = () => {
+      console.log("보드 디테일 모달 열려라");
+      
+      // 그래서 해당 인덱스에 있는 댓글을 보여주면 되는 것
+      // 버튼 누른다고 해서 모든 댓글창이 나오면 안됨
+
+      isOpenDetail.value = !isOpenDetail.value;
+    };
 
     const sendAddr = (addr) => {
             address.value = addr;
         }
 
 
+
     const boards = ref([]);
     const boardCnt = ref(0);
+    const boardInfo = ref([]);
     // 게시물 출력
     const getBoardList = async() => {
 
+      // onMeetingIdx 넣어주면 됨
       await axios.get('/onMeetings/1/board', {})
         .then((response) => {
 
-          boards.value = {...response.data[0].boardList};
+          boards.value = {...response.data};
           onMeetingInfo.value = {...response.data[0]};
 
           console.log(`^^^^^^^BOARD^^^^^^ ${JSON.stringify(boards.value, null, 2)}`);
+          console.log(`^^^^^^^BOARD_INFO^^^^^^ ${JSON.stringify(onMeetingInfo.value, null, 2)}`);
 
-          boardCnt.value = Object.keys(boards.value).length;
+         // boardCnt.value = Object.keys(boards.value).length;
 
         })
         .catch ((error) => {
@@ -472,13 +545,17 @@ export default {
     // 전체 가입멤버 출력
     const getOnMeetingMembers = async() => {
 
+      // onMeetingIdx 넣어주면 됨
       await axios.get('/onMeetings/1/board/members', {})
         .then((response) => {
-          console.log(`REGISTER MEM: ${JSON.stringify(response.data, null, 2)}`);
+        //  console.log(`REGISTER MEM: ${JSON.stringify(response.data, null, 2)}`);
           //console.log(`REGISTER MEM222222: ${JSON.stringify(response.data[0], null, 2)}`);
           registerMems.value = {...response.data}
-          
+
+          console.log(`MEMBER::: ${JSON.stringify(registerMems.value, null, 2)}`);
+
           registerMemsCnt.value = Object.keys(registerMems.value).length;
+          console.log(`### ${registerMemsCnt.value}`)
 
         })
         .catch ((error) => {
@@ -492,10 +569,24 @@ export default {
     const inputText = ref(''); 
     console.log(`+++++ ${JSON.stringify(registerMems.value, null, 2)}`);
   
-    // 게시글 추가
-    const postData = async() => {
+    const writer = ref("");
+    const contents = ref("");
+    const createDate = ref("");
 
-      console.log(`asasdsads ${inputText.value}`);
+    // 게시글 추가
+    const postData = () => {
+      console.log("게시글 추가 버튼 눌림");
+
+      console.log(`asasdsads ${JSON.stringify(boards.value, null, 2)}`);
+
+
+      // boards.value.push(
+      //   {
+      //     writer: writer.value,
+      //     cotents: inputText.value,
+      //     creatDate: createDate.value
+      //   }
+      // )
 
       // boards.value 에서 필요한 값 빼서 data 에 넣어주기
 
@@ -514,28 +605,87 @@ export default {
       //   })
     };
 
-    const replies = ref([]);
-
+      const replies = ref([]);
+      const replyInfo = ref("");
       const getReplyList = async() => {
 
-        await axios.get('/onMeetings/1/board/1/reply', {})
+        // onMeetingIdx, onMeetingBoardIdx 넣으면 됨
+        await axios.get('/onMeetings/1/board/2/reply', {})
             .then((response) => {
-                replies.value = {...response.data.replyList}
+                replies.value = {...response.data.replyList};
+                replyInfo.value = {...response.data};
 
-                console.log(`###REPLY ${JSON.stringify(replies.value, null, 2)}`)
+                console.log(`###REPLY ${JSON.stringify(replies.value[1], null, 2)}`)
+                console.log("$ㅇㅇㅇ$")
+                console.log(`###REPLY_INFO ${JSON.stringify(replyInfo.value, null, 2)}`);
             })
             .catch ((error) => {
                 console.log(`REPLY ERR: ${error}`);
             });
       };
-      getReplyList();
+     // getReplyList();
+
+
+    // 게시물 갯수
+     const boardCNT = computed(() => {
+      // console.log(`BOARDCNT : ${onMeetingInfo.value.boardList.length} `)
+      // return onMeetingInfo.value.boardList.length;
+     });
+
     // 댓글 갯수
-    const replyCnt = computed(() => {
-      let cnt = Object.keys(replies.value).length;
-      console.log("8------"+cnt)
+    const replyCnt = computed((index) => {
+      // let cnt = Object.keys(boards.replyList).length;
+      let cnt = 0;
+     // let boardCNT = onMeetingInfo.value.boardList.length;
+     // console.log(`@@@@CNT:: ${JSON.stringify(boardCNT, null, 2)}`)
+     console.log(`@@@@CNT:: ${JSON.stringify(onMeetingInfo.value.boardList[index], null, 2)}`)
+
+      // for (let reply in onMeetingInfo.value.boardList[index].replyList) {
+      //     cnt++;
+      // }
+      console.log(`CNT@@@ ${cnt}`);
       return cnt;
      });
-     
+
+
+
+
+    //  const getCommentsByPostId = (onMeetingBoardIdx) => {
+    //    console.log(`JSON_IDX; ${onMeetingBoardIdx}`)
+    //    console.log(`JSON_REPLIES; ${JSON.stringify(replies.value, null, 2)}`)
+    //    console.log(`JSON_REPLY; ${JSON.stringify(replies.value[0], null, 2)}`)
+    //  //  console.log(`JSON_REPLY; ${JSON.stringify(replies.value[0].onMeetingReplyIdx, null, 2)}`)
+    //   return computed(() => {
+    //     return replies.value.filter((reply) => reply.onMeetingBoardIdx === onMeetingBoardIdx);
+    //   });
+    // };
+
+
+
+    
+    
+     // 댓글 작성
+    const addReply = () => {
+
+        console.log("버튼 눌림");
+        console.log(`onMEETING@@@ ${JSON.stringify(onMeetingInfo.value, null, 2)}`)
+        
+
+        replies.value.push({
+            contents: contents.value,
+            writer: writer.value,
+            createDate: createDate.value,
+        }),
+            (writer.value = ""),
+            (createDate.value = ""),
+            (contents.value = "");
+
+            console.log(`LIST: ${JSON.stringify(replies.value)}`)
+
+
+        // axios.post 
+            
+    };
 
 
 
@@ -543,6 +693,7 @@ export default {
       isOpen,
       toggleMap,
       sendAddr,
+
       getBoardList,
       boards,
       boardCnt,
@@ -552,7 +703,26 @@ export default {
       registerMemsCnt,
       inputText,
       postData,
+
+      replies,
       replyCnt,
+      replyInfo,
+      getReplyList,
+
+      boardDetailModal,
+      isOpenDetail,
+
+      onMeetingIdx,
+      
+      //getCommentsByPostId,
+
+      boardInfo,
+      boardCNT,
+
+      addReply,
+      writer,
+      createDate,
+      contents,
     }
   }
 };
@@ -1112,6 +1282,54 @@ header.nav-closed {
   &:hover {
     background: var(--bg2);
   }
+   .commentItem{
+  z-index: 100;
+  border:1px solid #C0C0C0;
+  margin-top: 20px;
+  margin-bottom:10px;
+  padding:10px;
+  cursor: pointer;
+  display: flex; 
+  justify-content: flex-end;
+  margin:0 auto;
+  margin-bottom: 20px;
+  .left {
+      margin-right: 15px;
+      img {
+            width: 42px;
+            // height: 42px;
+            display: block;
+            object-fit: cover;
+            border-radius: 50%;
+            user-select: none;
+        }
+  }
+  .right {
+    width: 100%;
+    .info {
+        margin-bottom: 5px;
+        //   p {
+        //     margin: 0;
+        //     display: flex;
+        //     align-items: center;
+        //     span {
+        //       margin: 0 10px;
+        //       font-size: 12px;
+        //       opacity: 0.5;
+        //     }
+        //   }
+    }
+  }
+  .btns {
+      display:flex;
+      .btn {
+          font-size: 13px;
+          position: relative;
+          top: 50px
+      }
+  }
+
+}
 }
 .iframe-container {
   overflow: hidden;
@@ -1340,4 +1558,32 @@ header.nav-closed {
     }
   }
 }
+
+.reply
+    textarea{
+        width: 80%;
+        height: 40px;
+        resize: none;
+        overflow:hidden;
+        font-size: 15px;
+        vertical-align:middle;
+    }
+    button {
+        width: 20%;
+        vertical-align:middle;
+        background-color: #87cefa;
+	    color: black;
+    }
+
+.ReplyCnt
+    button {
+        color: black;
+        font-size: 10dp;
+    }
+
+
+ 
+
+
+
 </style>
