@@ -165,6 +165,7 @@ export default {
 
     const logout = () => {
       sessionStorage.removeItem("token");
+      sessionStorage.removeItem("memberId");
       sessionStorage.removeItem("memberIdx");
       sessionStorage.removeItem("status");
       window.location.reload(true);

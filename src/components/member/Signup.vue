@@ -168,6 +168,8 @@ export default {
                 alert("사용 가능한 아이디입니다.");
             } else {
                 alert("이미 존재하는 아이디입니다.");
+                member.value.memberId = '';
+                console.log(res.data);
             }
         } catch (error) {
             console.error(error);

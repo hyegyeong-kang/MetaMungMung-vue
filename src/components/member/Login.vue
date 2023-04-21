@@ -57,7 +57,12 @@ export default {
         sessionStorage.setItem('token', res.headers.token);
         sessionStorage.setItem('memberIdx', res.headers.memberidx);
         sessionStorage.setItem('status', res.headers.status);
-        sessionStorage.setItem('authority', res.headers.authority);
+
+        // 토큰에 존재하는 아이디 값 추출
+        const payload = JSON.parse(atob(res.headers.token.split('.')[1]));
+        const memberId = payload.sub;
+
+        sessionStorage.setItem('memberId', memberId);
 
         axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
 

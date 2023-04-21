@@ -9,7 +9,7 @@
                 <img id="preview-image" :src="profileImgSrc" @error="defaultImage">
                 <br>
                 </div>
-                <h1>My</h1>
+                <h1>{{memberName}} 님</h1>
             </div>
 
 
@@ -25,13 +25,17 @@
               
               <div class="profile-wrapper">
                 <div class="card-news" v-for="myPet in myPetList" :key="myPet.petIdx">
-                  <h2><img :src="myPet.petImg"/></h2>
+                  <!-- <h2><img :src="myPet.petImg"/></h2> -->
                   <div class="card-container">
                     <div class="card">
-                      <img src="" alt="Card image 1">
-                      <h3>{{ myPet.petName }}</h3>
-                      <p>{{ myPet.sex }}</p>
-                      <p>{{ myPet.birth }}</p>
+                      <div class="petImgBox">
+                        <img :src="myPet.petImg" alt="Card image 1" class="petImg">
+                      </div>
+                      <div class="petInfo">
+                        <h3>이름: {{ myPet.petName }}</h3>
+                        <p>성별: {{ myPet.sex }}</p>
+                        <p>태어난 날: {{ myPet.birth.split('T')[0] }}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -45,73 +49,70 @@
 </template>
 
 <script>
-import {useRoute, useRouter} from 'vue-router';
-import { ref, onMounted } from 'vue';
+import { useRouter} from 'vue-router';
+import { ref } from 'vue';
 import axios from 'axios';
 
 export default {
   name: 'MyPage',
   setup() {
     const router = useRouter();
+    const memberName = ref('');
+
+    const memberIdx = sessionStorage.getItem('memberIdx');
+    axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
 
     // 이미지 파일 첨부
-    const inputImage = ref(null);
     const profileImgSrc = ref('');
     const defaultImage = () => {
         profileImgSrc.value = require(`@/assets/images/member/profile.png`);
     }
 
-    // function readImage() {
-    //   const input = inputImage.value;
+    const info = async () => {
+      try {
+          const res = await axios.get('/members/my', {
+            params: {
+              memberIdx: memberIdx
+            }
+          });
+          memberName.value = res.data.memberName;
+          console.log(res.data);
 
-    //   if (input.files && input.files[0]) {
-    //     const reader = new FileReader();
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
-    //     reader.onload = (e) => {
-    //         profileImgSrc.value = e.target.result;
-    //     };
-
-    //     reader.readAsDataURL(input.files[0]);
-    //   }
-    // }
-
-    // const myPetList = async () => {
-    //     try{
-    //         const res = await axios.get('/members/pet');
-    //         myPetList.value = {...res.data};
-            
-    //         for(let i in res.data){
-    //             myPetList.value[i].introduction = res.data.recommendList[i].introduction.replace(/<br>/g, ' ');
-    //         }
-    //     } catch(err){
-    //         console.log(err);
-    //     }
-    // }
+    info();
 
     const myPetList = ref([]);
 
     const getMyPets = async () => {
+      try {
+        const response = await axios.get('/members/pets', {
+          params: {
+            memberIdx: memberIdx
+          }
+        });
+        console.log(response.data);
 
-      const memberIdx = sessionStorage.getItem('memberIdx');
-      axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+        myPetList.value = response.data;
 
-      const response = await axios.get('/members/pets', {
-        memberIdx: memberIdx
-      });
-
-      myPetList.value = response.data;
+      } catch (error) {
+        console.error(error);
+      }
     };
     
-    onMounted(() => {
-      getMyPets();
-    });
+    getMyPets();
     
-
     return {
-        defaultImage,
-        myPetList,
-        getMyPets,
-        profileImgSrc,
+      memberName,
+      defaultImage,
+      memberIdx,
+      info,
+      myPetList,
+      getMyPets,
+      profileImgSrc,
     };
   }
 }
