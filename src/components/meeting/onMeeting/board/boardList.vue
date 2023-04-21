@@ -176,7 +176,7 @@
         <a href="#">
           <p><strong>총 게시글</strong></p>
            <!-- {{ boards[0].boardList.length }} Object.keys(onMeetingInfo.replyList).lengt -->
-          <h3 style="color: white;text-align:center;">{{  boardCNT }}</h3>
+          <h3 style="color: white;text-align:center;">2</h3>
         </a>
         <a href="#">
           <p><strong>멤버</strong></p>
@@ -189,7 +189,7 @@
   <div id="container" class="wrapper nav-closed">
     <div id="timeline">
       <!-- 게시물 글 작성하는 곳  -->
-      <div class="new-tweet" style="border: 1px solid;border-radius: 2em;color:	#C0C0C0;margin-bottom:10px">
+      <div class="new-tweet" style="border: 1px solid;border-radius: 2em;color:	#C0C0C0;margin-bottom:20px">
         <textarea placeholder="새로운 소식을 남겨보세요." v-model="inputText"></textarea>
         <div class="registerModal">
           <!-- <RegisterModal @close="closeRegisterModal" v-if="registerModal" /> -->
@@ -197,7 +197,7 @@
         <div class="btns">
           <div class="btn">
             <button>
-              <input type="file" class="imageUpload" id="addPhoto" accept="image/*" name="attachment" @change="upload">
+              <!-- <input type="file" class="imageUpload" id="addPhoto" accept="image/*" name="attachment" @change="upload"> -->
               <img
                 src="@/assets/images/onMeeting/upload-file-icon.png"
                 alt=""
@@ -231,59 +231,80 @@
 
       <!--게시물 올라오는 곳 --> <!--이게 반복되면 되는 것임!! -->
       <!-- 이거 클릭하면 해당 게시물 디테일 나오면 됨..--> 
-      <div class="wrap">
-      <div class="tweet" v-for="(board, index) in onMeetingInfo.boardList" :key="board.onMeetingBoardIdx" :board="board" style="border: 0.5px solid;margin-left:10px">
-        <div class="left">
-          <img
-            :src="board.boardMember.memberImg"
-          />
-        </div>
-        <div class="right" @click="boardDetailModal()">
-          <div class="info">
-            <p><strong>{{ board.boardWriter }}</strong></p>
-            <time>{{ board.boardCreateDate.split('T')[0] }}</time>
-          </div>
+      <div class="wrap" >
+      <div class="tweet" v-for="(board, index) in onMeetingInfo.boardList" :key="board.onMeetingBoardIdx" :board="board" style="border: 0.5px solid;">
+      
+      
+        <div class="left" style="display:inline-block">
+          
+
+        <div class="kang">
+            <div class="info">
+              <img
+              :src="board.boardMember.memberImg"
+              />
+              <p><strong style="margin-left:10px">{{ board.boardWriter }}</strong></p>
+              <time>{{ board.boardCreateDate.split('T')[0] }}</time>
+            </div>
           <div class="message">
             <p>{{ board.boardContents }}</p>
             <!-- <img
               src="https://img.dogpre.com/web/dogpre/event/popular_keyword_theme/43_pc_main_page_banner_0036.jpg"
             /> -->
           </div>
+        </div>
+
+        </div> 
+        <!-- left 끝 -->
+
+        <!-- <hr> -->
+
+        <div class="right" @click="boardDetailModal()">
 
 
           <!--댓글 클릭했을 때 모당창 뜨게 -->
           <div class="btns" >
-            <button class="blue" type="button">
-              <img
-                src="@/assets/images/onMeeting/reply-icon.png"
+            <button class="blue" type="button" style="margin-left:10px">
+              <!-- <img
+                src="@/assets/images/onMeeting/down.png"
                 height="20"
                 width="20"
-                style="margin-right: 10px"
-              />dd
+                style="margin-right: 10px;margin-bottom:5px"
+              /> -->
+              댓글
             </button>
           </div>
-          <hr>
+          <!-- <hr> -->
           <!--!!!!댓글 출력 // getCommentsByPostId(board.onMeetingBoardIdx)!!!!-->
           <!-- <ul v-if="board.replyList.length > 0"> -->
             <ul v-if="board.replyList.length">
-            <li v-for="(reply, index) in board.replyList" :key="reply.onMeetingReplyIdx" class="commentItem"> 
+            <li v-for="(reply, index) in board.replyList" :key="reply.onMeetingReplyIdx" class="commentItem" style="background-color:#F5F5F5"> 
                 <!--댓글창이었음.. -->
-                <!-- <CreateReply/>   --><div class="left">
+                <!-- <CreateReply/>   -->
+
+
+                <div class="left">
                   <img
                       :src="reply.replyWriterImg"
                   />
-                  </div>
+                </div>
+
+                  
                   <div class="right">
                       <div class="info">
                           <!-- {{ 이름 }} -->
                           <span style="color:black;font-size:15px"><strong>{{ reply.replyWriter }}</strong></span>
-                          <!-- {{ 게시일 }} -->
-                          <span style="color:#C0C0C0;font-size:13px">{{ reply.replyCreateDate.split('T')[0] }}</span>
                       </div>
+                      <!-- {{ 게시일 }} -->
+                          <span style="color:#C0C0C0;font-size:13px;margin-left:9px">{{ reply.replyCreateDate.split('T')[0] }}</span>
+                      <div>
                       <!-- {{ 내용 }} -->
                       <span style="color:black;margin-left:9px">{{ reply.replyContents }}</span>
-                  </div>
-                  <div class="btns">
+                      </div>
+                  </div> 
+
+
+                  <div class="btns" style="margin-top:auto"> 
                   <b-button style="text-align:right;width:100%" class="btn" @click="updateReply()">수정</b-button>
                   <b-button style="text-align:right;width:100%" class="btn" @click="deleteReply()">삭제</b-button>        
                   </div>
@@ -294,7 +315,7 @@
           <!-- <hr> -->
 
              <!-- 댓글 작성하는 곳 -->
-            <div class="reply">
+            <div class="reply" style="margin-bottom:10px; padding:10px">
                 <form @submit.prevent="submitComment(index, board.onMeetingBoardIdx)">
                   <span>
                     <textarea
@@ -308,6 +329,7 @@
                   </span>
                 </form>
             </div>
+            
 
         </div>
           <!-- <BoardDetail ref="boardDetail" @close="closeBoardModal" /> -->
@@ -315,6 +337,7 @@
         
         <!-- 하나의 트윗이 끝나는 곳-->
       </div>
+      
        <!-- <CreateReply v-if="isOpenDetail" @close="boardDetailModal()" /> -->
 
         <footer>
@@ -392,7 +415,21 @@
             </div>
           </a>
           <!-- <hr> -->
-          <p align="right" style="font-size:13px"><img src="@/assets/images/onMeeting/setting.png" style="width:15px;height:15px;margin-right:10px;">모임 설정</p>
+          <p align="right" style="font-size:13px">
+            <img src="@/assets/images/onMeeting/setting.png" style="width:15px;height:15px;margin-right:10px;">
+            모임 설정
+            </p>
+          
+          <button class="blue" type="button" style="margin-left:10px;width:100%;height:40px;border-radius:2em">
+              <img
+                src="@/assets/images/offMeeting/paw-print.png"
+                height="20"
+                width="20"
+                style="margin-right: 10px;margin-bottom:5px"
+              />
+              OFF 미팅
+          </button>
+
         </main>
       </section>
       <section>
@@ -692,7 +729,7 @@ export default {
       try {
         const response = await axios.get(`/onMeetings/1/board`);
         comments.value = response.data;
-        console.log(`COMMENTSSSSSSS : ${JSON.stringify(comments.value, null, 2)}`)
+        console.log(`COMMENTSSSSSSS : ${JSON.stringify(comments.value.boardList, null, 2)}`)
       } catch (error) {
         console.error(error);
       }
@@ -1228,30 +1265,24 @@ header.nav-closed {
   }
 }
 .tweet {
-  border-top: 1px solid var(--bg2);
-  padding: 15px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: flex-start;
+
+  // border-top: 1px solid var(--bg2);
+  // padding: 15px;
+  // box-sizing: border-box;
+  // display: flex;
+  // align-items: flex-start;
+
   cursor: pointer;
   .left {
     margin-right: 15px;
-    img {
-      width: 42px;
-      height: 42px;
-      display: block;
-      object-fit: cover;
-      border-radius: 50%;
-      user-select: none;
-    }
-  }
-  .right {
-    width: 100%;
+    margin-left: 20px;
+    margin-top: 10px;
+    display: inline-block;
     .info {
       display: flex;
       align-items: center;
       color: var(--color);
-      margin-bottom: 5px;
+      margin-bottom: 10px;
       p {
         margin: 0;
         display: flex;
@@ -1290,8 +1321,63 @@ header.nav-closed {
         margin-top: 10px;
       }
     }
+    img {
+      width: 42px;
+      height: 42px;
+      display: block;
+      object-fit: cover;
+      border-radius: 50%;
+      user-select: none;
+    }
+  }
+
+  .right {
+    width: 100%;
+    .info {
+      display: flex;
+      align-items: center;
+      color: var(--color);
+      margin-bottom: 5px;
+      // p {
+      //   margin: 0;
+      //   display: flex;
+      //   align-items: center;
+      //   span {
+      //     margin: 0 10px;
+      //     font-size: 12px;
+      //     opacity: 0.5;
+      //   }
+      // }
+      // time {
+      //   display: flex;
+      //   align-items: center;
+      //   font-size: 12px;
+      //   opacity: 0.5;
+      //   &:before {
+      //     content: "";
+      //     height: 2px;
+      //     width: 2px;
+      //     margin-right: 10px;
+      //     border-radius: 50%;
+      //     background: var(--color);
+      //   }
+      // }
+    }
+    .message {
+      p {
+        margin: 0;
+        color: var(--color);
+        line-height: 20px;
+      }
+      img {
+        display: block;
+        width: 100%;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+    }
     .btns {
-      margin-top: 15px;
+      margin-top: 20px;
       display: flex;
       align-items: center;
       cursor: pointer;
@@ -1340,16 +1426,15 @@ header.nav-closed {
     background: var(--bg2);
   }
    .commentItem{
-  z-index: 100;
-  border:1px solid #C0C0C0;
-  margin-top: 20px;
-  margin-bottom:10px;
-  padding:10px;
-  cursor: pointer;
-  display: flex; 
-  justify-content: flex-end;
-  margin:0 auto;
-  margin-bottom: 20px;
+      z-index: 100;
+      border:0.5px solid #C0C0C0;
+      margin-top: 20px;
+      margin-bottom:10px;
+      padding:10px;
+      cursor: pointer;
+      display: flex; 
+      justify-content: flex-end;
+      margin:0 auto;
   .left {
       margin-right: 15px;
       img {
