@@ -41,17 +41,17 @@
           />
         </div>
 
-        <!-- <div class="form-group">
+        <div class="form-group">
           <label for="host">🙋🏻 호스트</label>
           <input
             type="text"
             class="form-control inputText"
             id="host"
             aria-describedby="emailHelp"
-            v-model="host"
+            v-model="hostId"
             disabled
           />
-        </div> -->
+        </div>
 
         <div class="form-group" style="display: none">
           <label for="location">위치</label>
@@ -139,14 +139,14 @@
       </div>
       <div class="modal-footer">
         <button
-          v-if="myIdx === offMeetingIdx"
+          v-if="myIdx === hostMemberIdx"
           @click="modifyOffMeeting"
           class="btn modifyBtn"
         >
           수정
         </button>
         <button
-          v-if="myIdx === offMeetingIdx"
+          v-if="myIdx === hostMemberIdx"
           @click="deleteOffMeeting"
           class="btn deleteBtn"
         >
@@ -192,6 +192,8 @@ export default {
     let joinMemberModal = ref(null);
     let substring = null;
     let board = ref({});
+    let hostMemberIdx = ref(0);
+    let hostId = ref("");
 
     // const checkJoinMember = () => {
     //   let openIt = () => {
@@ -230,6 +232,10 @@ export default {
             console.log("board => " + JSON.stringify(board.value, null, 2));
 
             offMeetingIdx.value = board.value.offMeetingIdx;
+            hostMemberIdx.value = board.value.host.memberIdx;
+            hostId.value = board.value.host.memberId;
+            console.log("호스트 idx : " + hostMemberIdx.value);
+            console.log("호스트 아이디 : " + hostId.value);
             title.value = board.value.title;
             meetingDate.value = board.value.meetingDate;
             substring();
@@ -295,6 +301,8 @@ export default {
       headcount,
       likeBtn,
       myIdx,
+      hostMemberIdx,
+      hostId,
     };
   },
 };
