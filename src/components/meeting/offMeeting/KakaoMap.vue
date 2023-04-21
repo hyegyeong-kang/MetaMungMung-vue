@@ -44,25 +44,34 @@
       ref="createModal"
     ></CreateModal>
     <DetailModal
+      :isOpen="isOpen"
       :selectedMarker="selectedMarker"
       :boardDetails="boardDetails"
       ref="detailModal"
+      @isOpen="isOpenFunc"
+      @board="getBoard"
     />
-    <!-- <div>{{ this.currentLocation }}</div>
-    <div>{{ this.currentLat }}</div>
-    <div>{{ this.currentLng }}</div> -->
+    <ModifyModal
+      v-if="isOpen === true"
+      ref="modifyModal"
+      :isOpen="isOpen"
+      :board="board"
+    />
   </div>
 </template>
 
 <script>
 import CreateModal from "@/components/meeting/offMeeting/modal/createModal.vue";
 import DetailModal from "@/components/meeting/offMeeting/modal/detailModal.vue";
+import ModifyModal from "@/components/meeting/offMeeting/modal/modifyModal.vue";
+import { ref, watchEffect } from "vue";
 import axios from "axios";
 export default {
   name: "KakaoMap",
   components: {
     CreateModal,
     DetailModal,
+    ModifyModal,
   },
   data() {
     return {
@@ -77,12 +86,15 @@ export default {
       boardDetails: [],
       boardDetailsLength: 0,
       offMeetingPage: null,
+      isOpen: false,
+      board: null,
     };
   },
   mounted() {
     // api 스크립트 소스 불러오기 및 지도 출력
     if (window.kakao && window.kakao.maps) {
       this.loadMap();
+      this.isOpenFunc(isOpen);
     } else {
       this.loadScript();
     }
@@ -92,6 +104,14 @@ export default {
     base.openDetailModal = this.$refs.detailModal.openDetailModalFunc;
   },
   methods: {
+    isOpenFunc(isOpen) {
+      this.isOpen = isOpen;
+      console.log("3. 부모로 다시 받았다 ===> " + this.isOpen);
+    },
+    getBoard(board) {
+      this.board = board;
+      console.log("3. 부모로 받았다. board ===> " + this.board.value);
+    },
     loadScript() {
       const script = document.createElement("script");
       script.src =
@@ -100,6 +120,8 @@ export default {
       document.head.appendChild(script);
     },
     loadMap() {
+      console.log("1. 부모 isOpen => " + this.isOpen);
+
       const container = document.getElementById("map");
       const currentBtn = document.getElementById("current-location-btn");
       let lat = 0;

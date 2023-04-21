@@ -173,15 +173,18 @@
 
 <script>
 import JoinMemberModal from "@/components/meeting/offMeeting/modal/JoinMemberModal.vue";
+import ModifyModal from "@/components/meeting/offMeeting/modal/modifyModal.vue";
 import axios from "axios";
 import { ref, onMounted } from "vue";
+
 export default {
   name: "OffMeetingModal",
-  props: ["selectedMarker", "boardDetails"],
+  props: ["selectedMarker", "boardDetails", "isOpen"],
   components: {
     JoinMemberModal,
   },
-  setup(props) {
+  emits: ["isOpen", "board"],
+  setup(props, { emit }) {
     const myIdx = Number(sessionStorage.getItem("memberIdx"));
     let offMeetingIdx = ref(0);
     let title = ref("");
@@ -202,6 +205,7 @@ export default {
     let board = ref({});
     let hostMemberIdx = ref(0);
     let hostId = ref("");
+    let isOpen = ref(props.isOpen);
     // const checkJoinMember = () => {
     //   let openIt = () => {
     //     joinMemberModal.openJoinMemberModal();
@@ -212,6 +216,15 @@ export default {
     const modifyOffMeeting = () => {
       const modalId = document.getElementById("detailModal");
       modalId.style.display = "none";
+
+      console.log("2. 자식 detailModal => " + isOpen.value);
+      isOpen.value = true;
+
+      emit("isOpen", isOpen.value);
+      console.log("보낸다 ~~~ => " + isOpen.value);
+
+      emit("board", board.value);
+      console.log("board 보낸다~~~ => " + board.value);
     };
 
     const checkJoinMember = () => {
@@ -307,6 +320,7 @@ export default {
       hostMemberIdx,
       hostId,
       modifyOffMeeting,
+      isOpen,
     };
   },
 };
