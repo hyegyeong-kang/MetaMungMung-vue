@@ -2,7 +2,7 @@
   <div class="services_section layout_padding">
         <div class="container">
             
-            <div class="content">
+            <div class="myContent">
 
             <div class="profile">
                 <div class="profile-image">
@@ -32,7 +32,7 @@
                         <img :src="myPet.petImg" alt="Card image 1" class="petImg">
                       </div>
                       <div class="petInfo">
-                        <h3>이름: {{ myPet.petName }}</h3>
+                        <h3>{{ myPet.petName }}</h3>
                         <p>성별: {{ myPet.sex }}</p>
                         <p>태어난 날: {{ myPet.birth.split('T')[0] }}</p>
                       </div>
@@ -70,11 +70,7 @@ export default {
 
     const info = async () => {
       try {
-          const res = await axios.get('/members/my', {
-            params: {
-              memberIdx: memberIdx
-            }
-          });
+          const res = await axios.get('/members/my');
           memberName.value = res.data.memberName;
           console.log(res.data);
 
@@ -89,11 +85,7 @@ export default {
 
     const getMyPets = async () => {
       try {
-        const response = await axios.get('/members/pets', {
-          params: {
-            memberIdx: memberIdx
-          }
-        });
+        const response = await axios.get('/members/pets');
         console.log(response.data);
 
         myPetList.value = response.data;
