@@ -9,7 +9,7 @@
                 </strong>
                 되었습니다.
             </div>
-            <router-link :to="`/orders/` + order.o_id" style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-size: 14px; line-: 22px; font-family: '맑은고딕', 'malgun gothic', 'dotum', sans-serif; letter-spacing: -1px; display: inline-block; min-: 135px; :40 px; margin: 19px 0 0; padding: 8px 15px 10px; border-radius: 5px; border: 0; background: #89cbeb; color: #fff; font-size: 16px; line-: 22px; letter-spacing: -1px; font-family: 'nanumbarungothicbold'; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center;">
+            <router-link :to="{name: 'OrderDetail', params: {id: orderIdx}}" style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-size: 14px; line-: 22px; font-family: '맑은고딕', 'malgun gothic', 'dotum', sans-serif; letter-spacing: -1px; display: inline-block; min-: 135px; :40 px; margin: 19px 0 0; padding: 8px 15px 10px; border-radius: 5px; border: 0; background: #89cbeb; color: #fff; font-size: 16px; line-: 22px; letter-spacing: -1px; font-family: 'nanumbarungothicbold'; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center;">
                 주문내역조회
             </router-link>
         </div>
@@ -41,7 +41,7 @@
                         </th>
                         <td
                             style="width: 558px; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; padding: 14px 0 16px 16px; line-height: 20px; color: #333; border-bottom: 1px solid #e6e6e6;">
-                            {{member.name}}
+                            {{member.memberName}}
                         </td>
                     </tr>
                     <tr>
@@ -53,7 +53,7 @@
                             style="width: 558px; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; padding: 14px 0 16px 16px; line-height: 20px; color: #333; border-bottom: 1px solid #e6e6e6;">
                             <strong
                                 style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; color: #666;">
-                                {{order.orders_date}}
+                                {{order.createDate}}
                             </strong>
                         </td>
                     </tr>
@@ -66,7 +66,7 @@
                             style="width: 558px; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; padding: 14px 0 16px 16px; line-height: 20px; color: #333; border-bottom: 1px solid #e6e6e6;">
                             <strong
                                 style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; color: #89cbeb; letter-spacing: 0;">
-                                {{order.o_id}}
+                                {{order.orderIdx}}
                             </strong>
                         </td>
                     </tr>
@@ -81,13 +81,13 @@
 
 
         <div style="overflow: hidden; margin: 0 20px;"
-            v-for="detail in orderDetails" :key="detail.productDTO.p_id">
+            v-for="detail in order.orderDetailList" :key="detail.productDTO.productIdx">
             <router-link target="_blank"
                 style="float: left; :70 px; :70 px; margin: 20px 0;"
-                :to="`/products/` + detail.productDTO.p_id" id="productImg">
+                :to="`/products/` + detail.productDTO.productIdx" id="productImg">
                 <img
                     style="border: 0; width: 70px; height: 70px;"
-                    :src='`https://img-cf.kurly.com/shop/data/goods/${detail.productDTO.img_url}`'
+                    :src='detail.productDTO.productImg'
                     alt="">
             </router-link>
 
@@ -95,8 +95,8 @@
                 style="float: left; width: 68%; margin: 0 0 0 15px; padding: 17px 0 15px;">
                 <router-link target="_blank"
                     style="color: #333; font-size: 15px; line-: 18px; display: block; text-decoration: none; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; :36 px; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-family: '맑은고딕', 'malgun gothic', 'dotum', sans-serif;"
-                    :to="`/products/` + detail.productDTO.p_id">
-                    {{detail.productDTO.brand}}<br>{{detail.productDTO.name}}
+                    :to="`/products/` + detail.productDTO.productIdx">
+                    {{detail.productDTO.brand}}<br>{{detail.productDTO.productName}}
                 </router-link>
                 <div
                     style="color: #999; font-size: 12px; line-height: 16px; font-weight: bold;">
@@ -109,7 +109,7 @@
 
                     <span
                         style="color: #333; font-size: 20px; font-weight: bold; padding: 0 0 0 7px;">
-                        {{detail.productDTO.price * detail.quantity}}
+                        {{order.orderPrice}}
                         <em
                             style="display: inline-block; color: #b0b0b0; font-style: normal; font-size: 12px; vertical-align: 1px; color: #333 !important; padding: 0 0 0 2px; vertical-align: 2px !important;">
                             원
@@ -145,7 +145,7 @@
                         </th>
                         <td
                             style="width: 558px; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; padding: 14px 0 16px 16px; line-height: 20px; color: #333; border-bottom: 1px solid #e6e6e6;">
-                            {{member.name}}
+                            {{member.memberName}}
                         </td>
                     </tr>
                     <tr>
@@ -168,7 +168,7 @@
                         </th>
                         <td
                             style="width: 558px; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; padding: 14px 0 16px 16px; line-height: 20px; color: #333; border-bottom: 1px solid #e6e6e6;">
-                            주소 : {{member.address}}
+                            {{ member.address1 }} {{ member.address2 }}
                         </td>
                     </tr>
                     <tr>
@@ -178,7 +178,7 @@
                         </th>
                         <td
                             style="width: 558px; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; padding: 14px 0 16px 16px; line-height: 20px; color: #333; border-bottom: 1px solid #e6e6e6;">
-                            {{msg}}
+                            {{order.deliveryMsg}}
                         </td>
                     </tr>
                 </tbody>
@@ -201,7 +201,7 @@
                     </strong>
                     <span
                         style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; float: right; color: #f47330; font-weight: bold; font-size: 16px; letter-spacing: 0;">
-                        {{totalPrice}}
+                        {{order.orderPrice}}
                         <em
                             style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; display: inline-block; margin-left: 3px; font-style: normal; font-weight: bold; font-size: 12px; vertical-align: 2px; letter-spacing: -1px;">
                             원
@@ -221,14 +221,13 @@
                     </strong>
                     <span
                         style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; float: right; color: #f47330; font-weight: bold; font-size: 16px; letter-spacing: 0;">
-                        - {{usePoint}}
+                        - {{payment.usePoint}}
                         <em
                             style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; display: inline-block; margin-left: 3px; font-style: normal; font-weight: bold; font-size: 12px; vertical-align: 2px; letter-spacing: -1px;">
                             원
                         </em>
                     </span>
                 </div>
-
             </div>
 
             <div
@@ -241,10 +240,23 @@
                     </strong>
                     <span
                         style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; float: right; color: #ff2828; font-weight: bold; font-size: 28px; line-height: 38px; letter-spacing: 0;">
-                        {{payment.payment_amount}}
+                        {{payment.paymentPrice}}
+                        <em
+                            style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; display: inline-block; margin-left: -3px; font-style: normal; font-weight: bold; font-size: 12px; vertical-align: 2px; letter-spacing: -1px;">
+                            원
+                        </em>
+                    </span>
+                    <br><br>
+                    <strong
+                        style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-size: 12px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; float: left; padding: 11px 0 0; color: #f47330;">
+                        포인트 적립 예정
+                    </strong>
+                    <span
+                        style="margin: 0; margin-right: -10px; padding: 0; border: 0; box-sizing: border-box; font-size: 12px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; float: right; color: #f47330; font-weight: bold; font-size: 16px; letter-spacing: 0;">
+                         + {{payment.accPoint}} 원
                         <em
                             style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; display: inline-block; margin-left: 3px; font-style: normal; font-weight: bold; font-size: 12px; vertical-align: 2px; letter-spacing: -1px;">
-                            원
+                            
                         </em>
                     </span>
                 </div>
@@ -266,11 +278,11 @@
                         <em
                             style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-size: 14px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; display: block; font-style: normal; letter-spacing: -0.5px;">
 
-                            <p v-if="1 == 1">
-                                일시불({{order.orders_date}})
+                            <p v-if="payment.method === '카드'" style="margin: 0;">
+                                일시불({{payment.createDate}})
                             </p>
-                            <p v-else-if="1 != 1">
-                                입금 완료({{order.orders_date}})
+                            <p v-else-if="payment.method === '계좌이체'" style="margin: 0;">
+                                입금 완료({{payment.createDate}})
                             </p>
                         </em>
                     </span>
@@ -282,43 +294,59 @@
 
 <script>
 import {ref} from 'vue';
+import {useRoute} from 'vue-router';
 import axios from 'axios';
 
 export default {
     setup(){
-		const member = ref(
-			{id: 1, name: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address: '서울', point: 0}
+        axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+        const memberIdx = sessionStorage.getItem('memberIdx');
+
+        const route = useRoute();
+		const member = ref({}
+			// {memberIdx: 1, memberName: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address1: '서울', address2: '5동 206호', point: 0}
 		);
 		const products = ref([
 			// {id: 3, brand: '크리넥스', price: 28800, name: '데코앤소프트 화장지', img_url: '1637926173262l0.jpeg', quantity: 1}
 		]);
-		const order = ref(
-			{id: 1, orders_date: '2023-03-27', status: '배송완료', total_amount: 2, price: 11800, m_id: 5}
+		const order = ref({}
+			// {id: 1, orders_date: '2023-03-27', status: '배송완료', total_amount: 2, price: 11800, m_id: 5}
 		);
 		const orderDetails = ref([
-			{o_id: 1, quantity: 1, productDTO: {id: 3, brand: '크리넥스', price: 28800, name: '데코앤소프트 화장지', img_url: '1637926173262l0.jpeg', quantity: 1}}
+			// {o_id: 1, quantity: 1, productDTO: {id: 3, brand: '크리넥스', price: 28800, name: '데코앤소프트 화장지', img_url: '1637926173262l0.jpeg', quantity: 1}}
 		]);
-		const payment = ref(
-			{id: 1, o_id: 1, m_id: 5, method: '카드', payment_amount: 28800}
+		const payment = ref({}
+			// {id: 1, o_id: 1, m_id: 5, method: '카드', payment_amount: 28800}
 		);
 		const usePoint = ref(0);
     	const totalPrice = ref(0);
-		const msg = ref('');
+        const orderIdx = ref(route.params.id);
+		// const msg = ref('');
 
 		const getSuccessPage = async () => {
-			// try{
-			// 	const res = await axios.get('/members/21/orders/payment');
-			// 	console.log(res);
-			// 	payment.value = {...res.data.payment};
-			// 	msg.value = {...res.data.deliveryMsg};
-			// 	orderDetails.value = {...res.data.orderProducts};
-			// 	totalPrice.value = orderDetails.value[0].productDTO.price * orderDetails.value[0].productDTO.quantity;
-			// }catch(err) {
-			// 	console.log("err !!!!!!!!!!!! :  " + err);
-			// }
+			try{
+				const res = await axios.get('/orders/' + route.params.id);
+				console.log(res);
+				payment.value = {...res.data.payment};
+				order.value = {...res.data.order};
+				// orderDetails.value = {...res.data.orderProducts};
+				// totalPrice.value = orderDetails.value[0].productDTO.price * orderDetails.value[0].productDTO.quantity;
+			}catch(err) {
+				console.log("err !!!!!!!!!!!! :  " + err);
+			}
 		}
-
 		getSuccessPage();
+
+        //회원 정보
+        const getMemberInfo = async () => {
+            try{
+                const res = await axios.get('/members/my');
+                member.value = {...res.data};
+            } catch(err) {
+                console.log(err);
+            }
+        }
+        getMemberInfo();
 
 		return{
 			member,
@@ -327,7 +355,7 @@ export default {
 			payment,
 			usePoint,
 			totalPrice,
-			msg,
+            orderIdx
 		}
 	}
 }

@@ -1,11 +1,11 @@
 <template>
     <div class="services_section layout_padding">
         <div class="container">
-            <OnMeetingHeader @send-type="sendType" :isMain="isMain" :showLocation="true"/>
+            <OnMeetingHeader @send-type="sendType" :isMain="isMain" :showLocation="true" @send-location="sendLocation"/>
             <hr>
             <OnMeetingCategory v-if="isSearch" :key="categoryKey" @select-cate="selectCate"/>
             <hr>
-            <OnMeetingList @send-type="sendType" :isMain="isMain" :isSearch="isSearch" :cate="cate"/>
+            <OnMeetingList @send-type="sendType" :isMain="isMain" :isSearch="isSearch" :addr="addr" :cate="cate"/>
         </div>
     </div>
 </template>
@@ -30,6 +30,7 @@ export default {
         const isMain = ref(true);
         const isSearch = ref(false);
         const categoryKey = ref(0);
+        const addr = ref('');
         const cate = ref('전체');
 
         watchEffect(() => {
@@ -60,6 +61,11 @@ export default {
             cate.value = category;
         }
 
+        const sendLocation = (location) => {
+            console.log("search하는 주소 : " + location);
+            addr.value = location;
+        }
+
         return{
             isMain,
             isSearch,
@@ -67,7 +73,8 @@ export default {
             cate,
             sendType,
             forceRender,
-            selectCate
+            selectCate,
+            sendLocation
         }
     }
 }

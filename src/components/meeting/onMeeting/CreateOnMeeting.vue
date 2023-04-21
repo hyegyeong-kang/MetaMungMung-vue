@@ -11,7 +11,7 @@
                     <div class="makeCover">
                         <label class="title" for="ex_name">모임 이름(최대 10자)</label>
                         <div class="uInput -simpleLine inputBand">
-                            <input @value="name" type="text" class="_inputBandName" id="ex_name" maxlength="10" placeholder="모임 이름을 입력하세요" required>
+                            <input v-model="name" type="text" class="_inputBandName" id="ex_name" maxlength="10" placeholder="모임 이름을 입력하세요" required>
                         </div>
 
                         <AddAddressModal v-if="isOpen" @close-req="toggleMap" @send-addr="sendAddr" />
@@ -25,7 +25,7 @@
                                 </span>
                             </div>
 
-                            <select id="cateSelect" required>
+                            <select id="cateSelect" v-model="category" required>
                                 <option value="">카테고리 선택</option>
                                 <option value="소형견">소형견</option>
                                 <option value="중형견">중형견</option>
@@ -38,13 +38,13 @@
                             <div class="makeType">
                                 <h2 class="title">모임 공개</h2>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="private" id="flexRadioDefault1">
+                                    <input class="form-check-input" type="radio" name="scope" id="flexRadioDefault1" value="0" v-model="isPublic">
                                     <label class="form-check-label" for="flexRadioDefault1">
                                         비공개
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="public" id="flexRadioDefault2" checked>
+                                    <input class="form-check-input" type="radio" name="scope" id="flexRadioDefault2" value="1" v-model="isPublic">
                                     <label class="form-check-label" for="flexRadioDefault2">
                                         공개
                                     </label>
@@ -95,7 +95,7 @@
             
                         <div class="btnFooter">
                             <button type="button" class="_btnCancel uButton -sizeXL -cancel" @click="cancel">취소</button>
-                            <button type="submit" class="_btnConfirm uButton -sizeXL -disabled" @click="check">완료</button>
+                            <button type="submit" class="_btnConfirm uButton -sizeXL -disabled" >완료</button>
                         </div>
                     </div>
                 </fieldset>
@@ -107,7 +107,8 @@
 <script>
 import AddAddressModal from './modal/AddAddressModal.vue';
 import {ref, reactive, watchEffect} from 'vue';
-import {useRouter} from 'vue-router';
+import axios from 'axios';
+import {useRoute, useRouter} from 'vue-router';
 
 export default {
     components:{
@@ -118,6 +119,7 @@ export default {
     },
     // emits: ['toggle-modal'],
     setup(props, {emit}){
+        const route = useRoute();
         const router = useRouter();
         const status = ref('');
         const name = ref('');
@@ -143,9 +145,24 @@ export default {
         const imgMessage = ref('');
         const isOpen = ref(false);
         const address = ref('주소를 등록해주세요.');
+        const category = ref('');
+        const isPublic = ref('1');
+        let description = '';
+        const meetingInfo = ref({});
 
         watchEffect(() => {
             status.value = props.status;
+
+            if(status.value === 'modify'){
+                name.value = meetingInfo.value.onMeetName;
+                introduction.value = description.replace(/<br>/g, '\n');
+                console.log(introduction.value);
+
+                coverImg.value = meetingInfo.value.thumbnail;
+                address.value = meetingInfo.value.onMeetingAddr;
+                category.value = meetingInfo.value.category;
+                isPublic.value = meetingInfo.value.isPublic;
+            }
         });
 
         const upload = (e) => {
@@ -178,19 +195,80 @@ export default {
             address.value = addr;
         }
 
-        const check = () => {
-            introduction.value = introduction.value.split('\n').join('<br>');
-        }
+        // const check = async () => {
+        //     introduction.value = introduction.value.split('\n').join('<br>');
+        //     meetingInfo.value = {
+        //         onMeetName: name.value,
+        //         category: category.value,
+        //         introduction: introduction.value,
+        //         thumbnail: coverImg.value,
+        //         isPublic: isPublic.value,
+        //         onMeetingAddr: address.value
+        //     };
+        // }
 
         const cancel = () => {
             router.go(-1);
         }
 
-        const registerOnMeeting = () => {
-            router.push({
-                name: "OnMeeting"
-            });
+        const registerOnMeeting = async () => {
+            introduction.value = introduction.value.split('\n').join('<br>');
+            meetingInfo.value = {
+                onMeetName: name.value,
+                category: category.value,
+                introduction: introduction.value,
+                thumbnail: coverImg.value,
+                isPublic: isPublic.value,
+                onMeetingAddr: address.value
+            };
+            // 수정
+            if(status.value === 'modify'){
+                console.log("수정하세요");
+                try{
+                    const res = await axios.put('/onMeetings/' + route.params.id, meetingInfo.value);
+                    console.log("수정된 온모임 : " + res.data);
+                    router.push({
+                        name: "OnMeeting"
+                    });
+                } catch(err){
+                    console.log(err);
+                }
+            }
+            // 생성
+            else{
+                console.log("생성하세요");
+                try{
+                    console.log(meetingInfo.value);
+                    const res = await axios.post('/onMeetings', meetingInfo.value);
+                    console.log("생성된 온모임 : " + res.data);
+                    router.push({
+                        name: "OnMeeting"
+                    });
+                } catch(err){
+                    console.log(err);
+                }
+            }
+            // router.push({
+            //     name: "OnMeeting"
+            // });
         }
+
+        const getMyOnMeetingInfo = async () => {
+            if(status.value === 'modify'){
+                try{
+                    axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+                    const memberIdx = sessionStorage.getItem('memberIdx');
+
+                    const res = await axios.get('/onMeetings/' + route.params.id);
+                    meetingInfo.value = {...res.data};
+                    description = meetingInfo.value.introduction;
+                    console.log(meetingInfo.value );
+                } catch(err){
+                    console.log(err);
+                }
+            }
+        }
+        getMyOnMeetingInfo();
 
         return{
             status,
@@ -201,13 +279,16 @@ export default {
             imgMessage,
             isOpen,
             address,
+            category,
+            isPublic,
+            meetingInfo,
             upload,
             selectImg,
             toggleMap,
             // openMap,
             // closeModal,
             sendAddr,
-            check,
+            // check,
             cancel,
             registerOnMeeting
         }
