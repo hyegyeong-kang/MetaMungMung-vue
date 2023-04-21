@@ -48,9 +48,9 @@
       :boardDetails="boardDetails"
       ref="detailModal"
     />
-    <div>{{ this.currentLocation }}</div>
+    <!-- <div>{{ this.currentLocation }}</div>
     <div>{{ this.currentLat }}</div>
-    <div>{{ this.currentLng }}</div>
+    <div>{{ this.currentLng }}</div> -->
   </div>
 </template>
 
@@ -58,6 +58,7 @@
 import CreateModal from "@/components/meeting/offMeeting/modal/createModal.vue";
 import DetailModal from "@/components/meeting/offMeeting/modal/detailModal.vue";
 import axios from "axios";
+import { watchEffect } from "vue";
 
 export default {
   name: "KakaoMap",
@@ -73,70 +74,10 @@ export default {
       openDetailModal: null,
       openCreateModal: null,
       selectedMarker: null,
+      lastCreatedLatlng: [],
       boardMarkers: [],
-      boardDetails: [
-        {
-          idx: 1,
-          title: "첫게시글!!!!",
-          host: "손정아",
-          addr: "헤이그카페",
-          latitude: 37.25974040657983,
-          longitude: 127.14262381993633,
-          limit: "5",
-          date: "2023-04-13",
-          startTime: "18:00",
-          content:
-            "여기서 모여요~ 여기 카페 음식도 맛있고, 강아지들 잘 놀아요!!!!!",
-        },
-        {
-          idx: 2,
-          title: "두번째 게시글!!!!",
-          host: "홍길동",
-          addr: "스타벅스",
-          latitude: 37.25967098625983,
-          longitude: 127.1422826831307,
-          limit: "4",
-          date: "2023-04-15",
-          startTime: "12:00",
-          content: "카페는 역시 스타벅스죠~~~~~ 여기 어떠세요????!!!!!",
-        },
-        {
-          idx: 3,
-          title: "세번째 게시글!!!!",
-          host: "박길동",
-          addr: "경찰병원역 스타벅스",
-          latitude: 37.494784448894926,
-          longitude: 127.12194168816411,
-          limit: "4",
-          date: "2023-04-15",
-          startTime: "12:00",
-          content: "카페는 역시 스타벅스죠~~~~~ 여기 어떠세요????!!!!!",
-        },
-        {
-          idx: 4,
-          title: "네번째 게시글!!!!",
-          host: "박길동",
-          addr: "우불식당",
-          latitude: 37.495170738242564,
-          longitude: 127.12086238052915,
-          limit: "4",
-          date: "2023-04-15",
-          startTime: "12:00",
-          content: "카페는 역시 스타벅스죠~~~~~ 여기 어떠세요????!!!!!",
-        },
-        {
-          idx: 5,
-          title: "다섯번째 게시글!!!!",
-          host: "박길동",
-          addr: "빽다방",
-          latitude: 37.21333912528333,
-          longitude: 127.3225686617836,
-          limit: "4",
-          date: "2023-04-15",
-          startTime: "12:00",
-          content: "카페는 역시 스타벅스죠~~~~~ 여기 어떠세요????!!!!!",
-        },
-      ],
+      boardDetails: [],
+      boardDetailsLength: 0,
       offMeetingPage: null,
     };
   },
@@ -148,47 +89,12 @@ export default {
       this.loadScript();
     }
     let base = this;
+
+    /* 자식 함수 호출 */
     base.openCreateModal = this.$refs.createModal.openCreateModalFunc;
     base.openDetailModal = this.$refs.detailModal.openDetailModalFunc;
-    // console.log(base.openCreateModal);
-    // console.log(base.openDetailModal);
-
-    // base.offMeetingPage = async () => {
-    //   console.log("ok");
-
-    //   try {
-    //     const res = await axios.get("/offMeetings");
-    //     base.boardDetails = { ...res.data };
-    //     console.log(res);
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // };
-
-    // 이코드 !!!!
-    // base.offMeetingPage = axios
-    //   .get("/offMeetings")
-    //   .then((res) => {
-    //     base.boardDetails = res.data;
-    //     console.log("base.boardDetails" + base.boardDetails);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-
-    // base.offMeetingPage();
-
-    // async function getData() {
-    //   base.boardDetails = axios.get("/offMeetings").then((res) => {
-    //     console.log("boardDetail : " + res.data);
-    //   });
-    // }
-    // getData();
   },
   methods: {
-    openCreateModal() {
-      base.openCreateModal();
-    },
     loadScript() {
       const script = document.createElement("script");
       script.src =
@@ -212,6 +118,7 @@ export default {
       // 지도 확대 축소를 제어할 수 있는 줌 컨트롤을 생성합니다
       var zoomControl = new kakao.maps.ZoomControl();
       map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
       geolocationFunc();
       /* 지도에 마커와 인포윈도우를 표시하는 함수 */
       function displayMarker(locPosition, message) {
@@ -247,11 +154,13 @@ export default {
           displayMarker(locPostion, message);
         }
       }
+
       /* 내 위치 찾기 버튼 클릭 시 현재 위치로 지도 이동하는 코드 start */
       currentBtn.addEventListener("click", function (event) {
         const locPosition = new kakao.maps.LatLng(lat, lon);
         map.setCenter(locPosition);
       });
+
       /* 지도 중심좌표 찾는 코드 start */
       // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
       kakao.maps.event.addListener(map, "center_changed", function () {
@@ -261,8 +170,10 @@ export default {
         const longitude = latlng.getLng();
         base.currentLat = latitude;
         base.currentLng = longitude;
+
         /* 주소 얻어오기(주소-좌표 변환) */
         getAddr(latitude, longitude);
+
         function getAddr(lat, lon) {
           /* 주소-좌표 변환 객체 생성 */
           let geocoder = new kakao.maps.services.Geocoder();
@@ -276,86 +187,58 @@ export default {
           geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
         }
       });
-      // // 커스텀 오버레이에 표시할 컨텐츠 입니다
-      // // 커스텀 오버레이는 아래와 같이 사용자가 자유롭게 컨텐츠를 구성하고 이벤트를 제어할 수 있기 때문에
-      // // 별도의 이벤트 메소드를 제공하지 않습니다
-      // var content =
-      //   '<div class="wrap">' +
-      //   '    <div class="info">' +
-      //   '        <div class="title">' +
-      //   "            카카오 스페이스닷원" +
-      //   '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' +
-      //   "        </div>" +
-      //   '        <div class="body">' +
-      //   '            <div class="img">' +
-      //   '                <img src="" width="73" height="70">' +
-      //   "           </div>" +
-      //   '            <div class="desc">' +
-      //   '                <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>' +
-      //   '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' +
-      //   '                <div><a href="https://www.kakaocorp.com/main" target="_blank" class="link">홈페이지</a></div>' +
-      //   "            </div>" +
-      //   "        </div>" +
-      //   "    </div>" +
-      //   "    <button>버튼</button>";
-      // ("</div>");
-      // let overlay = new Object();
-      // createCustomOverlay();
-      addBoardMarker();
-      /* 등록된 게시물의 좌표를 통해 마커 생성 */
+
+      /* axios 비동기 통신 */
+      base.offMeetingPage = async () => {
+        try {
+          axios.defaults.headers.common["AUTHORIZATION"] =
+            sessionStorage.getItem("token");
+
+          const res = await axios.get("/offMeetings");
+          base.boardDetails = { ...res.data };
+          base.boardDetailsLength = Object.keys(base.boardDetails).length;
+          addBoardMarker();
+        } catch (err) {
+          console.log(err);
+        }
+      };
+
+      base.offMeetingPage();
+
+      /* DB에 등록된 게시물의 좌표를 통해 마커 생성하는 코드 */
       function addBoardMarker() {
         let boardMarkerPosition = 0;
-        let cnt = 1;
-        for (let i = 0; i < base.boardDetails.length; i++) {
+
+        for (let i = 0; i < base.boardDetailsLength; i++) {
           boardMarkerPosition = new kakao.maps.LatLng(
             base.boardDetails[i].latitude,
             base.boardDetails[i].longitude
           );
+
           const boardMarker = new kakao.maps.Marker({
             position: boardMarkerPosition,
-            title: cnt + i,
+            title: base.boardDetails[i].offMeetingIdx,
           });
+
           boardMarker.setMap(map);
           base.boardMarkers.push(boardMarker);
+
           /* 등록된 게시글의 마커를 클릭 시 발생하는 이벤트 */
           kakao.maps.event.addListener(boardMarker, "click", function () {
             if (base.selectedMarker || base.selectedMarker !== boardMarker) {
               base.selectedMarker = boardMarker;
-              console.log(
-                "선택된 마커 : " +
-                  base.selectedMarker.getTitle() +
-                  ", 위도경도는" +
-                  base.selectedMarker.getPosition()
-              );
               base.openDetailModal(base.selectedMarker);
             }
           });
-          // // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
-          // kakao.maps.event.addListener(boardMarker, "click", function () {
-          //   overlay.setMap(map);
-          // });
-          // // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다
-          // function closeOverlay() {
-          //   overlay.setMap(null);
-          // }
         }
+
+        /* 마지막 위치 찾기 */
+        // base.lastCreatedLatlng.push(boardMarkerPosition);
+        // console.log(base.lastCreatedLatlng[0]);
+        // console.log(base.lastCreatedLatlng[0].La);
+        // console.log(base.lastCreatedLatlng[0].Ma);
       }
-      // // 마커 위에 커스텀오버레이를 표시합니다
-      // // 마커를 중심으로 커스텀 오버레이를 표시하기위해 CSS를 이용해 위치를 설정했습니다
-      // function createCustomOverlay() {
-      //   let boardMarkerPosition = 0;
-      //   for (let i = 0; i < base.boardDetails.length; i++) {
-      //     boardMarkerPosition = new kakao.maps.LatLng(
-      //       base.boardDetails[i].latitude,
-      //       base.boardDetails[i].longitude
-      //     );
-      //     overlay = new kakao.maps.CustomOverlay({
-      //       content: content,
-      //       map: map,
-      //       position: boardMarkerPosition,
-      //     });
-      //   }
-      // }
+
       //강혜경
       selectCategory();
       function selectCategory() {

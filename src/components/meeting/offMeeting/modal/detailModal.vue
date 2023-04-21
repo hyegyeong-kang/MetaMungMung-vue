@@ -16,7 +16,7 @@
               font-weight: bold;
             "
             class="badge detailBadge"
-            >( 2 / 5 )</span
+            >( {{ headcount }} / {{ limit }} )</span
           >
         </h2>
       </div>
@@ -26,7 +26,7 @@
             id="location"
             style="text-align: center"
             class="form-text text-muted box ivory"
-            >👉🏻 모임 위치 : {{ location }} 👈🏻</middle
+            >👉🏻 모임 위치 : {{ locationAddress }} 👈🏻</middle
           >
         </div>
         <div class="form-group">
@@ -48,7 +48,7 @@
             class="form-control inputText"
             id="host"
             aria-describedby="emailHelp"
-            v-model="host"
+            v-model="hostId"
             disabled
           />
         </div>
@@ -59,7 +59,7 @@
             type="text"
             class="form-control inputText disabledLabel"
             id="location"
-            :value="location"
+            v-model="locationAddress"
             disabled
           />
         </div>
@@ -95,11 +95,11 @@
 
         <div class="form-group" style="display: none">
           <label for="">위도</label>
-          <input type="text" v-model="lat" disabled />
+          <input type="text" v-model="latitude" disabled />
         </div>
         <div class="form-group" style="display: none">
           <label for="">경도</label>
-          <input type="text" v-model="long" disabled />
+          <input type="text" v-model="longitude" disabled />
         </div>
 
         <div class="form-group">
@@ -107,7 +107,7 @@
           <input
             type="date"
             id="date"
-            v-model="date"
+            v-model="meetingDate"
             name="date"
             class="form-control inputText"
             disabled
@@ -131,19 +131,34 @@
           <textarea
             class="form-control inputText"
             id="content"
-            rows="3"
-            placeholder="내용을 입력해주세요."
-            v-model="content"
+            rows="5"
+            v-model="contents"
             disabled
           ></textarea>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn modifyBtn">수정</button>
-        <button class="btn deleteBtn">삭제</button>
-        <!-- <button @click="closeDetailModalFunc" class="btn cancelBtn">
+        <button
+          v-if="myIdx == hostMemberIdx"
+          @click="modifyOffMeeting"
+          class="btn modifyBtn"
+        >
+          수정
+        </button>
+        <button
+          v-if="myIdx == hostMemberIdx"
+          @click="deleteOffMeeting"
+          class="btn deleteBtn"
+        >
+          삭제
+        </button>
+        <button
+          v-if="myIdx != hostMemberIdx"
+          @click="closeDetailModalFunc"
+          class="btn cancelBtn"
+        >
           닫기
-        </button> -->
+        </button>
       </div>
     </div>
   </div>
@@ -163,17 +178,26 @@ export default {
     JoinMemberModal,
   },
   setup(props) {
+    const myIdx = Number(sessionStorage.getItem("memberIdx"));
+    let offMeetingIdx = ref(0);
     let title = ref("");
-    let host = ref("");
-    let location = ref("");
-    let lat = ref("");
-    let lng = ref("");
-    let date = ref("");
+    let meetingDate = ref("");
+    let limit = ref(0);
+    let contents = ref("");
+    let createDate = ref("");
+    let updateDate = ref("");
+    let status = ref("");
+    let latitude = ref(0);
+    let longitude = ref(0);
+    let locationAddress = ref("");
     let startTime = ref("");
-    let content = ref("");
-    let limit = ref("");
+    let headcount = ref(0);
     let likeBtn = null;
     let joinMemberModal = ref(null);
+    let substring = null;
+    let board = ref({});
+    let hostMemberIdx = ref(0);
+    let hostId = ref("");
 
     // const checkJoinMember = () => {
     //   let openIt = () => {
@@ -197,25 +221,52 @@ export default {
 
     const openDetailModalFunc = (selectedMarker) => {
       modal[0].style.display = "block";
-      console.log("props로 받은 title값 : " + selectedMarker.getTitle());
 
       try {
-        for (let i = 0; i < props.boardDetails.length; i++) {
-          if (selectedMarker.getTitle() == props.boardDetails[i].idx) {
-            title.value = props.boardDetails[i].title;
-            host.value = props.boardDetails[i].host;
-            location.value = props.boardDetails[i].addr;
-            lat.value = props.boardDetails[i].latitude;
-            lng.value = props.boardDetails[i].longitude;
-            date.value = props.boardDetails[i].date;
-            startTime.value = props.boardDetails[i].startTime;
-            content.value = props.boardDetails[i].content;
-            limit.value = props.boardDetails[i].limit;
+        /* axios 비동기통신 */
+        const getOffMeetingDetailPage = async () => {
+          try {
+            axios.defaults.headers.common["AUTHORIZATION"] =
+              sessionStorage.getItem("token");
+
+            const res = await axios.get(
+              `/offMeetings/${selectedMarker.getTitle()}`
+            );
+            board.value = { ...res.data };
+            console.log("board => " + JSON.stringify(board.value, null, 2));
+
+            offMeetingIdx.value = board.value.offMeetingIdx;
+            hostMemberIdx.value = board.value.host.memberIdx;
+            hostId.value = board.value.host.memberId;
+            console.log("호스트 idx : " + hostMemberIdx.value);
+            console.log("호스트 아이디 : " + hostId.value);
+            console.log("세션멤버 idx : " + myIdx);
+            title.value = board.value.title;
+            meetingDate.value = board.value.meetingDate;
+            substring();
+            limit.value = board.value.limit;
+            contents.value = board.value.contents;
+            createDate.value = board.value.createDate;
+            updateDate.value = board.value.updateDate;
+            status.value = board.value.status;
+            latitude.value = board.value.latitude;
+            longitude.value = board.value.longitude;
+            locationAddress.value = board.value.locationAddress;
+            startTime.value = board.value.startTime;
+            headcount.value = board.value.headcount;
+          } catch (err) {
+            console.log(err);
           }
-        }
+        };
+
+        getOffMeetingDetailPage();
       } catch (err) {
         console.log("err!!!!" + err);
       }
+    };
+
+    substring = () => {
+      meetingDate.value = meetingDate.value.substring(0, 10);
     };
 
     const closeDetailModalFunc = () => {
@@ -239,14 +290,24 @@ export default {
       closeDetailModalFunc,
       activeJoin,
       checkJoinMember,
-      title,
-      date,
-      startTime,
-      content,
-      limit,
-      host,
-      location,
       joinMemberModal,
+      offMeetingIdx,
+      title,
+      meetingDate,
+      limit,
+      contents,
+      createDate,
+      updateDate,
+      status,
+      latitude,
+      longitude,
+      locationAddress,
+      startTime,
+      headcount,
+      likeBtn,
+      myIdx,
+      hostMemberIdx,
+      hostId,
     };
   },
 };
