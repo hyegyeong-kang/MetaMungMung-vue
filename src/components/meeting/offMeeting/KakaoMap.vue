@@ -58,6 +58,7 @@
 import CreateModal from "@/components/meeting/offMeeting/modal/createModal.vue";
 import DetailModal from "@/components/meeting/offMeeting/modal/detailModal.vue";
 import axios from "axios";
+import { watchEffect } from "vue";
 
 export default {
   name: "KakaoMap",

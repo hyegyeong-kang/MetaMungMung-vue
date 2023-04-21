@@ -139,20 +139,24 @@
       </div>
       <div class="modal-footer">
         <button
-          v-if="myIdx === hostMemberIdx"
+          v-if="myIdx == hostMemberIdx"
           @click="modifyOffMeeting"
           class="btn modifyBtn"
         >
           수정
         </button>
         <button
-          v-if="myIdx === hostMemberIdx"
+          v-if="myIdx == hostMemberIdx"
           @click="deleteOffMeeting"
           class="btn deleteBtn"
         >
           삭제
         </button>
-        <button @click="closeDetailModalFunc" class="btn cancelBtn">
+        <button
+          v-if="myIdx != hostMemberIdx"
+          @click="closeDetailModalFunc"
+          class="btn cancelBtn"
+        >
           닫기
         </button>
       </div>
@@ -236,6 +240,7 @@ export default {
             hostId.value = board.value.host.memberId;
             console.log("호스트 idx : " + hostMemberIdx.value);
             console.log("호스트 아이디 : " + hostId.value);
+            console.log("세션멤버 idx : " + myIdx);
             title.value = board.value.title;
             meetingDate.value = board.value.meetingDate;
             substring();

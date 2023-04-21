@@ -111,16 +111,24 @@
               <input
                 type="file"
                 class="custom-file-input"
+                accept="image/*"
                 id="inputGroupFile04"
+                name="attachment"
+                @change="upload"
               />
-              <label class="custom-file-label inputText" for="inputGroupFile04"
-                >파일을 선택하세요.</label
+              <label
+                v-bind="fileName"
+                class="custom-file-label inputText"
+                for="inputGroupFile04"
+                >{{ fileName }}</label
               >
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn createBtn">모임생성</button>
+          <button @click="createOffMeeting" type="submit" class="btn createBtn">
+            모임생성
+          </button>
           <a
             @click="closeModalFunc"
             style="color: white; width: 100px"
@@ -149,9 +157,16 @@ export default {
     let content = ref("");
     let limit = ref("2");
     const router = useRouter();
+    const myIdx = Number(sessionStorage.getItem("memberIdx"));
+    // const fileName = ref("파일을 선택해주세요.");
+    // const files = ref([]);
 
     const modal = document.getElementsByClassName("modal");
     const clickable = document.querySelectorAll(".clickable");
+
+    // const upload = (e) => {
+    //   fileName = e.target.fiels[0].name;
+    // };
 
     const openCreateModalFunc = () => {
       modal[0].style.display = "block";
@@ -159,6 +174,12 @@ export default {
 
     const closeModalFunc = () => {
       modal[0].style.display = "none";
+    };
+
+    const createOffMeeting = () => {
+      submitOffMeetingForm();
+      closeModalFunc();
+      router.go();
     };
 
     const submitOffMeetingForm = async () => {
@@ -175,6 +196,8 @@ export default {
           longitude: props.currentLng,
           locationAddress: props.currentLocation,
           startTime: startTime.value,
+          memberIdx: myIdx,
+          onMeetingIdx: 8,
         })
         .then(function (response) {
           console.log("response => " + JSON.stringify(response, null, 2));
@@ -200,11 +223,16 @@ export default {
       openCreateModalFunc,
       closeModalFunc,
       submitOffMeetingForm,
+      createOffMeeting,
+      // upload,
       title,
       date,
       startTime,
       content,
       limit,
+      myIdx,
+      // fileName,
+      // files,
     };
   },
 };
