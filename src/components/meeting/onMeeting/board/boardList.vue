@@ -231,7 +231,7 @@
 
       <!--게시물 올라오는 곳 --> <!--이게 반복되면 되는 것임!! -->
       <!-- 이거 클릭하면 해당 게시물 디테일 나오면 됨..--> 
-      <div class="wrap">
+      <div class="wrap" >
       <div class="tweet" v-for="(board, index) in onMeetingInfo.boardList" :key="board.onMeetingBoardIdx" :board="board" style="border: 0.5px solid;">
       
       
@@ -257,7 +257,7 @@
         </div> 
         <!-- left 끝 -->
 
-        <hr>
+        <!-- <hr> -->
 
         <div class="right" @click="boardDetailModal()">
 
@@ -278,7 +278,7 @@
           <!--!!!!댓글 출력 // getCommentsByPostId(board.onMeetingBoardIdx)!!!!-->
           <!-- <ul v-if="board.replyList.length > 0"> -->
             <ul v-if="board.replyList.length">
-            <li v-for="(reply, index) in board.replyList" :key="reply.onMeetingReplyIdx" class="commentItem"> 
+            <li v-for="(reply, index) in board.replyList" :key="reply.onMeetingReplyIdx" class="commentItem" style="background-color:#F5F5F5"> 
                 <!--댓글창이었음.. -->
                 <!-- <CreateReply/>   -->
 
@@ -304,7 +304,7 @@
                   </div> 
 
 
-                  <div class="btns">
+                  <div class="btns" style="margin-top:auto"> 
                   <b-button style="text-align:right;width:100%" class="btn" @click="updateReply()">수정</b-button>
                   <b-button style="text-align:right;width:100%" class="btn" @click="deleteReply()">삭제</b-button>        
                   </div>
@@ -1377,7 +1377,7 @@ header.nav-closed {
       }
     }
     .btns {
-      margin-top: 15px;
+      margin-top: 20px;
       display: flex;
       align-items: center;
       cursor: pointer;
