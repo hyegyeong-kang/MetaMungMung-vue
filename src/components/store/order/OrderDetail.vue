@@ -6,7 +6,7 @@
             <div class="widget-box">
                 <h4 class="widget-title">주문상세</h4>
                 <h6 class="post-title">주문번호 {{oid}}</h6>
-                <div>결제날짜 {{payment.createDate}} {{order.status}}</div>
+                <div>결제날짜 {{payment.createDate}} <span style="font-weight: bold;">{{order.status}}</span></div>
                 <div class="divider"></div>
                 
                 <div class="blog-item"
@@ -32,17 +32,17 @@
                 
                 <h4 class="widget-title">주문자정보</h4>
                 <h6 class="post-title">{{member.memberName}} | {{member.phone}}</h6>
-                <h6 class="post-title">배송지 {{member.address}}</h6>
+                <h6 class="post-title">배송지 {{member.address1}} {{member.address2}}</h6>
                 <div class="divider"></div>
                 
                 <h4 class="widget-title">결제정보</h4>
                 <h6 class="post-title" style="margin:0">{{payment.paymentPrice}}원</h6>
                     {{payment.method}}
                     <p v-if="payment.method === '카드'" style="margin: 0;">
-                        일시불({{payment.createDate}})
+                        일시불({{payment.createDate.split('T')[0]}})
                     </p>
                     <p v-else-if="payment.method === '계좌이체'" style="margin: 0;">
-                        입금 완료({{payment.createDate}})
+                        입금 완료({{payment.createDate.split('T')[0]}})
                     </p>
                 <h6 class="post-title" style="margin-top:10px">적립 포인트 <span style="font-weight: bolder;">{{ payment.accPoint }}</span>원</h6>
                 <div class="btn">
@@ -70,8 +70,8 @@ export default {
         const router = useRouter();
         const oid = route.params.id;
 
-        const member = ref(
-            {id: 1, memberName: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address: '서울', point: 0}
+        const member = ref({}
+            // {id: 1, memberName: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address: '서울', point: 0}
         );
         const order = ref({}
             // {id: 1, orders_date: '2023-02-22', status: '배송완료', total_amount: 2, price: 11800, m_id: 1}
@@ -99,6 +99,17 @@ export default {
 
             // });
         }
+
+        //회원 정보
+        const getMemberInfo = async () => {
+            try{
+                const res = await axios.get('/members/my');
+                member.value = {...res.data};
+            } catch(err) {
+                console.log(err);
+            }
+        }
+        getMemberInfo();
 
 
         const cancelOrder = async (oid) => {

@@ -1,6 +1,17 @@
 <template>
   <div class="services_section layout_padding">
     <div class="container">
+
+      <router-link :to="{ name: 'ProductPage' }">
+        <h1 class="services_taital">
+          <span>스토어</span>
+          <img
+            src="@/assets/images/offMeeting/paw-print.png"
+            style="width: 70px"
+          />
+          <span style="color: #1f1f1f">멍멍스토어</span>
+        </h1>
+      </router-link>
         
       <div class="page-section">
         <div class="container">
@@ -51,8 +62,8 @@ export default {
     const productIdx = route.query.id;
     const orderQuantity = route.query.quantity;
     // const orderProducts = ref([]);
-    const memberInfo = ref(
-       {memberIdx: 1, memberName: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address1: '서울', address2: '5동 206호', point: 0}
+    const memberInfo = ref({}
+      //  {memberIdx: 1, memberName: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address1: '서울', address2: '5동 206호', point: 0}
     );
     const orderDetails = ref([
       // {id: 1, quantity: 2, 
@@ -77,6 +88,16 @@ export default {
 
     // getProductsInfo();
 
+    //회원 정보
+    const getMemberInfo = async () => {
+      try{
+        const res = await axios.get('/members/my');
+        memberInfo.value = {...res.data};
+      } catch(err) {
+        console.log(err);
+      }
+    }
+
     // 주문서 페이지
     const getOrderPage = async () => {
       try{
@@ -96,6 +117,7 @@ export default {
       }
     }
 
+    getMemberInfo();
     getOrderPage();
 
     // 결제
