@@ -174,7 +174,9 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
+      router.go();
     };
+
     for (let i = 0; i < clickable.length; i++) {
       clickable[i].openModalFunc;
     }

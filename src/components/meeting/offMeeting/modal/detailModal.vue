@@ -259,8 +259,7 @@ export default {
             console.log("호스트 idx : " + hostMemberIdx.value);
             console.log("호스트 아이디 : " + hostId.value);
             title.value = board.value.title;
-            meetingDate.value = board.value.meetingDate;
-            substring();
+            meetingDate.value = board.value.meetingDate.substring(0, 10);
             limit.value = board.value.limit;
             contents.value = board.value.contents;
             createDate.value = board.value.createDate;
@@ -280,9 +279,7 @@ export default {
         console.log("err!!!!" + err);
       }
     };
-    substring = () => {
-      meetingDate.value = meetingDate.value.substring(0, 10);
-    };
+
     const closeDetailModalFunc = () => {
       modal[0].style.display = "none";
     };
