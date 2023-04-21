@@ -189,7 +189,7 @@
   <div id="container" class="wrapper nav-closed">
     <div id="timeline">
       <!-- 게시물 글 작성하는 곳  -->
-      <div class="new-tweet" style="border: 1px solid;border-radius: 2em;color:	#C0C0C0">
+      <div class="new-tweet" style="border: 1px solid;border-radius: 2em;color:	#C0C0C0;margin-bottom:10px">
         <textarea placeholder="새로운 소식을 남겨보세요." v-model="inputText"></textarea>
         <div class="registerModal">
           <!-- <RegisterModal @close="closeRegisterModal" v-if="registerModal" /> -->
@@ -232,7 +232,7 @@
       <!--게시물 올라오는 곳 --> <!--이게 반복되면 되는 것임!! -->
       <!-- 이거 클릭하면 해당 게시물 디테일 나오면 됨..--> 
       <div class="wrap">
-      <div class="tweet" v-for="(board, index) in onMeetingInfo.boardList" :key="board.onMeetingBoardIdx" :board="board">
+      <div class="tweet" v-for="(board, index) in onMeetingInfo.boardList" :key="board.onMeetingBoardIdx" :board="board" style="border: 0.5px solid;margin-left:10px">
         <div class="left">
           <img
             :src="board.boardMember.memberImg"
@@ -245,7 +245,6 @@
           </div>
           <div class="message">
             <p>{{ board.boardContents }}</p>
-            {{ typeof board.replyList }}
             <!-- <img
               src="https://img.dogpre.com/web/dogpre/event/popular_keyword_theme/43_pc_main_page_banner_0036.jpg"
             /> -->
@@ -263,11 +262,11 @@
               />dd
             </button>
           </div>
-
+          <hr>
           <!--!!!!댓글 출력 // getCommentsByPostId(board.onMeetingBoardIdx)!!!!-->
           <!-- <ul v-if="board.replyList.length > 0"> -->
-            <ul>
-            <li v-for="reply in board.replyList" :key="reply.onMeetingReplyIdx" class="commentItem"> 
+            <ul v-if="board.replyList.length">
+            <li v-for="(reply, index) in board.replyList" :key="reply.onMeetingReplyIdx" class="commentItem"> 
                 <!--댓글창이었음.. -->
                 <!-- <CreateReply/>   --><div class="left">
                   <img
@@ -277,12 +276,12 @@
                   <div class="right">
                       <div class="info">
                           <!-- {{ 이름 }} -->
-                          <span style="color:black"><strong>{{ reply.replyWriter }}</strong></span>
+                          <span style="color:black;font-size:15px"><strong>{{ reply.replyWriter }}</strong></span>
                           <!-- {{ 게시일 }} -->
                           <span style="color:#C0C0C0;font-size:13px">{{ reply.replyCreateDate.split('T')[0] }}</span>
-                          <!-- {{ 내용 }} -->
-                          <span style="color:black">{{ reply.replyContents }}</span>
                       </div>
+                      <!-- {{ 내용 }} -->
+                      <span style="color:black;margin-left:9px">{{ reply.replyContents }}</span>
                   </div>
                   <div class="btns">
                   <b-button style="text-align:right;width:100%" class="btn" @click="updateReply()">수정</b-button>
@@ -292,36 +291,31 @@
             </ul>
           <!-- </ul> -->
 
-          <hr>
+          <!-- <hr> -->
 
              <!-- 댓글 작성하는 곳 -->
             <div class="reply">
-                <span>
+                <form @submit.prevent="submitComment(index, board.onMeetingBoardIdx)">
+                  <span>
                     <textarea
+                        :id="'comment' + index"
                         placeholder="댓글을 입력하세요"
-                        v-model="contents"
                         style="border: 1px solid;border-radius: 2em;color:#C0C0C0;"
                         ></textarea>
-                </span>
-                <span>
-                    <button @click="addReply()" style="border: 1px solid;border-radius: 2em;color:#fff">보내기</button>
-                </span>
+                  </span>
+                  <span>
+                    <button type="submit" style="border: 1px solid;border-radius: 2em;color:#fff">보내기</button>
+                  </span>
+                </form>
             </div>
 
-
-                 
         </div>
           <!-- <BoardDetail ref="boardDetail" @close="closeBoardModal" /> -->
         </div>
+        
         <!-- 하나의 트윗이 끝나는 곳-->
       </div>
        <!-- <CreateReply v-if="isOpenDetail" @close="boardDetailModal()" /> -->
-
-        
-
-
-
-
 
         <footer>
             <!-- <i class="fab fa-twitter"></i>
@@ -397,7 +391,7 @@
               <p>{{ onMeetingInfo.introduction }}</p>
             </div>
           </a>
-          <hr>
+          <!-- <hr> -->
           <p align="right" style="font-size:13px"><img src="@/assets/images/onMeeting/setting.png" style="width:15px;height:15px;margin-right:10px;">모임 설정</p>
         </main>
       </section>
@@ -428,7 +422,7 @@ import MapModal from "@/components/meeting/onMeeting/board/modal/mapModal.vue";
 import ReplyList from "@/components/meeting/onMeeting/board/reply/replyList.vue";
 import CreateReply from "@/components/meeting/onMeeting/board/reply/createReply.vue";
 //import BoardDetail from "@/components/meeting/onMeeting/board/boardDetailModal.vue";
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import axios from 'axios';
 import { useRoute } from "vue-router";
 
@@ -522,10 +516,11 @@ export default {
         .then((response) => {
 
           boards.value = {...response.data};
+          console.log(`KANG_BOARd: ${JSON.stringify(boards.value, null, 2)}`)
           onMeetingInfo.value = {...response.data[0]};
 
           console.log(`^^^^^^^BOARD^^^^^^ ${JSON.stringify(boards.value, null, 2)}`);
-          console.log(`^^^^^^^BOARD_INFO^^^^^^ ${JSON.stringify(onMeetingInfo.value, null, 2)}`);
+          console.log(`^^^^^^^BOARD_INFO^^^^^^ ${JSON.stringify(onMeetingInfo.value.boardList, null, 2)}`);
 
          // boardCnt.value = Object.keys(boards.value).length;
 
@@ -664,7 +659,7 @@ export default {
 
     
     
-     // 댓글 작성
+     // 댓글 작성 
     const addReply = () => {
 
         console.log("버튼 눌림");
@@ -686,6 +681,63 @@ export default {
         // axios.post 
             
     };
+
+
+    const comments = ref([]);
+    const newCommentText = ref('');
+    
+    fetchComments();
+    // 댓글 가져오기 
+    async function fetchComments() {
+      try {
+        const response = await axios.get(`/onMeetings/1/board`);
+        comments.value = response.data;
+        console.log(`COMMENTSSSSSSS : ${JSON.stringify(comments.value, null, 2)}`)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    // 댓글 작성 함수
+    const submitComment = (index, id) => {
+
+      // (onMeetingBoard_seq.nextval,
+      //           #{onMeetingMemIdx},
+      //           #{onMeetingIdx},
+      //           #{memberIdx},
+      //           #{writer},
+      //           #{contents},
+      //           #{onMeetingBoardAddr},
+      //           sysdate,
+      //           sysdate
+      //   )
+      try {
+        // console.log(index)
+        // console.log('comment' + index)
+        console.log('board id: ' + id)
+        const commentId = 'comment' + index
+        const currComment = document.getElementById(commentId).value
+        console.log('comment: ' + currComment)
+        console.log('comment: ' + commentId)
+        // console.log(`NEW COMMENTS: ${newCommentText.value}`)
+        // const response = await axios.post(`/onMeetings/1/board`, {
+        //   replyContents: newCommentText.value
+        // });
+        const data = {
+          replyContents: currComment
+        }
+        // comments.value.push(data);
+       // console.log(`@@@@@@@@@@@@@@ ${JSON.stringify(comments.value, null, 2)}`)
+        // newCommentText.value = '';
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    // 게시물 아이디가 변경될 때
+    //watch(() => props.postId, fetchComments);
+
+
 
 
 
@@ -723,6 +775,11 @@ export default {
       writer,
       createDate,
       contents,
+
+      fetchComments,
+      submitComment,
+      newCommentText,
+      comments,
     }
   }
 };
@@ -1308,16 +1365,19 @@ header.nav-closed {
     width: 100%;
     .info {
         margin-bottom: 5px;
-        //   p {
-        //     margin: 0;
-        //     display: flex;
-        //     align-items: center;
-        //     span {
-        //       margin: 0 10px;
-        //       font-size: 12px;
-        //       opacity: 0.5;
-        //     }
-        //   }
+        display: block;
+          //p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            position: relative;
+            span {
+              margin: 0 10px;
+              font-size: 12px;
+              //opacity: 0.5;
+              //display: block;
+            }
+          //}
     }
   }
   .btns {
@@ -1325,7 +1385,7 @@ header.nav-closed {
       .btn {
           font-size: 13px;
           position: relative;
-          top: 50px
+          //top: 50px
       }
   }
 
