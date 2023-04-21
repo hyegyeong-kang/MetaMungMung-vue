@@ -111,16 +111,24 @@
               <input
                 type="file"
                 class="custom-file-input"
+                accept="image/*"
                 id="inputGroupFile04"
+                name="attachment"
+                @change="upload"
               />
-              <label class="custom-file-label inputText" for="inputGroupFile04"
-                >파일을 선택하세요.</label
+              <label
+                v-bind="fileName"
+                class="custom-file-label inputText"
+                for="inputGroupFile04"
+                >{{ fileName }}</label
               >
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn createBtn">모임생성</button>
+          <button @click="createOffMeeting" type="submit" class="btn createBtn">
+            모임생성
+          </button>
           <a
             @click="closeModalFunc"
             style="color: white; width: 100px"
@@ -149,9 +157,16 @@ export default {
     let content = ref("");
     let limit = ref("2");
     const router = useRouter();
+    const myIdx = Number(sessionStorage.getItem("memberIdx"));
+    // const fileName = ref("파일을 선택해주세요.");
+    // const files = ref([]);
 
     const modal = document.getElementsByClassName("modal");
     const clickable = document.querySelectorAll(".clickable");
+
+    // const upload = (e) => {
+    //   fileName = e.target.fiels[0].name;
+    // };
 
     const openCreateModalFunc = () => {
       modal[0].style.display = "block";
@@ -161,17 +176,35 @@ export default {
       modal[0].style.display = "none";
     };
 
-    const submitOffMeetingForm = () => {
-      console.log("제목!!! " + title.value);
-      // console.log("위치!!!   " + props.currentLocation);
-      // console.log("제한인원!!!  " + limit.value);
-      // console.log("날짜!!! " + date.value);
-      // console.log("모임시작시간!!! " + startTime.value);
-      // console.log("내용!!! " + content.value);
-      // console.log("위도 " + props.currentLat);
-      // console.log("경도 " + props.currentLng);
-
+    const createOffMeeting = () => {
+      submitOffMeetingForm();
+      closeModalFunc();
       router.go();
+    };
+
+    const submitOffMeetingForm = async () => {
+      axios.defaults.headers.common["AUTHORIZATION"] =
+        sessionStorage.getItem("token");
+
+      axios
+        .post("/offMeetings", {
+          title: title.value,
+          meetingDate: date.value,
+          limit: limit.value,
+          contents: content.value,
+          latitude: props.currentLat,
+          longitude: props.currentLng,
+          locationAddress: props.currentLocation,
+          startTime: startTime.value,
+          memberIdx: myIdx,
+          onMeetingIdx: 8,
+        })
+        .then(function (response) {
+          console.log("response => " + JSON.stringify(response, null, 2));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     };
 
     for (let i = 0; i < clickable.length; i++) {
@@ -190,11 +223,16 @@ export default {
       openCreateModalFunc,
       closeModalFunc,
       submitOffMeetingForm,
+      createOffMeeting,
+      // upload,
       title,
       date,
       startTime,
       content,
       limit,
+      myIdx,
+      // fileName,
+      // files,
     };
   },
 };
