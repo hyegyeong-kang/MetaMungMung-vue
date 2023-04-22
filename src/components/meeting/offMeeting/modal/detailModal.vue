@@ -176,6 +176,7 @@ import JoinMemberModal from "@/components/meeting/offMeeting/modal/JoinMemberMod
 import ModifyModal from "@/components/meeting/offMeeting/modal/modifyModal.vue";
 import axios from "axios";
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
   name: "OffMeetingModal",
@@ -201,7 +202,7 @@ export default {
     let headcount = ref(0);
     let likeBtn = null;
     let joinMemberModal = ref(null);
-    let substring = null;
+    let router = useRouter();
     let board = ref({});
     let hostMemberIdx = ref(0);
     let hostId = ref("");
@@ -280,6 +281,24 @@ export default {
       }
     };
 
+    const deleteOffMeeting = async () => {
+      axios.defaults.headers.common["AUTHORIZATION"] =
+        sessionStorage.getItem("token");
+
+      axios
+        .post(`/offMeetings/${offMeetingIdx.value}`, {
+          offMeetingIdx: offMeetingIdx.value,
+        })
+        .then(function (response) {
+          console.log("response => " + JSON.stringify(response, null, 2));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      router.go();
+    };
+
     const closeDetailModalFunc = () => {
       modal[0].style.display = "none";
     };
@@ -318,6 +337,7 @@ export default {
       hostId,
       modifyOffMeeting,
       isOpen,
+      deleteOffMeeting,
     };
   },
 };
