@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submitModifyOffMeetingForm">
+  <form @submit.prevent="modifyModalFunc">
     <!-- 모임 수정 모달 start -->
     <div id="modifyModal" class="modifyModal" style="overflow: visible">
       <!-- Modal content -->
@@ -112,11 +112,9 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button @click="modifyModalFunc" type="submit" class="btn createBtn">
-            수정
-          </button>
+          <button type="submit" class="btn createBtn">수정</button>
           <a
-            @click="closeModalFunc"
+            @click="closeModifyModalFunc"
             style="color: white; width: 100px"
             class="btn cancelBtn"
             >취소</a
@@ -150,9 +148,9 @@ export default {
     let locationAddress = ref("");
     let hostIdx = ref(null);
     let hostId = ref("");
+    let modal = ref(null);
 
     const router = useRouter();
-    const modal = document.getElementsByClassName("modal");
     const clickable = document.querySelectorAll(".clickable");
     let openModifyModalFunc = ref(null);
     let isOpen = ref(null);
@@ -172,24 +170,22 @@ export default {
     hostId.value = board.value.host.memberId;
     hostIdx.value = board.value.host.memberIdx;
 
-    watchEffect(() => {
-      if (props.isOpen) {
-        isOpen = props.isOpen;
+    // watchEffect(() => {
+    //   if (props.isOpen) {
+    //     isOpen = props.isOpen;
 
-        console.log("마지막~! =====> " + isOpen);
+    //     console.log("마지막~! =====> " + isOpen);
 
-        openModifyModalFunc = () => {
-          modal[0].style.display = "block";
-        };
+    //     openModifyModalFunc = () => {
+    //       modal[0].style.display = "block";
+    //     };
 
-        openModifyModalFunc();
-      }
-    });
+    //     openModifyModalFunc();
+    //   }
+    // });
 
-    const closeModalFunc = () => {
+    const closeModifyModalFunc = () => {
       modal[0].style.display = "none";
-      isOpen.value = false;
-      console.log("닫으면 ? " + isOpen.value);
     };
 
     const modifyModalFunc = async () => {
@@ -222,6 +218,8 @@ export default {
     }
 
     onMounted(() => {
+      modal = document.getElementsByClassName("modifyModal");
+
       window.onclick = function (event) {
         if (event.target == modal[0]) {
           modal[0].style.display = "none";
@@ -231,7 +229,7 @@ export default {
 
     return {
       openModifyModalFunc,
-      closeModalFunc,
+      closeModifyModalFunc,
       modifyModalFunc,
       submitModifyOffMeetingForm,
       offMeetingIdx,
