@@ -1,14 +1,14 @@
 <template>
-  <form @submit.prevent="submitOffMeetingForm">
-    <!-- 모임생성 모달 start -->
-    <div id="myModal" class="modal" style="overflow: visible">
+  <form @submit.prevent="submitModifyOffMeetingForm">
+    <!-- 모임 수정 모달 start -->
+    <div id="modifyModal" class="modifyModal" style="overflow: visible">
       <!-- Modal content -->
       <div class="modal-content slideDown">
         <div class="modal-header">
           <span @click="closeModalFunc" class="close" id="closeModal"
             >&times;</span
           >
-          <h2 style="color: gray; font-weight: bolder">모임 생성</h2>
+          <h2 style="color: gray; font-weight: bolder">모임 수정</h2>
         </div>
         <div class="modal-body">
           <div style="margin-bottom: 20px">
@@ -16,7 +16,7 @@
               id="location"
               style="text-align: center"
               class="form-text text-muted box ivory"
-              >👉🏻 모임 생성 위치 : {{ currentLocation }} 👈🏻</middle
+              >👉🏻 모임 생성 위치 : {{ locationAddress }} 👈🏻</middle
             >
           </div>
           <div class="form-group">
@@ -37,18 +37,18 @@
               type="text"
               class="form-control inputText disabledLabel"
               id="location"
-              :value="currentLocation"
+              :value="locationAddress"
               disabled
             />
           </div>
 
           <div class="form-group" style="display: none">
             <label for="">위도</label>
-            <input type="text" :value="currentLat" disabled />
+            <input type="text" :value="latitude" disabled />
           </div>
           <div class="form-group" style="display: none">
             <label for="">경도</label>
-            <input type="text" :value="currentLng" disabled />
+            <input type="text" :value="longitude" disabled />
           </div>
 
           <div class="form-group">
@@ -69,7 +69,7 @@
             <input
               type="date"
               id="date"
-              v-model="date"
+              v-model="meetingDate"
               name="limit"
               class="form-control inputText"
             />
@@ -87,13 +87,13 @@
           </div>
 
           <div class="form-group">
-            <label for="content">📝 내용</label>
+            <label for="contents">📝 내용</label>
             <textarea
               class="form-control inputText"
-              id="content"
+              id="contents"
               rows="3"
               placeholder="내용을 입력해주세요."
-              v-model="content"
+              v-model="contents"
             ></textarea>
           </div>
 
@@ -112,7 +112,9 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn createBtn">모임생성</button>
+          <button @click="modifyModalFunc" type="submit" class="btn createBtn">
+            수정
+          </button>
           <a
             @click="closeModalFunc"
             style="color: white; width: 100px"
@@ -128,42 +130,106 @@
 
 <script>
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watchEffect, watch } from "vue";
 import { useRouter } from "vue-router";
 export default {
   name: "OffMeetingModal",
-  props: ["currentLocation", "currentLat", "currentLng"],
+  props: ["isOpen", "board"],
   setup(props) {
     const myIdx = Number(sessionStorage.getItem("memberIdx"));
+    let offMeetingIdx = ref(null);
     let title = ref("");
-    let date = ref("");
+    let meetingDate = ref("");
     let startTime = ref("");
-    let content = ref("");
+    let contents = ref("");
     let limit = ref("2");
+    let latitude = ref(null);
+    let longitude = ref(null);
+    let locationAddress = ref("");
+    let hostIdx = ref(null);
+    let hostId = ref("");
     const router = useRouter();
-    const modal = document.getElementsByClassName("modal");
+    let modal = null;
+    // const modal = document.getElementsByClassName("modifyModal");
     const clickable = document.querySelectorAll(".clickable");
-    const openCreateModalFunc = () => {
-      modal[0].style.display = "block";
+    let openModifyModalFunc = ref(null);
+    let isOpen = ref(null);
+    let board = ref(null);
+    board.value = props.board;
+    console.log("detail 값 ===> " + JSON.stringify(board.value, null, 2));
+    offMeetingIdx.value = board.value.offMeetingIdx;
+    title.value = board.value.title;
+    meetingDate.value = board.value.meetingDate.substring(0, 10);
+    startTime.value = board.value.startTime;
+    contents.value = board.value.contents;
+    limit.value = board.value.limit;
+    latitude.value = board.value.latitude;
+    longitude.value = board.value.longitude;
+    locationAddress.value = board.value.locationAddress;
+    hostId.value = board.value.host.memberId;
+    hostIdx.value = board.value.host.memberIdx;
+
+    // watchEffect(() => {
+    //   if (props.isOpen) {
+    //     isOpen = props.isOpen;
+    //     console.log("마지막~! =====> " + isOpen);
+    //     openModifyModalFunc = () => {
+    //       modal[0].style.display = "block";
+    //     };
+    //     openModifyModalFunc();
+    //   }
+    // });
+
+    openModifyModalFunc = () => {
+      // if (props.isOpen) {
+      //   isOpen = props.isOpen;
+      //   console.log("마지막~! =====> " + isOpen);
+      //   modal = document.getElementsByClassName("modifyModal");
+      //   console.log(modal);
+      //   modal[0].style.display = "block";
+      // }
+      console.log(document.getElementsByClassName("modifyModal")[0]);
+      // modal = document.getElementsByClassName("modifyModal");
+      document.getElementsByClassName("modifyModal")[0].style.display = "block";
     };
+
+    // openModifyModalFunc();
+
+    watchEffect(() => {
+      if (props.isOpen) {
+        setTimeout(() => {
+          openModifyModalFunc();
+        }, 250);
+      }
+    });
+
     const closeModalFunc = () => {
       modal[0].style.display = "none";
+      isOpen.value = false;
+      console.log("닫으면 ? " + isOpen.value);
     };
-    const submitOffMeetingForm = async () => {
+    // const modifyModalFunc = async () => {
+    //   submitModifyOffMeetingForm();
+    //   // router.go();
+    // };
+    const submitModifyOffMeetingForm = async () => {
       axios.defaults.headers.common["AUTHORIZATION"] =
         sessionStorage.getItem("token");
+
+        console.log(offMeetingIdx.value);
+        console.log(title.value);
+        console.log(meetingDate.value);
+        console.log(limit.value);
+        console.log(contents.value);
+        console.log(startTime.value);
       axios
-        .post("/offMeetings", {
+        .patch(`/offMeetings/${offMeetingIdx.value}`, {
+          offMeetingIdx: offMeetingIdx.value,
           title: title.value,
-          meetingDate: date.value,
+          meetingDate: meetingDate.value,
           limit: limit.value,
-          contents: content.value,
-          latitude: props.currentLat,
-          longitude: props.currentLng,
-          locationAddress: props.currentLocation,
+          contents: contents.value,
           startTime: startTime.value,
-          memberIdx: myIdx,
-          onMeetingIdx: 14,
         })
         .then(function (response) {
           console.log("response => " + JSON.stringify(response, null, 2));
@@ -171,28 +237,39 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-      router.go();
+        router.go();
     };
     for (let i = 0; i < clickable.length; i++) {
       clickable[i].openModalFunc;
     }
     onMounted(() => {
-      window.onclick = function (event) {
-        if (event.target == modal[0]) {
-          modal[0].style.display = "none";
-        }
-      };
+      // window.onclick = function (event) {
+      //   if (event.target == modal[0]) {
+      //     modal[0].style.display = "none";
+      //   }
+      // };
     });
     return {
-      openCreateModalFunc,
+      openModifyModalFunc,
       closeModalFunc,
-      submitOffMeetingForm,
+      // modifyModalFunc,
+      submitModifyOffMeetingForm,
+      offMeetingIdx,
       title,
-      date,
-      startTime,
-      content,
       limit,
+      meetingDate,
+      startTime,
+      contents,
+      limit,
+      latitude,
+      longitude,
+      locationAddress,
+      startTime,
+      hostId,
+      hostIdx,
       myIdx,
+      isOpen,
+      board,
     };
   },
 };
@@ -230,7 +307,7 @@ export default {
 /*************/
 /*   MODAL   */
 /*************/
-.modal {
+.modifyModal {
   display: none;
   /* Hidden by default */
   position: absolute;
