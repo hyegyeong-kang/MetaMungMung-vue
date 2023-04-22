@@ -177,7 +177,6 @@ import ModifyModal from "@/components/meeting/offMeeting/modal/modifyModal.vue";
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-
 export default {
   name: "OffMeetingModal",
   props: ["selectedMarker", "boardDetails", "isOpen"],
@@ -213,34 +212,26 @@ export default {
     //   };
     //   console.log(openIt + "ok!!!!!!");
     // };
-
     const modifyOffMeeting = () => {
       const modalId = document.getElementById("detailModal");
       modalId.style.display = "none";
-
       console.log("2. 자식 detailModal => " + isOpen.value);
       isOpen.value = true;
-
       emit("isOpen", isOpen.value);
       console.log("보낸다 ~~~ => " + isOpen.value);
-
       emit("board", board.value);
       console.log("board 보낸다~~~ => " + board.value);
     };
-
     const checkJoinMember = () => {
       joinMemberModal.value.openJoinMemberModal();
       console.log(joinMemberModal.value.openJoinMemberModal());
     };
-
     const activeJoin = () => {
       likeBtn = document.getElementsByClassName("heart-button")[0];
       likeBtn.classList.toggle("active");
     };
-
     const modal = document.getElementsByClassName("detailModal");
     const clickable = document.querySelectorAll(".clickable");
-
     const openDetailModalFunc = (selectedMarker) => {
       modal[0].style.display = "block";
       try {
@@ -280,11 +271,9 @@ export default {
         console.log("err!!!!" + err);
       }
     };
-
     const deleteOffMeeting = async () => {
       axios.defaults.headers.common["AUTHORIZATION"] =
         sessionStorage.getItem("token");
-
       axios
         .post(`/offMeetings/${offMeetingIdx.value}`, {
           offMeetingIdx: offMeetingIdx.value,
@@ -295,10 +284,8 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-
       router.go();
     };
-
     const closeDetailModalFunc = () => {
       modal[0].style.display = "none";
     };
@@ -516,5 +503,196 @@ export default {
 .detailBadge {
   background-color: mediumaquamarine;
   color: white;
+}
+
+/*************/
+/*   MODAL   */
+/*************/
+.detailModal {
+  display: none;
+  /* Hidden by default */
+  position: absolute;
+  /* Stay in ㄹㅊ place */
+  z-index: 3;
+  /* Sit on top */
+  left: 0;
+  top: 12%;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  /* overflow: hidden; */
+  /* Black w/ opacity */
+  transition: all 0.5s ease 0.06s;
+}
+
+/* Modal Content/Box */
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  /* 15% from the top and centered */
+  padding: 1.2rem;
+  max-width: 35%;
+  min-width: 400px;
+  height: 650px;
+  overflow-y: auto;
+  /* Could be more or less, depending on screen size */
+  visibility: hidden;
+  box-shadow: 2px 2px 10px 0px rgba(99, 106, 119, 0.6);
+  border-radius: 5px;
+}
+
+/* The Close Button */
+.close {
+  color: #dedede;
+  /*float: right;*/
+  font-size: 2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.close:before {
+  content: "Close";
+  font-size: 1rem;
+  display: none;
+  text-decoration: none;
+  align-self: center;
+  margin-top: 0.2rem;
+  font-weight: 400;
+}
+
+.close:hover:before {
+  display: initial;
+  color: #dedede;
+}
+
+.close:hover,
+.close:focus {
+  color: hsl(0, 100%, 70%);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.close:active,
+.close:before:active {
+  transition: all 60ms ease;
+  transform: scale(0.97);
+}
+
+/***********************/
+/*  modal form layout  */
+/***********************/
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.modal-footer {
+  text-align: center;
+  display: inline-block;
+  /* flex-direction: row-reverse; */
+  align-items: center;
+}
+
+.modal-footer > input {
+  margin-top: 0.8rem;
+  margin-bottom: 0rem;
+  margin-left: 0rem;
+  margin-right: 0rem;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding: 0.4rem 0.4rem;
+}
+
+.form-row:nth-child(odd) {
+  background: #f2f2f2;
+}
+
+.form-row label {
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-basis: 50%;
+}
+
+.form-row input,
+.form-row select {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 50%;
+  border: 1px solid hsl(0, 0%, 90%);
+  padding: 0.2rem 0.2rem;
+  max-width: 50%;
+  background: transparent;
+}
+
+.slideDown {
+  animation-name: slideDown;
+  -webkit-animation-name: slideDown;
+  animation-duration: 0.6s;
+  -webkit-animation-duration: 0.6s;
+  animation-timing-function: ease;
+  -webkit-animation-timing-function: ease;
+  visibility: visible !important;
+}
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  50% {
+    transform: translateY(4%);
+  }
+  65% {
+    transform: translateY(-2%);
+  }
+  80% {
+    transform: translateY(2%);
+  }
+  95% {
+    transform: translateY(-1%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+.input-group-text {
+  background: #9fd6cd;
+  border-color: rgba(224, 224, 224, 0.531);
+
+  color: white;
+  width: 80px;
+}
+
+.inputText {
+  color: #5f5f5f;
+  border-color: rgba(224, 224, 224, 0.531);
+}
+
+.custom-file-input .custom-file {
+  border-color: rgba(224, 224, 224, 0.531);
 }
 </style>

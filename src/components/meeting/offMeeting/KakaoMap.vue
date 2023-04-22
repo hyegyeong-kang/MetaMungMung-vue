@@ -51,7 +51,12 @@
       @isOpen="isOpenFunc"
       @board="getBoard"
     />
-    <ModifyModal v-if="isOpen === true" :isOpen="isOpen" :board="board" />
+    <ModifyModal
+      v-if="isOpen === true"
+      ref="modifyModal"
+      :isOpen="isOpen"
+      :board="board"
+    />
   </div>
 </template>
 
@@ -68,7 +73,6 @@ export default {
     DetailModal,
     ModifyModal,
   },
-  props: ["isOpen", "board"],
   data() {
     return {
       currentLocation: "",
@@ -117,7 +121,6 @@ export default {
     },
     loadMap() {
       console.log("1. 부모 isOpen => " + this.isOpen);
-
       const container = document.getElementById("map");
       const currentBtn = document.getElementById("current-location-btn");
       let lat = 0;
