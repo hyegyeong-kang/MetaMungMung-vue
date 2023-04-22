@@ -190,10 +190,8 @@
     <div id="timeline">
       <!-- 게시물 글 작성하는 곳  -->
       <div class="new-tweet" style="border: 1px solid;border-radius: 2em;color:	#C0C0C0;margin-bottom:20px">
-        <textarea placeholder="새로운 소식을 남겨보세요." v-model="inputText"></textarea>
-        <div class="registerModal">
-          <!-- <RegisterModal @close="closeRegisterModal" v-if="registerModal" /> -->
-        </div>
+        <form @submit.prevent="addPost">
+        <textarea placeholder="새로운 소식을 남겨보세요." v-model="newPost"></textarea>
         <div class="btns">
           <div class="btn">
             <button>
@@ -217,9 +215,10 @@
             <MapModal v-if="isOpen" @close-req="toggleMap" @send-addr="sendAddr" />
           </div>
           <div class="btn">
-            <button @click="postData">게시</button>
+            <button type="submit">게시</button>
           </div>
         </div>
+         </form>
       </div>
 
 
@@ -254,6 +253,35 @@
           </div>
         </div>
 
+
+
+
+
+        <!-- <div>
+            <div id="postLyMenu_view729" class="lyMenu _postMoreMenu" style="min-width: 145px;" tabindex="-1">
+                    <ul class="_postMoreMenuUl">
+                <li>
+                  <a href="#" data-menueventname="postMoreAction:modifyPost">글 수정</a>
+                </li>
+                <li><a href="#" data-menueventname="postMoreAction:deletePost">삭제하기</a></li></ul>
+                </div>
+        </div> -->
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#">수정하기</a></li>
+            <li><a class="dropdown-item" href="#">삭제하기</a></li>
+          </ul>
+        </div>
+
+
+
+
+
+
+
         </div> 
         <!-- left 끝 -->
 
@@ -279,6 +307,7 @@
           <!-- <ul v-if="board.replyList.length > 0"> -->
             <ul v-if="board.replyList.length">
             <li v-for="(reply, index) in board.replyList" :key="reply.onMeetingReplyIdx" class="commentItem" style="background-color:#F5F5F5"> 
+             <hr>
                 <!--댓글창이었음.. -->
                 <!-- <CreateReply/>   -->
 
@@ -315,7 +344,7 @@
           <!-- <hr> -->
 
              <!-- 댓글 작성하는 곳 -->
-            <div class="reply" style="margin-bottom:10px; padding:10px">
+            <div class="reply" style="margin-bottom:10px; padding:10px;">
                 <form @submit.prevent="submitComment(index, board.onMeetingBoardIdx)">
                   <span>
                     <textarea
@@ -459,7 +488,7 @@ import MapModal from "@/components/meeting/onMeeting/board/modal/mapModal.vue";
 import ReplyList from "@/components/meeting/onMeeting/board/reply/replyList.vue";
 import CreateReply from "@/components/meeting/onMeeting/board/reply/createReply.vue";
 //import BoardDetail from "@/components/meeting/onMeeting/board/boardDetailModal.vue";
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import axios from 'axios';
 import { useRoute } from "vue-router";
 
@@ -505,6 +534,7 @@ export default {
   },
   mounted() {
       let base = this;
+     // getBoardList();
     //  base.openBoardModal = this.$refs.boardDetail.openBoardModalFunc;
      // base.openMapModal = this.$refs.map.openMapModalFunc;
 
@@ -552,11 +582,11 @@ export default {
       await axios.get('/onMeetings/1/board', {})
         .then((response) => {
 
-          boards.value = {...response.data};
+          boards.value = response.data
           console.log(`KANG_BOARd: ${JSON.stringify(boards.value, null, 2)}`)
           onMeetingInfo.value = {...response.data[0]};
 
-          console.log(`^^^^^^^BOARD^^^^^^ ${JSON.stringify(boards.value, null, 2)}`);
+         // console.log(`^^^^^^^BOARD^^^^^^ ${JSON.stringify(boards.value, null, 2)}`);
           console.log(`^^^^^^^BOARD_INFO^^^^^^ ${JSON.stringify(onMeetingInfo.value.boardList, null, 2)}`);
 
          // boardCnt.value = Object.keys(boards.value).length;
@@ -569,8 +599,9 @@ export default {
     };
 
     getBoardList();
+    //onMounted(getBoardList());
 
-
+//console.log(`^^^^^^^BㅌㅌOARD^^^^^^ ${JSON.stringify(boards.value, null, 2)}`);
 
     const registerMems = ref([]);
     const registerMemsCnt = ref(0); 
@@ -597,35 +628,82 @@ export default {
     getOnMeetingMembers();
 
 
+
     // 게시물 등록 버튼 눌렀을 떄
-    const inputText = ref(''); 
-    console.log(`+++++ ${JSON.stringify(registerMems.value, null, 2)}`);
+    const newPost = ref('');
+    // 게시물 등록
+    const addPost = () => {
+
+      console.log("######" + newPost.value);
+
+      // onMeetingIdx = 1
+      axios.post('/onMeetings/1/board',
+      {
+        boardContents: newPost.value,
+        onMeetingIdx: 1,
+        boardWriter: "강", // memberIdx 로 회원 이름 알려주기
+        memberIdx: 1
+      }
+      )
+      .then((response) => {
+        //push 해주기
+        newPost.value = '';
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+            // onMeetingIdx = 1
+      // axios
+      //   .post('/onMeetings/1/board', 
+      //       { 
+      //         replyContents: newPost.value
+      //       }
+      //   )
+      //   .then((response) => {
+      //     posts.value.push({ id: response.data.id, text: response.data.text });
+      //     newPost.value = '';
+      //   })
+      //   .catch((error) => {
+      //     console.error(error);
+      //   });
+    //};
+      
+      //posts.value.push({ id: posts.value.length + 1, text: newPost.value });
+      
+    };
+
+    console.log(`HGHGHGHGHGHGHG// ${JSON.stringify(onMeetingInfo, null, 2)}`);
   
     const writer = ref("");
     const contents = ref("");
     const createDate = ref("");
 
+
+
+
+
     // 게시글 추가
     const postData = () => {
       console.log("게시글 추가 버튼 눌림");
 
-      console.log(`asasdsads ${JSON.stringify(boards.value, null, 2)}`);
+
 
 
       // boards.value.push(
       //   {
       //     writer: writer.value,
-      //     cotents: inputText.value,
+      //     cotents: newPost.value,
       //     creatDate: createDate.value
       //   }
       // )
 
       // boards.value 에서 필요한 값 빼서 data 에 넣어주기
 
-      const data = {
+      // const data = {
 
-        contents: inputText.value
-      };
+      //   contents: newPost.value
+      // };
 
       // await axios.post('/onMeetings/1/board', data)
       //   .then((response) => {
@@ -642,20 +720,20 @@ export default {
       const getReplyList = async() => {
 
         // onMeetingIdx, onMeetingBoardIdx 넣으면 됨
-        await axios.get('/onMeetings/1/board/2/reply', {})
+        await axios.get('/onMeetings/1/board/4/reply', {})
             .then((response) => {
-                replies.value = {...response.data.replyList};
+                replies.value = {...response.data};
                 replyInfo.value = {...response.data};
 
-                console.log(`###REPLY ${JSON.stringify(replies.value[1], null, 2)}`)
+                console.log(`###REPLY ${JSON.stringify(replies.value, null, 2)}`)
                 console.log("$ㅇㅇㅇ$")
-                console.log(`###REPLY_INFO ${JSON.stringify(replyInfo.value, null, 2)}`);
+               // console.log(`###REPLY_INFO ${JSON.stringify(replyInfo.value, null, 2)}`);
             })
             .catch ((error) => {
                 console.log(`REPLY ERR: ${error}`);
             });
       };
-     // getReplyList();
+      getReplyList();
 
 
     // 게시물 갯수
@@ -727,9 +805,9 @@ export default {
     // 댓글 가져오기 
     async function fetchComments() {
       try {
-        const response = await axios.get(`/onMeetings/1/board`);
+        const response = await axios.get(`/onMeetings/1/board/4/reply`);
         comments.value = response.data;
-        console.log(`COMMENTSSSSSSS : ${JSON.stringify(comments.value.boardList, null, 2)}`)
+        console.log(`COMMENTSSSSSSS : ${JSON.stringify(comments.value, null, 2)}`)
       } catch (error) {
         console.error(error);
       }
@@ -751,7 +829,7 @@ export default {
       try {
         // console.log(index)
         // console.log('comment' + index)
-        console.log('board id: ' + id)
+        console.log('board id: ' + id) 
         const commentId = 'comment' + index
         const currComment = document.getElementById(commentId).value
         console.log('comment: ' + currComment)
@@ -778,6 +856,7 @@ export default {
 
 
 
+
     return {
       isOpen,
       toggleMap,
@@ -790,7 +869,7 @@ export default {
       getOnMeetingMembers,
       registerMems,
       registerMemsCnt,
-      inputText,
+      newPost,
       postData,
 
       replies,
@@ -817,6 +896,8 @@ export default {
       submitComment,
       newCommentText,
       comments,
+
+      addPost,
     }
   }
 };
