@@ -1,5 +1,5 @@
 <template>
-  <div class="services_section layout_padding">
+  <div style="z-index: 1000" class="services_section layout_padding">
     <ReviewHeader :productIdx="productIdx" />
     <div class="container">
       <div id="app">
@@ -16,18 +16,19 @@
           @input="content = $event.target.value"
         ></textarea>
 
-        <button v-on:click="addReview">리뷰등록</button>
+        <button class="register-btn" v-on:click="addReview">리뷰등록</button>
 
         <div
-          v-for="review in reviewList"
+          v-for="(review, index) in reviewList"
           :key="review.productReviewIdx"
           class="review"
+          style="margin-top: 50px"
         >
           <div class="review-memberImg">
             <img :src="review.reviewMember.memberImg" />
           </div>
 
-          <div class="review-box">
+          <div class="review-box" id="review-detail">
             <div class="review-author">
               <p>
                 <strong>{{ review.title }}</strong> -
@@ -37,6 +38,21 @@
                 <i class="fa fa-star" aria-hidden="true"></i>
                 <i class="fa fa-star" aria-hidden="true"></i>
                 - {{ review.reviewMember.memberId }}
+
+                <button
+                  v-if="myIdx == review.reviewMember.memberIdx"
+                  @click="deleteOffMeeting"
+                  class="btn deleteBtn"
+                >
+                  삭제
+                </button>
+                <button
+                  v-if="myIdx == review.reviewMember.memberIdx"
+                  @click="modifyOffMeeting(index, review.productReviewIdx)"
+                  class="btn modifyBtn"
+                >
+                  수정
+                </button>
               </p>
             </div>
             <div class="review-comment">
@@ -53,21 +69,28 @@
       </div>
     </div>
   </div>
+
+  <ReviewModifyModal/>
 </template>
 
 <script>
 import ReviewHeader from "@/components/store/product/ReviewHeader.vue";
+import ReviewModifyModal from "@/components/store/product/ReviewModifyModal.vue";
 import axios from "axios";
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import { onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 export default {
   components: {
     ReviewHeader,
+    ReviewModifyModal,
   },
   setup() {
     const route = useRoute();
+    const router = useRouter();
+    // const isOpen = ref(true);
+
     const myIdx = Number(sessionStorage.getItem("memberIdx"));
 
     let productIdx = Number(route.params.id);
@@ -81,12 +104,13 @@ export default {
     let content = ref("");
     let createDate = ref("");
     let updateDate = ref("");
+    let isModalViewed = ref(false);
 
-    let reviewList = ref([]);
+    let reviewList = ref(null);
 
     onMounted(() => {
       reviewDetailPage();
-      console.log("memberId : " + memberId.value);
+      // console.log("memberIdx : " + myIdx);
     });
 
     /* axios 비동기 통신 */
@@ -97,46 +121,64 @@ export default {
 
         const res = await axios.get(`/products/${productIdx}/reviews`);
         reviewList.value = { ...res.data };
-        console.log(JSON.stringify(res, null, 2));
+
+        // console.log("id => " + productReviewIdx.value);
+        // console.log(JSON.stringify(res, null, 2));
       } catch (err) {
         console.log(err);
       }
+
+      // console.log(JSON.stringify(reviewList.value, null, 2));
     };
 
+    /* 리뷰 작성 */
     const addReview = () => {
-      // console.log("title => " + title.value);
-      // console.log("content => " + content.value);
-      // console.log("myid => " + myIdx);
-      // reviewList.value.push({
-      //   memberId: 123,
-      //   memberImg: ref(
-      //     "https://i.pinimg.com/474x/d7/70/33/d7703333ad8ba85827b60fccf42f9c25.jpg"
-      //   ),
-      //   title: title.value,
-      //   content: content.value,
-      //   memberIdx: myIdx,
-      // })();
-
       axios
         .post(`/products/${productIdx}/reviews`, {
-          productIdx: productIdx,
           memberIdx: myIdx,
           title: title.value,
           content: content.value,
         })
         .then(function (response) {
-          console.log("나왔당");
-          // console.log("response => " + JSON.stringify(response, null, 2));
+          // console.log(response);
+          console.log("등록됨");
         })
         .catch(function (error) {
           console.log(error);
         }),
         (title.value = ""),
         (content.value = "");
+
+      router.go();
     };
+
+    /* 리뷰 수정 */
+    const modifyOffMeeting = async (index, productReviewIdx) => {
+      console.log("productReviewIdx ===> " + productReviewIdx);
+      axios
+        .patch(`/products/${productIdx}/reviews/${productReviewIdx}`, {
+          productIdx: productIdx,
+          memberIdx: myIdx,
+          title: title.value,
+          content: content.value,
+        })
+        .then(function (response) {
+          console.log("눌렀다~ => " + response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        }),
+        (title.value = ""),
+        (content.value = "");
+
+      // router.go();
+    };
+
+    /* 리뷰 삭제 */
 
     return {
       addReview,
+      modifyOffMeeting,
       productIdx,
       productReviewIdx,
       memberId,
@@ -148,6 +190,7 @@ export default {
       updateDate,
       reviewList,
       myIdx,
+      // isOpen,
     };
   },
 };
@@ -226,6 +269,7 @@ button {
   margin-right: 3em;
 }
 .review-box {
+  min-width: 490px;
   float: left;
   display: inline-block;
   width: 87.5%;
@@ -259,5 +303,30 @@ button {
 }
 .review-author strong {
   color: black;
+}
+.modifyBtn {
+  border-radius: 20px;
+  font-size: 13px;
+  color: white;
+  width: 100px;
+  background-color: rgb(130, 199, 145);
+  margin-right: 10px;
+}
+.deleteBtn {
+  min-width: 100px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: white;
+  width: 100px;
+  background-color: lightslategray;
+}
+
+.register-btn {
+  min-width: 100px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: white;
+  width: 100px;
+  background-color: rgb(140, 185, 230);
 }
 </style>
