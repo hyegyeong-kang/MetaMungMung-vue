@@ -301,7 +301,7 @@
           <div v-for="(reply, index) in comments[0].replyList" :key="reply.onMeetingReplyIdx" class="commentItem" style="background-color:#F5F5F5">
             <div v-if="board.onMeetingBoardIdx == reply.onMeetingBoardIdx">
             <ul>
-            <li> 
+            <!-- <li>  -->
              <hr>
               <div >
               
@@ -336,7 +336,7 @@
                   <b-button style="text-align:right;width:100%" class="btn" @click="deleteReply()">삭제</b-button>        
                   </div>
                   </div>
-            </li>
+            <!-- </li> -->
             </ul>
 
 
@@ -360,7 +360,7 @@
                         :id="'comment' + index"
                         placeholder="댓글을 입력하세요"
                         style="border: 1px solid;border-radius: 2em;color:#C0C0C0;"
-                        ></textarea>
+                    ></textarea>
                   </span>
                   <span>
                     <button type="submit" style="border: 1px solid;border-radius: 2em;color:#fff">보내기</button>
@@ -499,7 +499,7 @@ import CreateReply from "@/components/meeting/onMeeting/board/reply/createReply.
 //import BoardDetail from "@/components/meeting/onMeeting/board/boardDetailModal.vue";
 import { ref, computed, watch, onMounted } from 'vue';
 import axios from 'axios';
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 
 export default {
@@ -552,9 +552,10 @@ export default {
   },
   setup() {
 
-    axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+    
 
     const route = useRoute();
+    const router = useRouter();
     const isOpen = ref(false);
     const isOpenDetail = ref(false);
     const onMeetingIdx = ref("");
@@ -591,6 +592,7 @@ export default {
 
     // 게시물 출력
     const getBoardList = async() => {
+      axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
 
       // onMeetingIdx 넣어주면 됨
       await axios.get('/onMeetings/1/board', {})
@@ -621,6 +623,7 @@ export default {
     const registerMemsCnt = ref(0); 
     // 전체 가입멤버 출력
     const getOnMeetingMembers = async() => {
+      axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
 
       // onMeetingIdx 넣어주면 됨
       await axios.get('/onMeetings/1/board/members', {})
@@ -645,6 +648,7 @@ export default {
     const member = ref([]);
     //회원 정보
     const getMemberInfo = async () => {
+      axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
         try{
             const res = await axios.get('/members/my');
             member.value = {...res.data};
@@ -659,9 +663,7 @@ export default {
     const newPost = ref('');
     // 게시물 등록
     const addPost = () => {
-
-
-      console.log(`###NEWINFO  ${JSON.stringify(typeof member.value.memberName, null, 2)}`)
+      axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
 
       console.log("###NEWWWW###" + newPost.value);
 
@@ -684,25 +686,8 @@ export default {
         newPost.value = '';
         console.log(error);
       })
+      router.go();
 
-            // onMeetingIdx = 1
-      // axios
-      //   .post('/onMeetings/1/board', 
-      //       { 
-      //         replyContents: newPost.value
-      //       }
-      //   )
-      //   .then((response) => {
-      //     posts.value.push({ id: response.data.id, text: response.data.text });
-      //     newPost.value = '';
-      //   })
-      //   .catch((error) => {
-      //     console.error(error);
-      //   });
-    //};
-      
-      //posts.value.push({ id: posts.value.length + 1, text: newPost.value });
-      
     };
 
 
@@ -806,7 +791,7 @@ export default {
       }
     }
 
-    // 댓글 작성 함수
+    // 댓글 작성 함수 - 진짜
     const submitComment = (index, id) => {
 
       // (onMeetingBoard_seq.nextval,
@@ -820,22 +805,42 @@ export default {
       //           sysdate
       //   )
       try {
-        // console.log(index)
-        // console.log('comment' + index)
         console.log('board id: ' + id) 
         const commentId = 'comment' + index
         const currComment = document.getElementById(commentId).value
-        console.log('comment: ' + currComment)
-        console.log('comment: ' + commentId)
+        console.log('comment: ' + currComment);
+        console.log('comment: ' + commentId);
+
+      axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+   
+        axios.post('/onMeetings/1/board/reply',
+          {
+            onMeetingBoardIdx: id,
+            onMeetingMemIdx: 1,
+            onMeetingIdx: 1,
+            memberIdx: member.value.memberIdx,
+            replyContents: currComment,
+            replyWriter: member.value.memberName, // memberIdx 로 회원 이름 알려주기
+            replyWriterImg: member.value.memberImg
+          }
+          )
+          .then((response) => {
+            console.log("댓글 입력됐나요~~~")
+            document.getElementById(commentId).value="";
+          })
+          .catch((error) => {
+            console.log("댓글 에러 입니다.")
+            document.getElementById(commentId).value="";
+            console.log(error);
+          })
+
+
+
+
         // console.log(`NEW COMMENTS: ${newCommentText.value}`)
         // const response = await axios.post(`/onMeetings/1/board`, {
         //   replyContents: newCommentText.value
         // });
-        const data = {
-          replyContents: currComment
-        }
-        // comments.value.push(data);
-       // console.log(`@@@@@@@@@@@@@@ ${JSON.stringify(comments.value, null, 2)}`)
         // newCommentText.value = '';
       } catch (error) {
         console.error(error);
@@ -891,6 +896,7 @@ export default {
       addPost,
 
       member,
+      router
     }
   }
 };
