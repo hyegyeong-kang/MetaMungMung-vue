@@ -9,7 +9,7 @@
                 <div style="font-size: 17px">결제날짜 {{payment.createDate}} <span style="font-weight: bold;">{{order.status}}</span></div>
                 <div class="divider"></div>
                 
-                <div class="blog-item"
+                <div style="border: none" class="blog-item"
                     v-for="detail in order.orderDetailList" :key="detail.productDTO.productIdx">
                     <router-link class="post-thumb" :to="{path: '/products/' + detail.productDTO.productIdx}">
                         <img :src="`${detail.productDTO.productImg}`" alt="">
@@ -21,7 +21,7 @@
                             {{detail.productDTO.brand}} {{detail.productDTO.productName}}
                         </router-link>
                         {{detail.quantity}}개<br>
-                        <strong>{{order.orderPrice}}</strong>
+                        <strong>{{(order.orderPrice).toLocaleString()}}</strong>
                         <em
                             style="display: inline-block; color: #b0b0b0; font-style: normal; font-size: 15px; vertical-align: 1px; color: #333 !important; padding: 0 0 0 2px; vertical-align: 2px !important;">
                             원
