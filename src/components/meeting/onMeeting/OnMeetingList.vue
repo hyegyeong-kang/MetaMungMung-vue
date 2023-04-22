@@ -58,6 +58,9 @@ export default {
     },
     emits: ['send-type'],
     setup(props, {emit}){
+        axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+        const memberIdx = sessionStorage.getItem('memberIdx');
+
         const route = useRoute();
         const router = useRouter();
         const searchResultCnt = ref(0);
@@ -97,10 +100,6 @@ export default {
             }
             console.log("주소주소주소 " + address);
             try{
-                axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
-                const memberIdx = sessionStorage.getItem('memberIdx');
-                console.log(memberIdx);
-
                 const res = await axios.get('/onMeetings');
                 onMeetingList.value = {...res.data.recommendList};
                 
@@ -112,14 +111,14 @@ export default {
             }
         }
         // getOnMeetingList();
-
+    
         
 
         const getSearchResultList = async () => {
             let keywords = route.query.keywords;
             let category = props.cate;
             let address = props.addr;
-            
+
             console.log("전 카테 " + category);
             console.log("전 주소 " + address);
             console.log("전 키워드 " + keywords);
@@ -147,7 +146,7 @@ export default {
                 for(let i in res.data){
                     if(res.data[i].introduction != null){
                         onMeetingList.value[i].introduction = res.data[i].introduction.replace(/<br>/g, ' ');
-                    } 
+                    }
                 }
                 console.log(res.data.length);
 

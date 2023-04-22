@@ -1,7 +1,7 @@
 <template>
     <div class="topInputSearch _searchBox">
         <label class="gSrOnly">모임 검색</label>
-        <input :type="text" id="input_search_view62" class="inputBandSearch _gnbInputSearch" role="search" title="모임 검색" placeholder="모임 검색" autocomplete="off" v-model="searchKeyword">
+        <input @keyup="enterkey" :type="text" id="input_search_view62" class="inputBandSearch _gnbInputSearch" role="search" title="모임 검색" placeholder="모임 검색" autocomplete="off" v-model="searchKeyword">
 
         <button type="submit" class="btnSearch" id="btn_search" @click="checkInputText"><span class="gSrOnly">검색</span></button>
     </div>
@@ -53,9 +53,16 @@ export default {
 
         // });
 
+        const enterkey = () => {
+            if (window.event.keyCode == 13) {
+                checkInputText();
+            }
+        }
+
         return {
             searchKeyword,
-            checkInputText
+            checkInputText,
+            enterkey
         }
     }
 }
