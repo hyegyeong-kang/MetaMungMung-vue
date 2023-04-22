@@ -55,7 +55,7 @@ const router = createRouter({
       component: MyPage,
     },
     {
-      path: "/offMeeting",
+      path: "/offMeetings",
       name: "OffMeeting",
       component: OffMeeting,
     },
@@ -80,12 +80,12 @@ const router = createRouter({
       component: ProductPage,
     },
     {
-      path: "/product/:id",
+      path: "/products/:id",
       name: "ProductDetail",
       component: ProductDetail,
     },
     {
-      path: "/product/:id/reviews",
+      path: "/products/:id/reviews",
       name: "ProductReviews",
       component: ProductReviews,
     },
@@ -115,7 +115,7 @@ const router = createRouter({
       component: Order,
     },
     {
-      path: "/store/order/success",
+      path: "/store/order/success/:id",
       name: "OrderSuccess",
       component: OrderSuccess,
     },

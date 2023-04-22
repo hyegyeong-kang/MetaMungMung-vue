@@ -43,8 +43,8 @@
                     <input v-model="member.address2" type="text" placeholder="상세 주소지 입력">
                 </div>
 
-                <button type="submit" id="btnSave">저장하기</button>
-                <button type="submit" id="btnDelete">회원 탈퇴하기</button>
+                <button type="submit" id="btnSave" @click="btnSave">저장하기</button>
+                <button type="submit" id="btnDelete" @click="btnDelete">회원 탈퇴</button>
                 </div>
 
                 </form>
@@ -59,6 +59,7 @@
 import {useRoute, useRouter} from 'vue-router';
 import { ref } from 'vue';
 import axios from 'axios';
+import Swal from "sweetalert2";
 
 export default {
   name: 'ModifyForm',
@@ -86,13 +87,6 @@ export default {
       }
     }
 
-
-    const memberInfo = JSON.parse(sessionStorage.getItem("memberInfo"));
-
-    // console.log(memberInfo.memberIdx);
-    // console.log(memberInfo.memberName);
-    // console.log(memberInfo.authority);
-
     const member = ref({
       password: '',
       email: '',
@@ -101,10 +95,13 @@ export default {
       address2:''
     });
 
-    const modifyForm = async() => {
+    const btnSave = async() => {
       try {
         console.log(member.value);
-        const res = await axios.patch('/members/modify/' + memberInfo.memberIdx, {
+        axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+        const memberIdx = sessionStorage.getItem('memberIdx');
+
+        const res = await axios.patch(`/members/modify/${memberIdx}`, {
           password: member.value.password,
           email: member.value.email,
           phone: member.value.phone,
@@ -112,22 +109,72 @@ export default {
           address2: member.value.address2
         });
         console.log(res.data);
-        alert(memberInfo.memberName + ' 님의 회원 정보가 수정되었습니다!')
-        //router.push({ name: 'Login' });
-        //location.href = '/members/login';
+
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'center-center',
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+        })
+
+        Toast.fire({
+          icon: 'success',
+          title: '회원 정보 수정 완료'
+        })
+
+        router.push({ name: 'MyPage'});
 
         } catch (error) {
             console.log(error);
         } 
-        
-        console.log(member.value);
     };
 
-    
+    const btnDelete = async() => {
+      try {
+
+        Swal.fire({
+            title: '탈퇴를 진행하시겠습니까?',
+            text: "탈퇴 후 일주일 이내 재가입이 불가능합니다.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '탈퇴',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+              axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+              const memberIdx = sessionStorage.getItem('memberIdx');
+                const res = axios.patch(`/members/withdrawal/${memberIdx}`, {
+                  status: 'DELETED'
+              });
+
+              Swal.fire(
+                  '탈퇴가 완료되었습니다.',
+                  '메타멍멍을 이용해 주셔서 감사합니다.',
+                  'success'
+              )
+              
+              sessionStorage.removeItem("token");
+              sessionStorage.removeItem("memberId");
+              window.location.href = "/";
+            }
+        })
+        } catch (error) {
+            console.log(error);
+        } 
+    };
+
     return {
-      memberInfo,
       member,
-      modifyForm,
+      btnSave,
+      btnDelete,
       passwordValid,
       passwordValidFlag,
       passwordCheck,

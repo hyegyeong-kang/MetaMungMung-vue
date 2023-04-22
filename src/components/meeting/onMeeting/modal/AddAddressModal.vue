@@ -74,10 +74,10 @@ export default {
             emit('close-req', false);
         }
 
-        const addPosition = (name, event) => {
-            console.log(name);
-            emit('add-address', name);
-        }
+        // const addPosition = (name, event) => {
+        //     console.log(name);
+        //     emit('add-address', name);
+        // }
 
 
 
@@ -396,6 +396,7 @@ export default {
                 displayInfowindow(markers[0], places[0].place_name);
                 map.setCenter(new kakao.maps.LatLng(places[0].y, places[0].x));
             }
+
             // 검색결과 항목을 Element로 반환하는 함수입니다
             function getListItem(index, places) {
 
@@ -406,9 +407,9 @@ export default {
 
                 if (places.road_address_name) {
                     itemStr += '    <span>' + places.road_address_name + '</span>' +
-                                '   <span class="jibun gray">' +  places.address_name  + '</span>';
+                                '   <span class="jibun gray addr">' +  places.address_name  + '</span>';
                 } else {
-                    itemStr += '    <span>' +  places.address_name  + '</span>'; 
+                    itemStr += '    <span class="addr">' +  places.address_name  + '</span>'; 
                 }
                             
                 itemStr += '  <span class="tel">' + places.phone  + '</span>' +
@@ -491,6 +492,7 @@ export default {
             function addinfoWindowClickEvt() {
                 document.getElementById("infowindow").parentNode.parentNode.addEventListener('click', (e) => {
                     addr.value = e.currentTarget.lastChild.childNodes[0].lastChild.getAttribute('data-addr');
+
                     emit('send-addr', addr.value);
                     emit('close-req', false);
                     console.log(addr.value);
@@ -511,7 +513,7 @@ export default {
 
         return{
             closeModal,
-            addPosition,
+            // addPosition,
             loadScript,
             loadMap
         }

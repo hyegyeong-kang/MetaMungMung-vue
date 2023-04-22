@@ -1,12 +1,12 @@
 <template>
     <div class="services_section layout_padding">
         <div class="container">
-            <OnMeetingHeader @send-type="sendType" :isMain="isMain" :showLocation="true"/>
+            <OnMeetingHeader @send-type="sendType" :isMain="isMain" :showLocation="true" @send-location="sendLocation"/>
             <hr>
             <MyOnMeetingList v-if="isMain"/>
-            <OnMeetingCategory v-else :key="categoryKey" :isViewAll="isViewAll"/>
+            <OnMeetingCategory v-else :key="categoryKey" :isViewAll="isViewAll"  @select-cate="selectCate"/>
             <hr>
-            <OnMeetingList @send-type="sendType" :isMain="isMain" :isSearch="isSearch" />
+            <OnMeetingList @send-type="sendType" :isMain="isMain" :isSearch="isSearch" :addr="addr" :cate="cate"/>
         </div>
     </div>
 </template>
@@ -30,6 +30,17 @@ export default {
         const isSearch = ref(false);
         const isViewAll = ref(false);
         const categoryKey = ref(0);
+        const addr = ref('');
+        const cate = ref('전체');
+
+        const sendLocation = (location) => {
+            addr.value = location;
+        }
+
+        const selectCate = (category) => {
+
+            cate.value = category;
+        }
 
         const sendType = (type) => {
             console.log("부모가 받았어!");
@@ -59,6 +70,10 @@ export default {
             isSearch,
             isViewAll,
             categoryKey,
+            addr,
+            cate,
+            sendLocation,
+            selectCate,
             sendType,
             forceRender
         }

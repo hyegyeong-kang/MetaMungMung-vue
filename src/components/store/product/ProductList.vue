@@ -219,6 +219,7 @@
 <script>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import axios from "axios";
 
 export default {
   props: {
@@ -230,103 +231,22 @@ export default {
     const router = useRouter();
     const productIdx = ref(0);
 
-    const productList = ref([
-      {
-        productIdx: 1,
-        category: "사료",
-        productName: "프로플랜 센서티브 스킨 앤 스토막 어덜트",
-        brand: "퓨리나",
-        price: 87000,
-        productImg:
-          "https://images-dev.wefluffy.co.kr/product-option/1192/modify_detail_056.webp",
-        productDetail:
-          "프로플랜 센서티브 스킨 앤 스토막 어덜트프로플랜 센서티브 스킨 앤 스토막 어덜트",
-        volume: "12kg",
-      },
-      {
-        productIdx: 2,
-        category: "간식",
-        productName: "울트라 그레인프리 닭고기",
-        brand: "내추럴발란스",
-        price: 142400,
-        productImg:
-          "https://images-dev.wefluffy.co.kr/product-option/1234/1000010255_detail_034.webp",
-        productDetail:
-          "울트라 그레인프리 닭고기울트라 그레인프리 닭고기울트라 그레인프리 닭고기",
-        volume: "13.6kg",
-      },
-      {
-        productIdx: 3,
-        category: "사료",
-        productName: "스페셜 특수견 프로",
-        brand: "제일사료",
-        price: 29200,
-        productImg:
-          "https://images-dev.wefluffy.co.kr/product-option/1143/register_detail_095.webp",
-        productDetail:
-          "스페셜 특수견 프로스페셜 특수견 프로스페셜 특수견 프로스페셜 특수견 프로스페셜 특수견 프로",
-        volume: "15kg",
-      },
-      {
-        productIdx: 4,
-        category: "사료",
-        productName: "LID 고구마&연어 알러지 포뮬라",
-        brand: "내추럴발란스",
-        price: 82600,
-        productImg:
-          "https://images.pet-high.com/product-option/1204/natural_balance2.webp",
-        productDetail:
-          "LID 고구마&연어 알러지 포뮬라LID 고구마&연어 알러지 포뮬라LID 고구마&연어 알러지 포뮬라",
-        volume: "3kg",
-      },
-      {
-        productIdx: 5,
-        category: "장난감",
-        productName: "후각놀이 킁킁볼",
-        brand: "시소플레이",
-        price: 13500,
-        productImg:
-          "https://images-dev.wefluffy.co.kr/product-option/2618/modify_detail_128.webp",
-        productDetail: "후각놀이 킁킁볼후각놀이 킁킁볼후각놀이 킁킁볼",
-        volume: "-",
-      },
-      {
-        productIdx: 6,
-        category: "장난감",
-        productName: "멍도날드 후각놀이 매트",
-        brand: "시소플레이",
-        price: 19300,
-        productImg:
-          "https://images-dev.wefluffy.co.kr/product-option/2619/modify_detail_180.webp",
-        productDetail:
-          "멍도날드 후각놀이 매트멍도날드 후각놀이 매트멍도날드 후각놀이 매트",
-        volume: "-",
-      },
-      {
-        productIdx: 7,
-        category: "장난감",
-        productName: "개코볼 노즈워크 강아지 장난감 강아지공",
-        brand: "독톡",
-        price: 23400,
-        productImg:
-          "https://shopping-phinf.pstatic.net/main_8303605/83036053704.jpg?type=f300",
-        productDetail:
-          "개코볼 노즈워크 강아지 장난감 강아지공개코볼 노즈워크 강아지 장난감 강아지공개코볼 노즈워크 강아지 장난감 강아지공",
-        volume: "-",
-      },
-      {
-        productIdx: 8,
-        category: "장난감",
-        productName: "얼레벌레 애벌레 터그 장난감",
-        brand: "바잇미",
-        price: 12900,
-        productImg:
-          "https://shop-phinf.pstatic.net/20230414_7/1681454943916lVMSV_JPEG/42415862824398183_1730661470.jpg?type=f300",
-        productDetail:
-          "얼레벌레 애벌레 터그 장난감얼레벌레 애벌레 터그 장난감얼레벌레 애벌레 터그 장난감",
-        volume: "-",
-      },
-    ]);
+    const productList = ref([]);
+
+    /* axios!!!!!!!!!!! */
+    const productListPage = async () => {
+      console.log("ok!!!!!!!!!");
+      try {
+        axios.defaults.headers.common["AUTHORIZATION"] =
+          sessionStorage.getItem("token");
+        const res = await axios.get("/products");
+        productList.value = { ...res.data };
+        console.log(JSON.stringify(res, 2, null));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    productListPage();
 
     const moveToDetailPage = (productIdx) => {
       console.log(productIdx);
@@ -335,6 +255,7 @@ export default {
         name: "ProductDetail",
         params: {
           id: productIdx,
+          // productName: product
         },
       });
     };

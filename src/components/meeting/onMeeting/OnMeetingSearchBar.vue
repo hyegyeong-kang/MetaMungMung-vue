@@ -35,6 +35,7 @@ export default {
         const checkInputText = () => {
             if(searchKeyword.value !== ''){
                 emit('send-type', 'search');
+                console.log("나와라" + searchKeyword.value);
                 router.push({name: 'OnMeetingSearch', query: {keywords: searchKeyword.value}});
             }
             return false;

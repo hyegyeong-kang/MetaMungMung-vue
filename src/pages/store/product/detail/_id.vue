@@ -124,7 +124,7 @@
 
                 <div class="btns-box">
                   <button class="input_other">장바구니 담기</button>
-                  <button class="input_primary">바로 구매하기</button>
+                  <button class="input_primary" @click="order">바로 구매하기</button>
                 </div>
               </div>
             </div>
@@ -142,7 +142,8 @@ import ProductCategory from "@/components/store/product/ProductCategory.vue";
 import ProductHeader from "@/components/store/product/ProductHeader.vue";
 import ProductDescription from "@/components/store/product/ProductDescription.vue";
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
+import axios from "axios";
 
 export default {
   components: {
@@ -152,22 +153,32 @@ export default {
   },
   setup() {
     const router = useRouter();
-    const product = ref({
-      productIdx: 1,
-      category: "사료",
-      productName: "프로플랜 센서티브 스킨 앤 스토막 어덜트",
-      brand: "퓨리나",
-      price: 87000,
-      productImg:
-        "https://images-dev.wefluffy.co.kr/product-option/1192/modify_detail_056.webp",
-      productDetail:
-        "프로플랜 센서티브 스킨 앤 스토막 어덜트프로플랜 센서티브 스킨 앤 스토막 어덜트",
-      volume: "12kg",
-    });
+    const route = useRoute();
+    const productIdx = route.params.id;
+    const productName = ref("");
+
+    const product = ref({});
+
+    /* axios 사용!!! */
+    const productDetailPage = async () => {
+      // console.log("ok!!!!!");
+      try {
+        axios.defaults.headers.common["AUTHORIZATION"] =
+          sessionStorage.getItem("token");
+        const res = await axios.get(`/products/${productIdx}`);
+        product.value = { ...res.data };
+        productName.value = product.value.productName;
+        // console.log(JSON.stringify(res, 2, null));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    productDetailPage();
 
     const optionList = ref([
       { name: "선택해주세요.", value: "" },
-      { name: "사료", value: 1 },
+      { name: productName, value: 1 },
     ]);
 
     const selectedOption = ref("");
@@ -258,6 +269,14 @@ export default {
       document.getElementById("bannerDiv").style.display = "none";
     };
 
+    const order = () => {
+      let resultCnt = document.getElementById("result").value;
+      router.push({
+        name: "Order",
+        query: {id: productIdx, quantity: resultCnt}
+      });
+    }
+
     return {
       checkFunc,
       setSelect,
@@ -268,6 +287,8 @@ export default {
       optionList,
       selectedOption,
       router,
+      order,
+      productName,
     };
   },
 };

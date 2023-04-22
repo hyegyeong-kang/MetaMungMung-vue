@@ -4,17 +4,27 @@
     <div class="container">
       <div id="app">
         <label>제목</label>
-        <input title="title" type="text" v-model="title" /><br />
+        <input
+          v-model="title"
+          @input="title = $event.target.value"
+          type="text"
+        /><br />
+
         <label>내용</label>
-        <textarea title="content" v-model="content"></textarea>
+        <textarea
+          v-model="content"
+          @input="content = $event.target.value"
+        ></textarea>
 
-        <button v-on:click="[addReview(), checkContentLength()]">
-          리뷰등록
-        </button>
+        <button v-on:click="addReview">리뷰등록</button>
 
-        <div v-for="review in reviewList" :key="review.title" class="review">
+        <div
+          v-for="review in reviewList"
+          :key="review.productReviewIdx"
+          class="review"
+        >
           <div class="review-memberImg">
-            <img v-bind:src="review.memberImg" />
+            <img :src="review.reviewMember.memberImg" />
           </div>
 
           <div class="review-box">
@@ -26,15 +36,17 @@
                 <i class="fa fa-star" aria-hidden="true"></i>
                 <i class="fa fa-star" aria-hidden="true"></i>
                 <i class="fa fa-star" aria-hidden="true"></i>
-                - {{ review.writer }}
+                - {{ review.reviewMember.memberId }}
               </p>
             </div>
             <div class="review-comment">
-              <p>{{ review.content }}</p>
+              <div>
+                <p>{{ review.content }}</p>
+              </div>
             </div>
 
             <div class="review-date">
-              <time>{{ review.reviewDate }}</time>
+              <time>{{ review.createDate }}</time>
             </div>
           </div>
         </div>
@@ -45,7 +57,9 @@
 
 <script>
 import ReviewHeader from "@/components/store/product/ReviewHeader.vue";
+import axios from "axios";
 import { ref } from "vue";
+import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 export default {
@@ -54,70 +68,86 @@ export default {
   },
   setup() {
     const route = useRoute();
+    const myIdx = Number(sessionStorage.getItem("memberIdx"));
 
-    const productIdx = ref(0);
-    const content = ref("");
-    const title = ref("");
-    const memberImg = ref(
+    let productIdx = Number(route.params.id);
+    let productReviewIdx = ref(0);
+    let memberId = ref("");
+    let memberIdx = ref(0);
+    let memberImg = ref(
       "https://i.pinimg.com/474x/d7/70/33/d7703333ad8ba85827b60fccf42f9c25.jpg"
     );
-    const writer = ref("");
-    const reviewDate = ref("");
+    let title = ref("");
+    let content = ref("");
+    let createDate = ref("");
+    let updateDate = ref("");
 
-    const reviewList = ref([
-      {
-        title: "또 시킬래요..",
-        content:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur consequat magna ut dui egestas, in varius diam ultricies. Phasellus suscipit magna id arcu auctor, nec vulputate dolor elementum.",
-        memberImg:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ1shBdJ7nUA44VMTPv0-ceFSfSHk_L7ViMw&usqp=CAU",
-        writer: "개죽이",
-        reviewDate: "2023-04-20",
-      },
-      {
-        title: "진짜 잘먹어요!",
-        content:
-          "Minhas cadeiras chegaram no prazo e super bem embaladas!!! Além das cadeiras serem lindas, os preços são ótimos! Indico, com certeza!",
-        memberImg:
-          "https://img2.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202105/25/holapet/20210525081724428qquq.jpg",
-        writer: "밍망",
-        reviewDate: "2023-04-20",
-      },
-    ]);
+    let reviewList = ref([]);
 
-    const checkContentLength = () => {
-      if (content.value.length > 65) {
-        const newContent =
-          content.value.substring(0, 65) + "\n" + content.value.substring(65);
-        content.value = newContent;
+    onMounted(() => {
+      reviewDetailPage();
+      console.log("memberId : " + memberId.value);
+    });
+
+    /* axios 비동기 통신 */
+    const reviewDetailPage = async () => {
+      try {
+        axios.defaults.headers.common["AUTHORIZATION"] =
+          sessionStorage.getItem("token");
+
+        const res = await axios.get(`/products/${productIdx}/reviews`);
+        reviewList.value = { ...res.data };
+        console.log(JSON.stringify(res, null, 2));
+      } catch (err) {
+        console.log(err);
       }
     };
 
     const addReview = () => {
-      reviewList.value.push({
-        title: title.value,
-        writer: writer.value,
-        memberImg: memberImg.value,
-        content: content.value,
-        reviewDate: reviewDate.value,
-      }),
+      // console.log("title => " + title.value);
+      // console.log("content => " + content.value);
+      // console.log("myid => " + myIdx);
+      // reviewList.value.push({
+      //   memberId: 123,
+      //   memberImg: ref(
+      //     "https://i.pinimg.com/474x/d7/70/33/d7703333ad8ba85827b60fccf42f9c25.jpg"
+      //   ),
+      //   title: title.value,
+      //   content: content.value,
+      //   memberIdx: myIdx,
+      // })();
+
+      axios
+        .post(`/products/${productIdx}/reviews`, {
+          productIdx: productIdx,
+          memberIdx: myIdx,
+          title: title.value,
+          content: content.value,
+        })
+        .then(function (response) {
+          console.log("나왔당");
+          // console.log("response => " + JSON.stringify(response, null, 2));
+        })
+        .catch(function (error) {
+          console.log(error);
+        }),
         (title.value = ""),
-        (writer.value = ""),
         (content.value = "");
     };
 
-    productIdx.value = route.params.id;
-
     return {
       addReview,
-      checkContentLength,
-      content,
-      title,
-      memberImg,
-      writer,
-      reviewList,
       productIdx,
-      reviewDate,
+      productReviewIdx,
+      memberId,
+      memberIdx,
+      memberImg,
+      title,
+      content,
+      createDate,
+      updateDate,
+      reviewList,
+      myIdx,
     };
   },
 };

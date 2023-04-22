@@ -98,7 +98,8 @@
 
 <script>
 import {ref} from 'vue';
-import {useRouter} from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
+import axios from 'axios';
 
 export default {
   mounted(){
@@ -109,6 +110,7 @@ export default {
   },
   emits: ['member-withdrawal'],
   setup(props, {emit}){
+    const route = useRoute();
     const router = useRouter();
     const maxMemberCnt = ref(50);
 
@@ -144,6 +146,27 @@ export default {
       emit('member-withdrawal', true);
     }
 
+    const leaveConfirm = async (result) => {
+      if(result.isConfirmed){
+        try{
+          axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+          const memberIdx = sessionStorage.getItem('memberIdx');
+
+          const res = await axios.delete('/onMeetings/' + route.params.id + '/withdraw');
+          
+          // 삭제 성공
+          if(res === 1){
+            Swal.fire('탈퇴 완료', '탈퇴가 성공적으로 완료되었습니다.', 'success');
+          }
+          else{
+            Swal.fire('탈퇴 불가능', '탈퇴를 원하면 모임을 삭제하시길 바랍니다.', 'error');
+          }
+        } catch(err){
+            console.log(err);
+        }
+      }
+    }
+
     const leaveGroup = () => {
       Swal.fire({
         title: '정말 탈퇴하시겠습니까?',
@@ -155,11 +178,29 @@ export default {
         cancelButtonText : '취소',
         reverseButtons: true
       }).then((result) => {
-        if(result.isConfirmed){
-          // 탈퇴
-          Swal.fire('탈퇴 완료', '탈퇴가 성공적으로 완료되었습니다.', 'success');
-        }
+        leaveConfirm(result);
       });
+    }
+
+    const deleteConfirm = async (result) => {
+      if(result.isConfirmed){
+        try{
+          axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+          const memberIdx = sessionStorage.getItem('memberIdx');
+
+          const res = await axios.delete('/onMeetings/' + route.params.id);
+          
+          // 삭제 성공
+          if(res === 1){
+            Swal.fire('모임 삭제 완료', '삭제가 성공적으로 완료되었습니다.', 'success');
+          }
+          else{
+            Swal.fire('모임 삭제 불가능', '멤버가 존재합니다.', 'error');
+          }
+        } catch(err){
+            console.log(err);
+        }
+      }
     }
 
     const deleteGroup = () => {
@@ -173,10 +214,7 @@ export default {
         cancelButtonText : '취소',
         reverseButtons: true
       }).then((result) => {
-        if(result.isConfirmed){
-          // 삭제 (모임 멤버가 2명 이상이면 불가능)
-          Swal.fire('모임 삭제 불가능', '멤버가 존재합니다.', 'error');
-        }
+        deleteConfirm(result);
       });
     }
 
