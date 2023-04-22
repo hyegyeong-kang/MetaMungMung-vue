@@ -38,21 +38,6 @@
                 <i class="fa fa-star" aria-hidden="true"></i>
                 <i class="fa fa-star" aria-hidden="true"></i>
                 - {{ review.reviewMember.memberId }}
-
-                <button
-                  v-if="myIdx == review.reviewMember.memberIdx"
-                  @click="deleteOffMeeting"
-                  class="btn deleteBtn"
-                >
-                  삭제
-                </button>
-                <button
-                  v-if="myIdx == review.reviewMember.memberIdx"
-                  @click="modifyOffMeeting(index, review.productReviewIdx)"
-                  class="btn modifyBtn"
-                >
-                  수정
-                </button>
               </p>
             </div>
             <div class="review-comment">
@@ -64,13 +49,37 @@
             <div class="review-date">
               <time>{{ review.createDate }}</time>
             </div>
+
+            <button
+              v-if="myIdx == review.reviewMember.memberIdx"
+              @click="
+                deleteOffMeeting(idx, review.productReviewIdx, productIdx)
+              "
+              class="btn deleteBtn"
+            >
+              삭제
+            </button>
+            <button
+              v-if="myIdx == review.reviewMember.memberIdx"
+              @click="
+                modifyOffMeeting(index, review.productReviewIdx, productIdx)
+              "
+              class="btn modifyBtn"
+            >
+              수정
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <ReviewModifyModal/>
+  <ReviewModifyModal
+    :productIdx="productIdx"
+    :productReviewIdx="productReviewIdx"
+    v-if="showModal"
+    @close="showModal = false"
+  />
 </template>
 
 <script>
@@ -87,6 +96,7 @@ export default {
     ReviewModifyModal,
   },
   setup() {
+    let showModal = ref(false);
     const route = useRoute();
     const router = useRouter();
     // const isOpen = ref(true);
@@ -94,7 +104,7 @@ export default {
     const myIdx = Number(sessionStorage.getItem("memberIdx"));
 
     let productIdx = Number(route.params.id);
-    let productReviewIdx = ref(0);
+    let productReviewIdx = ref(null);
     let memberId = ref("");
     let memberIdx = ref(0);
     let memberImg = ref(
@@ -104,7 +114,6 @@ export default {
     let content = ref("");
     let createDate = ref("");
     let updateDate = ref("");
-    let isModalViewed = ref(false);
 
     let reviewList = ref(null);
 
@@ -113,7 +122,7 @@ export default {
       // console.log("memberIdx : " + myIdx);
     });
 
-    /* axios 비동기 통신 */
+    /* 리뷰조회 axios 비동기 통신 */
     const reviewDetailPage = async () => {
       try {
         axios.defaults.headers.common["AUTHORIZATION"] =
@@ -131,8 +140,10 @@ export default {
       // console.log(JSON.stringify(reviewList.value, null, 2));
     };
 
-    /* 리뷰 작성 */
+    /* 리뷰 추가 */
     const addReview = () => {
+      axios.defaults.headers.common["AUTHORIZATION"] =
+        sessionStorage.getItem("token");
       axios
         .post(`/products/${productIdx}/reviews`, {
           memberIdx: myIdx,
@@ -152,18 +163,26 @@ export default {
       router.go();
     };
 
-    /* 리뷰 수정 */
-    const modifyOffMeeting = async (index, productReviewIdx) => {
-      console.log("productReviewIdx ===> " + productReviewIdx);
+    /* 리뷰 상세 조회 (모달 열기)*/
+    const modifyOffMeeting = (index, prId, productIdx) => {
+      productReviewIdx.value = prId;
+      showModal.value = true;
+    };
+
+    /* 리뷰 삭제 */
+    const deleteOffMeeting = async (idx, productReviewIdx, productIdx) => {
+      console.log(
+        "productReviewIdx ===> " +
+          productReviewIdx +
+          " productIdx ==> " +
+          productIdx +
+          " memberIdx => " +
+          myIdx
+      );
       axios
-        .patch(`/products/${productIdx}/reviews/${productReviewIdx}`, {
-          productIdx: productIdx,
-          memberIdx: myIdx,
-          title: title.value,
-          content: content.value,
-        })
+        .post(`/products/${productIdx}/reviews/${productReviewIdx}`)
         .then(function (response) {
-          console.log("눌렀다~ => " + response);
+          console.log("눌렀다~ => " + JSON.stringify(response));
         })
         .catch(function (error) {
           console.log(error);
@@ -171,10 +190,8 @@ export default {
         (title.value = ""),
         (content.value = "");
 
-      // router.go();
+      router.go();
     };
-
-    /* 리뷰 삭제 */
 
     return {
       addReview,
@@ -190,7 +207,8 @@ export default {
       updateDate,
       reviewList,
       myIdx,
-      // isOpen,
+      showModal,
+      deleteOffMeeting,
     };
   },
 };
