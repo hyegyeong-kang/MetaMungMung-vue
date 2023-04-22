@@ -1,8 +1,7 @@
 /*************/
 /*   MODAL   */
 /*************/
-.modal,
-.detailModal {
+.modal {
   display: none;
   /* Hidden by default */
   position: absolute;

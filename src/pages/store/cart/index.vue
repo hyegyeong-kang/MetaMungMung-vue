@@ -68,9 +68,9 @@
                 <div class="cart_total_area">
                     <p><strong>결제 정보</strong></p>
     
-                    <div class="cart_total_price">
+                    <div class="cart_total_price" style="white-space : nowrap;text-align: center">
                         <p>총 상품금액 <strong class="item_price" style="color:#87cefa"><span>{{ totalPrice }}</span></strong>원<span class="plus_ic"></span></p>
-                        <p><strong class="total_price color-red" style="color:#87cefa">무료배송</strong></p>
+                        <p><strong class="total_price color-red" style="color:#87cefa">무료배송<img src="@/assets/images/offMeeting/paw-print.png" style="width:8%;height:8%"/></strong></p>
                     </div>
                 </div>
     
@@ -94,7 +94,7 @@
             const allSelected = ref(false);
 
             const totalPrice = computed(() => {
-                console.log(`"000000!!!" ${JSON.stringify(Object.keys(cartList.value).length, null, 2)}`)
+            //    console.log(`"000000!!!" ${JSON.stringify(cartList.value[0].productList[0].price, null, 2)}`)
                 
                 let total = 0;
                 for (let i = 0; i < Object.keys(cartList.value).length; i++) {
@@ -170,15 +170,24 @@
         };
     
         const deleteBtn = (index) => {
-            const cnt = cartList.value[index].quantity
-            const cartIdx = cartList.value[index].cartIdx;
+
+            console.log("삭제 버튼 눌렸음");
+            console.log(`INDEX: #{index}`)
+            console.log(`$$$$$tt삭제될 카드 인덱스99999 ${JSON.stringify(cartList.value[index], null, 2)}`);
+
+         //   const cnt = cartList.value[index].quantity
+         //   const cartIdx = cartList.value[index].cartIdx;
             const productIdx = cartList.value[index].productIdx;
+
+            console.log(`####### ${productIdx}`);
 
             delete cartList.value[index];
 
        //     cartList.value.splice(index, 1)
+       console.log(`$$$$$tt삭제될 카드 인덱스111 ${productIdx}`);
+       console.log(`$$$$$tt삭제될 카드 인덱스222 ${index}`);
 
-               axios.delete('/cart/' + cartIdx, {productIdx:productIdx, quantity:cnt})
+               axios.delete('/cart/' + productIdx, {})
                 .then(res => {
                     console.log(res.data)
                 })
