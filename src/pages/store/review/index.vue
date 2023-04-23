@@ -182,14 +182,11 @@ export default {
         .post(`/products/${productIdx}/reviews/${productReviewIdx}`)
         .then(function (response) {
           console.log("눌렀다~ => " + JSON.stringify(response));
+          router.go();
         })
         .catch(function (error) {
           console.log(error);
-        }),
-        (title.value = ""),
-        (content.value = "");
-
-      router.go();
+        });
     };
 
     return {
