@@ -655,7 +655,7 @@ export default {
       // onMeetingIdx = 1
       axios.post(`/onMeetings/${onMeetingIdx}/board`,
       {
-        onMeetingIdx: 1,
+        onMeetingIdx: onMeetingIdx,
         boardContents: newPost.value,
         boardWriter: member.value.memberName, // memberIdx 로 회원 이름 알려주기
         memberIdx: member.value.memberIdx,
@@ -803,7 +803,7 @@ export default {
           {
             onMeetingBoardIdx: id,
             //onMeetingMemIdx: 1,
-            onMeetingIdx: 1,
+            onMeetingIdx: onMeetingIdx,
             memberIdx: member.value.memberIdx,
             replyContents: currComment,
             replyWriter: member.value.memberName, // memberIdx 로 회원 이름 알려주기
