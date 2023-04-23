@@ -1,63 +1,61 @@
 <template>
-  <h2 style="margin-top: 50px; margin-left: 50px; margin-bottom: 30px">
-    📅 나의 모임 목록 조회
-  </h2>
-
-  <div
-    class="container"
-    style="margin: 0 auto; width: 100%; margin-top: -150px"
-  >
-    <div class="table">
-      <div class="table-header" style="background: #acc8dd">
-        <div class="header__item">
-          <a id="name" class="filter__link" href="#">🙋🏻</a>
-        </div>
-        <!-- <div class="header__item">
-          <a id="wins" class="filter__link filter__link--number" href="#"
-            >호스트</a
-          >
-        </div> -->
-        <div class="header__item">
-          <a id="wins" class="filter__link filter__link--number" href="#"
-            >모임제목</a
-          >
-        </div>
-        <div class="header__item">
-          <a id="draws" class="filter__link filter__link--number" href="#"
-            >날짜</a
-          >
-        </div>
-        <div class="header__item">
-          <a id="losses" class="filter__link filter__link--number" href="#"
-            >시간</a
-          >
-        </div>
-        <div class="header__item">
-          <a id="wins" class="filter__link filter__link--number" href="#"
-            >위치</a
-          >
-        </div>
-        <!-- <div class="header__item">
-          <a id="total" class="filter__link filter__link--number" href="#"
-            >내용</a
-          >
-        </div> -->
-      </div>
-      <div
-        v-for="(list, index) in myMeetingList"
-        :key="index"
-        class="table-content"
-      >
-        <div style="background-color: white" class="table-row">
-          <div class="table-data">{{ Number(index) + 1 }}</div>
-          <!-- <div class="table-data">0</div> -->
-          <div class="table-data">{{ list.title }}</div>
-          <div class="table-data">{{ list.meetingDate }}</div>
-          <div class="table-data">{{ list.startTime }}</div>
-          <div class="table-data">{{ list.locationAddress }}</div>
-        </div>
+  <div class="container m-auto p-10 text-grey-darkest" id="app">
+    <div style="margin-top: 30px" class="filters row">
+      <div class="form-group col-sm-3">
+        <label style="font-weight: bold; font-size: 20px" for="search-element"
+          >👉🏻 나의 오프모임 조회
+        </label>
+        <input
+          v-model="search"
+          type="search"
+          placeholder="참여한 모임을 확인해보세요!"
+          class="form-control focus:outline-none"
+          id="search-element"
+          @input="searchGroup($event)"
+          required
+        />
       </div>
     </div>
+    <table style="min-width: 550px" class="table">
+      <thead>
+        <tr>
+          <th>🙋🏻</th>
+          <th>모임제목</th>
+          <th>날짜</th>
+          <th>시간</th>
+          <th>위치</th>
+          <th class="col-sm-2">✏️</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="group-item"
+          v-for="(list, index) in myMeetingList"
+          :key="index"
+        >
+          <td>{{ Number(index) + 1 }}</td>
+          <td>
+            {{ list.title }}
+            <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
+          </td>
+          <td>
+            {{ list.meetingDate }}
+            <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
+          </td>
+          <td>
+            {{ list.startTime }}
+            <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
+          </td>
+          <td>
+            {{ list.locationAddress }}
+            <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
+          </td>
+          <td>
+            <a class="btn btn-warning btn-xs modifyBtn">조회</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -65,12 +63,14 @@
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
+import { onMounted } from "@vue/runtime-core";
 export default {
   setup() {
     const myIdx = Number(sessionStorage.getItem("memberIdx"));
     const myMeetingList = ref(null);
     const route = useRoute();
-
+    const search = "";
+    let searchGroup = function () {};
     /* 나의 오프모임 조회 axios 비동기 통신 */
     const myOffMeeting = async () => {
       try {
@@ -82,7 +82,7 @@ export default {
         });
         myMeetingList.value = { ...res.data };
 
-        console.log(JSON.stringify(res, null, 2));
+        // console.log(JSON.stringify(res, null, 2));
       } catch (err) {
         console.log(err);
       }
@@ -90,111 +90,67 @@ export default {
 
     myOffMeeting();
 
+    // console.log(myMeetingList.value.length);
+    /* 키워드 조회 */
+
+    onMounted(() => {
+      window.onload = () => {
+        searchGroup = (event) => {
+          const len = Object.keys(myMeetingList.value).length;
+          console.log("len => " + len);
+
+          for (let i = 0; i < len; i++) {
+            if (
+              myMeetingList.value[i].title.includes(event.target.value) ===
+              false
+            ) {
+              document.querySelector(".group-item")[i].style.display = "none";
+            } else {
+              document.querySelector(".group-item")[i].style.display = "flex";
+            }
+          }
+        };
+      };
+    });
+
     return {
       myOffMeeting,
       myIdx,
       myMeetingList,
+      search,
+      searchGroup,
     };
   },
 };
 </script>
 
-<style lang="scss" scoped>
-@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700");
-
-$base-spacing-unit: 24px;
-$half-spacing-unit: $base-spacing-unit / 2;
-
-$color-alpha: #1772ff;
-$color-form-highlight: #eeeeee;
-
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
+<style scoped>
+.form-group {
+  max-width: 500px;
 }
 
-body {
-  padding: $base-spacing-unit;
-  font-family: "Source Sans Pro", sans-serif;
-  margin: 0;
+.actions {
+  padding: 10px 0;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin: 0;
+.glyphicon-euro {
+  font-size: 12px;
 }
-
-.container {
-  max-width: 1000px;
-  margin-right: auto;
-  margin-left: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
-.table {
-  width: 100%;
-  border: 1px solid $color-form-highlight;
-}
-
-.table-header {
-  display: flex;
-  width: 100%;
-  background: #000;
-  padding: ($half-spacing-unit * 1.5) 0;
-}
-
-.table-row {
-  display: flex;
-  width: 100%;
-  padding: ($half-spacing-unit * 1.5) 0;
-
-  &:nth-of-type(odd) {
-    background: $color-form-highlight;
-  }
-}
-
-.table-data,
-.header__item {
-  flex: 1 1 20%;
-  text-align: center;
-}
-
-.header__item {
-  text-transform: uppercase;
-}
-
-.filter__link {
+.modifyBtn {
+  margin-right: 10px;
+  border-radius: 20px;
+  font-size: 13px;
   color: white;
-  text-decoration: none;
-  position: relative;
-  display: inline-block;
-  padding-left: $base-spacing-unit;
-  padding-right: $base-spacing-unit;
-
-  &::after {
-    content: "";
-    position: absolute;
-    right: -($half-spacing-unit * 1.5);
-    color: white;
-    font-size: $half-spacing-unit;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  &.desc::after {
-    content: "(desc)";
-  }
-
-  &.asc::after {
-    content: "(asc)";
-  }
+  width: 80px;
+  background-color: rgb(130, 199, 145);
+  border: none;
+}
+.deleteBtn {
+  border-radius: 20px;
+  font-size: 13px;
+  color: white;
+  width: 70px;
+  border: none;
+  background-color: lightslategray;
 }
 </style>
