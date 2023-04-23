@@ -21,9 +21,12 @@
             </div>
 
             <button type="submit" id="btnLogin" @click="submit">로그인</button>
+
+            <div style="text-align: center; background-color: transparent; font-weight: bold;">
+              <router-link :to="{ name: 'FindId' }">아이디 찾기</router-link>
+            </div> 
             
-            </form>
-            
+            </form>           
         
         </div>
 
@@ -84,6 +87,13 @@ export default {
           });
       } 
     };
+
+    const findId = async() => {
+      const res = await axios.post('/members/login', {
+          memberId: member.value.memberId,
+          password: member.value.password
+      });
+    }
 
     return {
       member,
