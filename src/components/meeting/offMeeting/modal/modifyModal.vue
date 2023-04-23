@@ -168,7 +168,6 @@ export default {
     locationAddress.value = board.value.locationAddress;
     hostId.value = board.value.host.memberId;
     hostIdx.value = board.value.host.memberIdx;
-
     // watchEffect(() => {
     //   if (props.isOpen) {
     //     isOpen = props.isOpen;
@@ -179,7 +178,6 @@ export default {
     //     openModifyModalFunc();
     //   }
     // });
-
     openModifyModalFunc = () => {
       // if (props.isOpen) {
       //   isOpen = props.isOpen;
@@ -192,9 +190,7 @@ export default {
       // modal = document.getElementsByClassName("modifyModal");
       document.getElementsByClassName("modifyModal")[0].style.display = "block";
     };
-
     // openModifyModalFunc();
-
     watchEffect(() => {
       if (props.isOpen) {
         setTimeout(() => {
@@ -202,7 +198,6 @@ export default {
         }, 250);
       }
     });
-
     const closeModalFunc = () => {
       modal[0].style.display = "none";
       isOpen.value = false;
@@ -215,13 +210,12 @@ export default {
     const submitModifyOffMeetingForm = async () => {
       axios.defaults.headers.common["AUTHORIZATION"] =
         sessionStorage.getItem("token");
-
-        console.log(offMeetingIdx.value);
-        console.log(title.value);
-        console.log(meetingDate.value);
-        console.log(limit.value);
-        console.log(contents.value);
-        console.log(startTime.value);
+      console.log(offMeetingIdx.value);
+      console.log(title.value);
+      console.log(meetingDate.value);
+      console.log(limit.value);
+      console.log(contents.value);
+      console.log(startTime.value);
       axios
         .patch(`/offMeetings/${offMeetingIdx.value}`, {
           offMeetingIdx: offMeetingIdx.value,
@@ -233,11 +227,11 @@ export default {
         })
         .then(function (response) {
           console.log("response => " + JSON.stringify(response, null, 2));
+          router.go();
         })
         .catch(function (error) {
           console.log(error);
         });
-        router.go();
     };
     for (let i = 0; i < clickable.length; i++) {
       clickable[i].openModalFunc;
@@ -303,7 +297,6 @@ export default {
   width: 100px;
   background-color: lightgray;
 }
-
 /*************/
 /*   MODAL   */
 /*************/
@@ -324,9 +317,7 @@ export default {
   /* Black w/ opacity */
   transition: all 0.5s ease 0.06s;
 }
-
 /* Modal Content/Box */
-
 .modal-content {
   background-color: #fff;
   margin: 15% auto;
@@ -341,7 +332,6 @@ export default {
   box-shadow: 2px 2px 10px 0px rgba(99, 106, 119, 0.6);
   border-radius: 5px;
 }
-
 /* The Close Button */
 .close {
   color: #dedede;
@@ -351,7 +341,6 @@ export default {
   display: flex;
   align-items: center;
 }
-
 .close:before {
   content: "Close";
   font-size: 1rem;
@@ -361,34 +350,28 @@ export default {
   margin-top: 0.2rem;
   font-weight: 400;
 }
-
 .close:hover:before {
   display: initial;
   color: #dedede;
 }
-
 .close:hover,
 .close:focus {
   color: hsl(0, 100%, 70%);
   text-decoration: none;
   cursor: pointer;
 }
-
 .close:active,
 .close:before:active {
   transition: all 60ms ease;
   transform: scale(0.97);
 }
-
 /***********************/
 /*  modal form layout  */
 /***********************/
-
 .modal-content {
   display: flex;
   flex-direction: column;
 }
-
 .modal-header {
   display: flex;
   flex-direction: row-reverse;
@@ -398,45 +381,38 @@ export default {
   font-size: 2em;
   font-weight: bold;
 }
-
 .modal-footer {
   text-align: center;
   display: inline-block;
   /* flex-direction: row-reverse; */
   align-items: center;
 }
-
 .modal-footer > input {
   margin-top: 0.8rem;
   margin-bottom: 0rem;
   margin-left: 0rem;
   margin-right: 0rem;
 }
-
 .modal-form {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-
 .form-row {
   display: flex;
   width: 100%;
   align-items: center;
   padding: 0.4rem 0.4rem;
 }
-
 .form-row:nth-child(odd) {
   background: #f2f2f2;
 }
-
 .form-row label {
   flex-grow: 1;
   flex-shrink: 0;
   flex-basis: 50%;
 }
-
 .form-row input,
 .form-row select {
   flex-grow: 1;
@@ -447,7 +423,6 @@ export default {
   max-width: 50%;
   background: transparent;
 }
-
 .slideDown {
   animation-name: slideDown;
   -webkit-animation-name: slideDown;
@@ -477,20 +452,16 @@ export default {
     transform: translateY(0%);
   }
 }
-
 .input-group-text {
   background: #9fd6cd;
   border-color: rgba(224, 224, 224, 0.531);
-
   color: white;
   width: 80px;
 }
-
 .inputText {
   color: #5f5f5f;
   border-color: rgba(224, 224, 224, 0.531);
 }
-
 .custom-file-input .custom-file {
   border-color: rgba(224, 224, 224, 0.531);
 }

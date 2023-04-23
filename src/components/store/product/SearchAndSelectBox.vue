@@ -58,11 +58,15 @@ export default {
 
       if (searchKeyword.value !== "") {
         emit("send-type", "search");
+        console.log("찾는 키워드다~! => " + searchKeyword.value);
         router.push({
           name: "ProductPage",
-          query: { keywords: searchKeyword.value },
+          query: {
+            keyword: searchKeyword.value,
+          },
         });
       }
+      return false;
     };
 
     watchEffect(() => {

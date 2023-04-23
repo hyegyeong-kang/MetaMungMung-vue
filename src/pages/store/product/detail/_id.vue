@@ -123,8 +123,12 @@
                 </div>
 
                 <div class="btns-box">
-                  <button class="input_other">장바구니 담기</button>
-                  <button class="input_primary" @click="order">바로 구매하기</button>
+                  <button @click="moveToCartPage" class="input_other">
+                    장바구니 담기
+                  </button>
+                  <button class="input_primary" @click="order">
+                    바로 구매하기
+                  </button>
                 </div>
               </div>
             </div>
@@ -242,6 +246,23 @@ export default {
       resultElement.value = number;
     };
 
+    /* 장바구니 페이지로 이동 */
+    const moveToCartPage = async () => {
+      try {
+        const req = await axios.post("/cart/cartAdd", {
+          p_id: pid,
+          quantity: count.value,
+        });
+        console.log("req : " + req.data);
+        router.push({
+          name: "CartList",
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    /* 리뷰 페이지로 이동 */
     const moveToReview = () => {
       router.push({ name: "ProductReviews", id: product.productIdx });
     };
@@ -273,9 +294,9 @@ export default {
       let resultCnt = document.getElementById("result").value;
       router.push({
         name: "Order",
-        query: {id: productIdx, quantity: resultCnt}
+        query: { id: productIdx, quantity: resultCnt },
       });
-    }
+    };
 
     return {
       checkFunc,
@@ -283,11 +304,12 @@ export default {
       count,
       close,
       moveToReview,
+      moveToCartPage,
+      order,
       product,
       optionList,
       selectedOption,
       router,
-      order,
       productName,
     };
   },
