@@ -89,6 +89,7 @@ import axios from "axios";
 import { ref, watchEffect } from "vue";
 import { onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import Swal from "sweetalert2";
 
 export default {
   components: {
@@ -170,23 +171,38 @@ export default {
 
     /* 리뷰 삭제 */
     const deleteOffMeeting = async (idx, productReviewIdx, productIdx) => {
-      console.log(
-        "productReviewIdx ===> " +
-          productReviewIdx +
-          " productIdx ==> " +
-          productIdx +
-          " memberIdx => " +
-          myIdx
-      );
-      axios
-        .post(`/products/${productIdx}/reviews/${productReviewIdx}`)
-        .then(function (response) {
-          console.log("눌렀다~ => " + JSON.stringify(response));
+      Swal.fire({
+        title: "정말 삭제하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        confirmButtonText: "삭제",
+        cancelButtonText: "취소",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios.defaults.headers.common["AUTHORIZATION"] =
+            sessionStorage.getItem("token");
+          axios
+            .post(`/products/${productIdx}/reviews/${productReviewIdx}`)
+            .then(function (response) {
+              console.log("눌렀다~ => " + JSON.stringify(response));
+              router.go();
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          // 모임 삭제
+          Swal.fire(
+            "삭제 완료",
+            "리뷰가 성공적으로 삭제되었습니다.",
+            "success"
+          );
+        }
+        setTimeout(() => {
           router.go();
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+        }, 500);
+      });
     };
 
     return {
