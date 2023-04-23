@@ -169,14 +169,16 @@
           :src="onMeetingInfo.thumbnail"
         />
         <div class="user">
-          <h2 style="color: white">{{ onMeetingInfo.onMeetName }}</h2>
+          <h2 style="color: white">{{ onMeetingInfo.onMeetName}}</h2>
         </div>
       </div>
       <div class="bottom">
         <a href="#">
           <p><strong>총 게시글</strong></p>
            <!-- {{ boards[0].boardList.length }} Object.keys(onMeetingInfo.replyList).lengt -->
-          <h3 style="color: white;text-align:center;">2</h3>
+          <!-- {{boards[0].lengt}} -->
+        
+          <h3 style="color: white;text-align:center;">{{ boardCnt }}</h3>
         </a>
         <a href="#">
           <p><strong>멤버</strong></p>
@@ -190,10 +192,11 @@
     <div id="timeline">
       <!-- 게시물 글 작성하는 곳  -->
       <div class="new-tweet" style="border: 1px solid;border-radius: 2em;color:	#C0C0C0;margin-bottom:20px">
-        <textarea placeholder="새로운 소식을 남겨보세요." v-model="inputText"></textarea>
-        <div class="registerModal">
-          <!-- <RegisterModal @close="closeRegisterModal" v-if="registerModal" /> -->
-        </div>
+        
+        
+        
+        <form @submit.prevent="addPost">
+        <textarea placeholder="새로운 소식을 남겨보세요." v-model="newPost"></textarea>
         <div class="btns">
           <div class="btn">
             <button>
@@ -217,20 +220,17 @@
             <MapModal v-if="isOpen" @close-req="toggleMap" @send-addr="sendAddr" />
           </div>
           <div class="btn">
-            <button @click="postData">게시</button>
+            <button type="submit">게시</button>
           </div>
         </div>
+         </form>
+      <!-- {{comments}} -->
+
+
       </div>
-
-
-        
-
-
-
-
-
       <!--게시물 올라오는 곳 --> <!--이게 반복되면 되는 것임!! -->
       <!-- 이거 클릭하면 해당 게시물 디테일 나오면 됨..--> 
+
       <div class="wrap" >
       <div class="tweet" v-for="(board, index) in onMeetingInfo.boardList" :key="board.onMeetingBoardIdx" :board="board" style="border: 0.5px solid;">
       
@@ -247,13 +247,30 @@
               <time>{{ board.boardCreateDate.split('T')[0] }}</time>
             </div>
           <div class="message">
-            <p>{{ board.boardContents }}</p>
+            <p>{{board.boardContents}}</p>
             <!-- <img
               src="https://img.dogpre.com/web/dogpre/event/popular_keyword_theme/43_pc_main_page_banner_0036.jpg"
             /> -->
           </div>
         </div>
-
+        <!-- <div>
+            <div id="postLyMenu_view729" class="lyMenu _postMoreMenu" style="min-width: 145px;" tabindex="-1">
+                    <ul class="_postMoreMenuUl">
+                <li>
+                  <a href="#" data-menueventname="postMoreAction:modifyPost">글 수정</a>
+                </li>
+                <li><a href="#" data-menueventname="postMoreAction:deletePost">삭제하기</a></li></ul>
+                </div>
+        </div> -->
+        <!-- <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#">수정하기</a></li>
+            <li><a class="dropdown-item" href="#">삭제하기</a></li>
+          </ul>
+        </div> -->
         </div> 
         <!-- left 끝 -->
 
@@ -277,11 +294,37 @@
           <!-- <hr> -->
           <!--!!!!댓글 출력 // getCommentsByPostId(board.onMeetingBoardIdx)!!!!-->
           <!-- <ul v-if="board.replyList.length > 0"> -->
-            <ul v-if="board.replyList.length">
-            <li v-for="(reply, index) in board.replyList" :key="reply.onMeetingReplyIdx" class="commentItem" style="background-color:#F5F5F5"> 
+            <!-- <ul v-if="board.replyList.length"> -->
+             
+              <!-- {{comments[0].replyList}} -->
+             
+           {{board.onMeetingBoardIdx}}
+            <!-- {{comments}} -->
+            {{Object.keys(comments)}}
+        <!-- <div v-if="comments[0].replyList != null"> -->
+          <div v-for="(reply, index) in comments" :key="index" class="commentItem" style="background-color:#F5F5F5">
+            <!-- {{reply[Object.keys(comments)]}} -->
+           
+            <!-- {{index}} -->
+            <!-- {{reply}} -->
+
+            <!-- for (const key in comments) {
+  if (comments.hasOwnProperty(key)) {
+    const replyContents = comments[key].replyContents;
+    console.log(replyContents);
+  }
+} -->
+            <!-- <div v-if="(reply, index) in obj" :key="index"> -->
+            <div v-if="board.onMeetingBoardIdx === reply.onMeetingBoardIdx">
+            <ul>
+            <li> 
+             <hr>
+              <div >
+              
                 <!--댓글창이었음.. -->
                 <!-- <CreateReply/>   -->
-
+       
+                <!-- {{reply.onMeetingBoardIdx}} -->
 
                 <div class="left">
                   <img
@@ -308,21 +351,29 @@
                   <b-button style="text-align:right;width:100%" class="btn" @click="updateReply()">수정</b-button>
                   <b-button style="text-align:right;width:100%" class="btn" @click="deleteReply()">삭제</b-button>        
                   </div>
+                  </div>
             </li>
             </ul>
+            </div >
+          <div v-else style="display:none">
+              ll
+          </div >
+          <!-- </div> -->
+            
+          </div>
           <!-- </ul> -->
 
           <!-- <hr> -->
 
              <!-- 댓글 작성하는 곳 -->
-            <div class="reply" style="margin-bottom:10px; padding:10px">
+            <div class="reply" style="margin-bottom:10px; padding:10px;">
                 <form @submit.prevent="submitComment(index, board.onMeetingBoardIdx)">
                   <span>
                     <textarea
                         :id="'comment' + index"
                         placeholder="댓글을 입력하세요"
                         style="border: 1px solid;border-radius: 2em;color:#C0C0C0;"
-                        ></textarea>
+                    ></textarea>
                   </span>
                   <span>
                     <button type="submit" style="border: 1px solid;border-radius: 2em;color:#fff">보내기</button>
@@ -349,60 +400,9 @@
       <div class="search-container" style="border: 1px solid;border-radius: 2em;color:	#C0C0C0">
         <div class="search-input">
                 <img src="@/assets/images/onMeeting/search-icon.png">
-				<input id="search" type="search" placeholder="글 내용 검색" autocomplete="off">
-				<!-- <i class="fas fa-search"></i> -->
-		</div>
-        <div class="search-results">
-          <div class="result">
-            <p>youtube</p>
-          </div>
-          <div class="result">
-            <p>youtuber dog</p>
-          </div>
-          <div class="result">
-            <p>youtube music</p>
-          </div>
-          <hr />
-          <div class="result">
-
-            <div class="right">
-              <p>YouTube Gaming</p>
-              <span>@YouTubeGaming</span>
-            </div>
-          </div>
-          <div class="result">
-
-            <div class="right">
-              <p>YouTube</p>
-              <span>@YouTube</span>
-            </div>
-          </div>
-          <div class="result">
-
-            <div class="right">
-              <p>YouTube Creators</p>
-              <span>@YTCreators</span>
-            </div>
-          </div>
-          <div class="result">
-
-            <div class="right">
-              <p>YouTube TV</p>
-              <span>@youtubemusic</span>
-            </div>
-          </div>
-          <div class="result">
- 
-            <div class="right">
-              <p>YouTube Music</p>
-              <span>@youtubemusic</span>
-            </div>
-          </div>
-          <hr />
-          <div class="result">
-            <p>Go to @YouTube</p>
-          </div>
+				        <input id="search" type="text" placeholder="글 내용 검색" autocomplete="off" v-model="searchKeyword" @keyup.enter="submitSearch">
         </div>
+
       </div>
       <section>
         <header>
@@ -459,9 +459,9 @@ import MapModal from "@/components/meeting/onMeeting/board/modal/mapModal.vue";
 import ReplyList from "@/components/meeting/onMeeting/board/reply/replyList.vue";
 import CreateReply from "@/components/meeting/onMeeting/board/reply/createReply.vue";
 //import BoardDetail from "@/components/meeting/onMeeting/board/boardDetailModal.vue";
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import axios from 'axios';
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 
 export default {
@@ -505,6 +505,8 @@ export default {
   },
   mounted() {
       let base = this;
+
+     // getBoardList();
     //  base.openBoardModal = this.$refs.boardDetail.openBoardModalFunc;
      // base.openMapModal = this.$refs.map.openMapModalFunc;
 
@@ -512,12 +514,17 @@ export default {
 
   },
   setup() {
+
+    
+
     const route = useRoute();
+    const router = useRouter();
     const isOpen = ref(false);
     const isOpenDetail = ref(false);
-    const onMeetingIdx = ref("");
+  //  const onMeetingIdx = ref("");
 
-    onMeetingIdx.value = route.params.onMeetingIdx;
+    const onMeetingIdx = route.params.id;
+    console.log(`@@@ ${onMeetingIdx}`)
 
     const onMeetingInfo = ref([]);
 
@@ -541,25 +548,39 @@ export default {
         }
 
 
+    //  onMounted(() => {
+    //    console.log(`kkkk ${comments.value}`)
+    //   for (const key of Object.keys(comments.value)) {
+    //     const replyContents = comments.value[key].replyContents;
+    //     console.log(`MOUNT::: ${replyContents}`);
+    //   }
+    // });   
 
-    const boards = ref([]);
+
+
+    const boards = ref("");
     const boardCnt = ref(0);
     const boardInfo = ref([]);
+
+
     // 게시물 출력
     const getBoardList = async() => {
+      axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
 
       // onMeetingIdx 넣어주면 됨
       await axios.get('/onMeetings/1/board', {})
         .then((response) => {
 
-          boards.value = {...response.data};
+          boards.value = response.data
           console.log(`KANG_BOARd: ${JSON.stringify(boards.value, null, 2)}`)
           onMeetingInfo.value = {...response.data[0]};
 
-          console.log(`^^^^^^^BOARD^^^^^^ ${JSON.stringify(boards.value, null, 2)}`);
-          console.log(`^^^^^^^BOARD_INFO^^^^^^ ${JSON.stringify(onMeetingInfo.value.boardList, null, 2)}`);
+         // console.log(`^^^^^^^BOARD^^^^^^ ${JSON.stringify(boards.value, null, 2)}`);
+          console.log(`^^^^^^^BOARD_INFO^^^^^^ ${JSON.stringify(onMeetingInfo.value, null, 2)}`);
 
-         // boardCnt.value = Object.keys(boards.value).length;
+
+          boardCnt.value = onMeetingInfo.value.boardList.length;
+          console.log(`CNT:: ${boardCnt.value}`)
 
         })
         .catch ((error) => {
@@ -569,13 +590,15 @@ export default {
     };
 
     getBoardList();
+    //onMounted(getBoardList());
 
-
+//console.log(`^^^^^^^BㅌㅌOARD^^^^^^ ${JSON.stringify(boards.value, null, 2)}`);
 
     const registerMems = ref([]);
     const registerMemsCnt = ref(0); 
     // 전체 가입멤버 출력
     const getOnMeetingMembers = async() => {
+      axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
 
       // onMeetingIdx 넣어주면 됨
       await axios.get('/onMeetings/1/board/members', {})
@@ -597,65 +620,73 @@ export default {
     getOnMeetingMembers();
 
 
+    const member = ref([]);
+    //회원 정보
+    const getMemberInfo = async () => {
+      axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+        try{
+            const res = await axios.get('/members/my');
+            member.value = {...res.data};
+        } catch(err) {
+            console.log(err);
+        }
+    }
+    getMemberInfo();
+
+
     // 게시물 등록 버튼 눌렀을 떄
-    const inputText = ref(''); 
-    console.log(`+++++ ${JSON.stringify(registerMems.value, null, 2)}`);
-  
-    const writer = ref("");
-    const contents = ref("");
-    const createDate = ref("");
+    const newPost = ref('');
+    // 게시물 등록
+    const addPost = () => {
+      //axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+      console.log("Click!!");
+      console.log("###NEWWWW###" + newPost.value);
 
-    // 게시글 추가
-    const postData = () => {
-      console.log("게시글 추가 버튼 눌림");
+      //console.log(`ONMEETINGIDX::: ${onMeetingIdx}`)
 
-      console.log(`asasdsads ${JSON.stringify(boards.value, null, 2)}`);
+      // onMeetingIdx = 1
+      axios.post('/onMeetings/1/board',
+      {
+        onMeetingIdx: 1,
+        boardContents: newPost.value,
+        boardWriter: member.value.memberName, // memberIdx 로 회원 이름 알려주기
+        memberIdx: member.value.memberIdx,
+        onMeetingBoardAddr: "주소입니다."
+      }
+      )
+      .then((response) => {
+        console.log("입력됐나요~~~")
+        newPost.value = '';
+      })
+      .catch((error) => {
+        console.log("게시 에러 입니다.")
+        newPost.value = '';
+        console.log(error);
+      })
+      router.go();
 
-
-      // boards.value.push(
-      //   {
-      //     writer: writer.value,
-      //     cotents: inputText.value,
-      //     creatDate: createDate.value
-      //   }
-      // )
-
-      // boards.value 에서 필요한 값 빼서 data 에 넣어주기
-
-      const data = {
-
-        contents: inputText.value
-      };
-
-      // await axios.post('/onMeetings/1/board', data)
-      //   .then((response) => {
-      //     console.log(`POST RESPONSE: ${response}`);
-
-      //   })
-      //   .catch((error) => {
-      //     console.log(`POST DATE ERR: ${error}`);
-      //   })
     };
+
 
       const replies = ref([]);
       const replyInfo = ref("");
       const getReplyList = async() => {
 
         // onMeetingIdx, onMeetingBoardIdx 넣으면 됨
-        await axios.get('/onMeetings/1/board/2/reply', {})
+        await axios.get('/onMeetings/1/board/4/reply', {})
             .then((response) => {
-                replies.value = {...response.data.replyList};
+                replies.value = {...response.data};
                 replyInfo.value = {...response.data};
 
-                console.log(`###REPLY ${JSON.stringify(replies.value[1], null, 2)}`)
+                console.log(`###REPLY ${JSON.stringify(replies.value, null, 2)}`)
                 console.log("$ㅇㅇㅇ$")
-                console.log(`###REPLY_INFO ${JSON.stringify(replyInfo.value, null, 2)}`);
+               // console.log(`###REPLY_INFO ${JSON.stringify(replyInfo.value, null, 2)}`);
             })
             .catch ((error) => {
                 console.log(`REPLY ERR: ${error}`);
             });
       };
-     // getReplyList();
+      getReplyList();
 
 
     // 게시물 갯수
@@ -663,6 +694,7 @@ export default {
       // console.log(`BOARDCNT : ${onMeetingInfo.value.boardList.length} `)
       // return onMeetingInfo.value.boardList.length;
      });
+
 
     // 댓글 갯수
     const replyCnt = computed((index) => {
@@ -713,9 +745,6 @@ export default {
             (contents.value = "");
 
             console.log(`LIST: ${JSON.stringify(replies.value)}`)
-
-
-        // axios.post 
             
     };
 
@@ -723,19 +752,20 @@ export default {
     const comments = ref([]);
     const newCommentText = ref('');
     
-    fetchComments();
+     fetchComments();
     // 댓글 가져오기 
     async function fetchComments() {
+      
       try {
-        const response = await axios.get(`/onMeetings/1/board`);
-        comments.value = response.data;
-        console.log(`COMMENTSSSSSSS : ${JSON.stringify(comments.value.boardList, null, 2)}`)
+        const response = await axios.get(`/onMeetings/1/board/reply`);
+        comments.value = {...response.data};
+        console.log(`COMMENccccTSSSSSSS : ${JSON.stringify(comments.value, null, 2)}`)
       } catch (error) {
         console.error(error);
       }
     }
 
-    // 댓글 작성 함수
+    // 댓글 작성 함수 - 진짜
     const submitComment = (index, id) => {
 
       // (onMeetingBoard_seq.nextval,
@@ -749,22 +779,43 @@ export default {
       //           sysdate
       //   )
       try {
-        // console.log(index)
-        // console.log('comment' + index)
-        console.log('board id: ' + id)
+        console.log('board id: ' + id) 
         const commentId = 'comment' + index
         const currComment = document.getElementById(commentId).value
-        console.log('comment: ' + currComment)
-        console.log('comment: ' + commentId)
+        console.log('comment: ' + currComment);
+        console.log('comment: ' + commentId);
+
+      axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+   
+        axios.post('/onMeetings/1/board/reply',
+          {
+            onMeetingBoardIdx: id,
+            //onMeetingMemIdx: 1,
+            onMeetingIdx: 1,
+            memberIdx: member.value.memberIdx,
+            replyContents: currComment,
+            replyWriter: member.value.memberName, // memberIdx 로 회원 이름 알려주기
+            replyWriterImg: member.value.memberImg
+          }
+          )
+          .then((response) => {
+            console.log("댓글 입력됐나요~~~")
+            document.getElementById(commentId).value="";
+          })
+          .catch((error) => {
+            console.log("댓글 에러 입니다.")
+            document.getElementById(commentId).value="";
+            console.log(error);
+          })
+
+          router.go();
+
+
+
         // console.log(`NEW COMMENTS: ${newCommentText.value}`)
         // const response = await axios.post(`/onMeetings/1/board`, {
         //   replyContents: newCommentText.value
         // });
-        const data = {
-          replyContents: currComment
-        }
-        // comments.value.push(data);
-       // console.log(`@@@@@@@@@@@@@@ ${JSON.stringify(comments.value, null, 2)}`)
         // newCommentText.value = '';
       } catch (error) {
         console.error(error);
@@ -774,6 +825,56 @@ export default {
     // 게시물 아이디가 변경될 때
     //watch(() => props.postId, fetchComments);
 
+    let searchKeyword = ref("");
+    const boardList = ref({});
+    const submitSearch = async () => {
+      // 검색어를 이용한 검색 로직 구현
+      console.log(`Searching for ${searchKeyword.value}`);
+
+      try{
+          const res = await axios.get('/onMeetings/1/board/search', {params: {keyword: searchKeyword.value}});
+          boardList.value = res.data;
+
+          console.log(`SEARCH:::: ${JSON.stringify(boardList.value, null, 2)}`);
+          console.log(`원래:: ${JSON.stringify(onMeetingInfo.value, null, 2)}`);
+
+         
+      
+            console.log(`KANG111: ${JSON.stringify(onMeetingInfo.value.boardList, null, 2)}`);
+            console.log(typeof onMeetingInfo.value)
+            console.log(`KANG222: ${JSON.stringify(boardList.value[0].boardList, null, 2)}`);
+            console.log(typeof boardList.value)
+
+
+            onMeetingInfo.value.boardList = boardList.value[0].boardList;
+            //  Object.assign(onMeetingInfo.value.boardList, boardList.value[0].boardList);
+            console.log(`덮어씌워졌니0000:: ${JSON.stringify(onMeetingInfo.value.boardList, null, 2)}`)
+             console.log(`덮어씌워졌니:: ${JSON.stringify(onMeetingInfo.value, null, 2)}`)
+           // onMeetingInfo.value = boardList.value;
+   
+
+          // for(let i in res.data){
+          //     if(res.data[i].introduction != null){
+          //         onMeetingList.value[i].introduction = res.data[i].introduction.replace(/<br>/g, ' ');
+          //     } 
+          // }
+         router.go()
+
+      } catch(err){
+          console.log(err);
+      }
+    //  router.go();
+
+      // if (searchKeyword.value !== "") {
+      //   emit("send-type", "search");
+      //   router.push({
+      //     name: "ProductPage",
+      //     query: { keywords: searchKeyword.value },
+      //   });
+      // }
+
+      searchKeyword.value = "";
+    };
 
 
 
@@ -790,8 +891,8 @@ export default {
       getOnMeetingMembers,
       registerMems,
       registerMemsCnt,
-      inputText,
-      postData,
+      newPost,
+
 
       replies,
       replyCnt,
@@ -801,7 +902,6 @@ export default {
       boardDetailModal,
       isOpenDetail,
 
-      onMeetingIdx,
       
       //getCommentsByPostId,
 
@@ -809,14 +909,19 @@ export default {
       boardCNT,
 
       addReply,
-      writer,
-      createDate,
-      contents,
+
 
       fetchComments,
       submitComment,
       newCommentText,
       comments,
+
+      addPost,
+
+      member,
+      router,
+      submitSearch,
+      searchKeyword,
     }
   }
 };
@@ -1428,9 +1533,9 @@ header.nav-closed {
    .commentItem{
       z-index: 100;
       border:0.5px solid #C0C0C0;
-      margin-top: 20px;
-      margin-bottom:10px;
-      padding:10px;
+      // margin-top: 20px;
+      // margin-bottom:10px;
+      // padding:10px;
       cursor: pointer;
       display: flex; 
       justify-content: flex-end;

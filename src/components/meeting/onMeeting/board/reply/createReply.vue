@@ -1,5 +1,6 @@
 <!--댓글쓰고 댓글달기 버튼있는 곳 -->
 <template>
+<div id="replyModal" class="replyModal">
     <!-- <div class="ReplyCnt" style="margin-bottom:10px">
               <img
                 src="@/assets/images/onMeeting/reply-icon.png"
@@ -42,18 +43,21 @@
             <button @click="addReply()" style="border: 1px solid;border-radius: 2em;color:#fff">보내기</button>
         </span>
     </div>
+</div>
 </template>
 
 <script>
-// import data from "@/data"
 import { ref, computed } from 'vue';
 import axios from 'axios';
 
 export default {
-
-    setup() {
+    props: ["onMeetingBoardIdx"],
+    setup(props) {
 
    // const title = ref("");
+    const boardIdx = props.onMeetingBoardIdx;
+
+    console.log(`@@!@#$#$#%$ ${boardIdx}`)
 
     const memberImg = ref(
       "https://i.pinimg.com/474x/d7/70/33/d7703333ad8ba85827b60fccf42f9c25.jpg"
@@ -61,19 +65,54 @@ export default {
     const writer = ref("");
     const createDate = ref("");
     const contents = ref("");
+
+
+    const onMeetingInfo = ref([]);
+    const onMeetingBoardIdx = ref("");
+    const boards = ref([]);
+    const boardCnt = ref(0);
+    const boardInfo = ref([]);
+    // 게시물 출력
+    const getBoardList = async() => {
+
+      await axios.get('/onMeetings/1/board', {})
+        .then((response) => {
+
+          boards.value = {...response.data[0].boardList};
+          onMeetingInfo.value = {...response.data[0]};
+
+          onMeetingBoardIdx.value = onMeetingInfo.value.onMeetingIdx;
+          console.log(`^^^^^^^BOARD^^^^^^ ${JSON.stringify(onMeetingInfo.value, null, 2)}`);
+            console.log(`#### ${onMeetingBoardIdx.value}`);
+
+
+          boardCnt.value = Object.keys(boards.value).length;
+
+        })
+        .catch ((error) => {
+          console.log(`BOARD ERR ${error}`);
+        });
+
+    };
+
+    getBoardList();
+
     
 
     const replies = ref([]);
     //const replyCnt = ref(0);
+    const replyInfo = ref("");
     
-    // 리뷰 리스트 가져오기
+    // 댓글 리스트 가져오기
     const getReplyList = async() => {
 
-        await axios.get('/onMeetings/1/board/1/reply', {})
+        await axios.get('/onMeetings/1/board/2/reply', {})
             .then((response) => {
-                replies.value = {...response.data.replyList}
+                replies.value = {...response.data};
+                replyInfo.value = {...response.data};
 
-                console.log(`###REPLY ${JSON.stringify(replies.value, null, 2)}`)
+                console.log(`###REPLY ${JSON.stringify(replies.value, null, 2)}`);
+                console.log(`###REPLY_INFO ${JSON.stringify(replyInfo.value, null, 2)}`);
 
                 // replyCnt.value = Object.keys(replies.value).length;
                // console.log(`@@@CNT ${replyCnt.value}`);
@@ -162,6 +201,16 @@ export default {
 
             replyCnt,
             getReplyList,
+            replyInfo,
+
+            onMeetingInfo,
+            boards,
+            boardCnt,
+            boardInfo,
+            onMeetingBoardIdx,
+
+            boardIdx,
+
 
         }
     }
@@ -228,6 +277,7 @@ export default {
     }
 
 .commentItem{
+  z-index: 100;
   border:1px solid #C0C0C0;
   margin-top: 20px;
   margin-bottom:10px;

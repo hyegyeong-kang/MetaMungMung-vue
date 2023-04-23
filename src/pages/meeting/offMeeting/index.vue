@@ -58,5 +58,5 @@ export default {
 
 <style scoped>
 @import "@/assets/css/meeting/offMeeting/kakaomap.css";
-@import "@/assets/css/meeting/offMeeting/off-meeting-modal.css";
+/* @import "@/assets/css/meeting/offMeeting/off-meeting-modal.css"; */
 </style>
