@@ -309,11 +309,12 @@ export default {
         })
         .then(function (response) {
           console.log("response => " + JSON.stringify(response, null, 2));
+
+          router.go();
         })
         .catch(function (error) {
           console.log(error);
         });
-      router.go();
     };
 
     /* 상세 조회 모달 닫기 */
