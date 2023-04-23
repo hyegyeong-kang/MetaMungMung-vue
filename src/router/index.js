@@ -20,6 +20,7 @@ import Order from "../pages/store/order/index.vue";
 import OrderSuccess from "../pages/store/order/success/index.vue";
 import OrderList from "../pages/store/order/list/index.vue";
 import OrderDetail from "../pages/store/order/_id.vue";
+import Cart from "../pages/store/cart/index.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -128,6 +129,11 @@ const router = createRouter({
       path: "/store/order/:id",
       name: "OrderDetail",
       component: OrderDetail,
+    },
+    {
+      path: "/cart",
+      name: "Cart",
+      component: Cart,
     },
   ],
   scrollBehavior() {

@@ -217,23 +217,29 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref, watchEffect } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
 
 export default {
   props: {
     isMain: Boolean,
     isSearch: Boolean,
+    cate: String,
+    isCategoryMain: Boolean,
   },
   emits: ["send-type"],
+
   setup(props, { emit }) {
+    const route = useRoute();
     const router = useRouter();
     const productIdx = ref(0);
 
     const productList = ref([]);
+    const searchResultCnt = ref(0);
+    let category = ref(null);
 
-    /* axios!!!!!!!!!!! */
+    /* 전체 상품 목록 가져오기 */
     const productListPage = async () => {
       console.log("ok!!!!!!!!!");
       try {
@@ -241,12 +247,51 @@ export default {
           sessionStorage.getItem("token");
         const res = await axios.get("/products");
         productList.value = { ...res.data };
-        console.log(JSON.stringify(res, 2, null));
+        // console.log(JSON.stringify(res, 2, null));
       } catch (err) {
         console.log(err);
       }
     };
-    productListPage();
+
+    /* 카테고리 검색 목록 가져오기 */
+    const getSearchCategoryResultList = async () => {
+      console.log(
+        "3-2. 카테고리 검색 : 마지막 자식 컴포넌트가 받았어 => " + props.cate
+      );
+      // let keyword = route.query.keyword;
+      category = props.cate;
+
+      try {
+        const res = await axios.get("/offMeeting/", {
+          params: { category: category },
+        });
+
+        productList.value = { ...res.data };
+
+        console.log(res.data);
+
+        console.log(res.data.length);
+
+        searchResultCnt.value = res.data.length;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    /* 메인이면 전체 상품을 출력하고, 메인이 아니면 카테고리 상품이나 입력한 상품을 출력한다. */
+    watchEffect(() => {
+      console.log("productList isMain? => " + props.isMain);
+      if (props.isMain) {
+        console.log("메인입니다.");
+        productListPage();
+      } else {
+        console.log("카테고리별 상품 찾기입니다.");
+        console.log(
+          "3-1. 카테고리 검색 : 마지막 자식 컴포넌트가 받았어 => " + props.cate
+        );
+        getSearchCategoryResultList();
+      }
+    });
 
     const moveToDetailPage = (productIdx) => {
       console.log(productIdx);
@@ -268,8 +313,12 @@ export default {
     return {
       moveToDetailPage,
       removeHideFunc,
+      getSearchCategoryResultList,
       productList,
       productIdx,
+      route,
+      router,
+      category,
     };
   },
 };

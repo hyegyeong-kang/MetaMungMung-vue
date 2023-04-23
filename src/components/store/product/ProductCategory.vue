@@ -4,7 +4,12 @@
     <div class="grey-container" b-5udx3prrol="">
       <div class="category-section" b-kladk2uprp="">
         <div class="category-layout" b-kladk2uprp="">
-          <!--!--><a class="category-item-component" href="/b/4" b-aodjs4goz8=""
+          <!--!--><a
+            class="category-item-component"
+            href=""
+            data-id="1"
+            @click.prevent="cateToggle(0)"
+            b-aodjs4goz8=""
             ><div class="category" b-aodjs4goz8="">
               <img
                 class="image"
@@ -20,7 +25,9 @@
             </div></a
           ><!--!--><a
             class="category-item-component"
-            href="/b/22"
+            href=""
+            data-id="2"
+            @click.prevent="cateToggle(1)"
             b-aodjs4goz8=""
             ><div class="category" b-aodjs4goz8="">
               <img
@@ -37,7 +44,9 @@
             </div></a
           ><!--!--><a
             class="category-item-component"
-            href="/b/15"
+            href=""
+            data-id="3"
+            @click.prevent="cateToggle(2)"
             b-aodjs4goz8=""
             ><div class="category" b-aodjs4goz8="">
               <img
@@ -54,7 +63,9 @@
             </div></a
           ><!--!--><a
             class="category-item-component"
-            href="/b/192"
+            href=""
+            data-id="4"
+            @click.prevent="cateToggle(3)"
             b-aodjs4goz8=""
             ><div class="category" b-aodjs4goz8="">
               <img
@@ -71,7 +82,9 @@
             </div></a
           ><!--!--><a
             class="category-item-component"
-            href="/b/21"
+            href=""
+            data-id="5"
+            @click.prevent="cateToggle(4)"
             b-aodjs4goz8=""
             ><div class="category" b-aodjs4goz8="">
               <img
@@ -88,7 +101,9 @@
             </div></a
           ><!--!--><a
             class="category-item-component"
-            href="/b/13"
+            href=""
+            data-id="6"
+            @click.prevent="cateToggle(5)"
             b-aodjs4goz8=""
             ><div class="category" b-aodjs4goz8="">
               <img
@@ -105,7 +120,9 @@
             </div></a
           ><!--!--><a
             class="category-item-component"
-            href="/b/17"
+            href=""
+            data-id="7"
+            @click.prevent="cateToggle(6)"
             b-aodjs4goz8=""
             ><div class="category" b-aodjs4goz8="">
               <img
@@ -122,7 +139,9 @@
             </div></a
           ><!--!--><a
             class="category-item-component"
-            href="/b/18"
+            href=""
+            data-id="8"
+            @click.prevent="cateToggle(7)"
             b-aodjs4goz8=""
             ><div class="category" b-aodjs4goz8="">
               <img
@@ -139,7 +158,9 @@
             </div></a
           ><!--!--><a
             class="category-item-component"
-            href="/b/19"
+            href=""
+            data-id="9"
+            @click.prevent="cateToggle(8)"
             b-aodjs4goz8=""
             ><div class="category" b-aodjs4goz8="">
               <img
@@ -165,22 +186,35 @@
 import { ref } from "vue";
 
 export default {
-  setup() {
+  emits: ["select-cate"],
+  setup(props, { emit }) {
+    const isMain = ref(true);
     const isActive = ref(false);
-    let prevIdx = 0;
+    let prevIdx = -1;
+
+    const getCate = () => {
+      for (let item in document.getElementsByClassName("category-layout")) {
+        // console.log("item => " + item);
+      }
+    };
+
+    getCate();
 
     const cateToggle = (idx) => {
-      const parent = document.getElementsByClassName("searchedSortBand")[0];
       if (idx != prevIdx) {
-        parent.children[prevIdx].classList.remove("active");
-        parent.children[idx].classList.add("active");
+        const parent = document.getElementsByClassName("category-layout")[0];
+        const selectElem = parent.children[idx];
+        console.log("1. category 자식 컴포넌트 => " + selectElem.innerText);
         prevIdx = idx;
+        emit("isMain", isMain.value);
+        emit("select-cate", selectElem.innerText);
       }
     };
 
     return {
       isActive,
       cateToggle,
+      prevIdx,
     };
   },
 };
