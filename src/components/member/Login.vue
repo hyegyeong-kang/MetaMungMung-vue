@@ -88,13 +88,6 @@ export default {
       } 
     };
 
-    const findId = async() => {
-      const res = await axios.post('/members/login', {
-          memberId: member.value.memberId,
-          password: member.value.password
-      });
-    }
-
     return {
       member,
       loginForm,
