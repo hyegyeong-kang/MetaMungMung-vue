@@ -447,14 +447,14 @@
         </header>
         <main>
           <!--카페 멤버-->
-          <a href="#" v-for="(member, index) in registerMems" :key="index">
+           <a href="#" v-for="(member, index) in registerMems" :key="index">
             <img
               :src="member.memberList[0].memberImg"
             />
             <div class="user">
               <p>{{ member.memberList[0].memberName }}</p>
             </div>
-          </a>
+          </a> 
         </main>
       </section>
     </div>
