@@ -291,6 +291,8 @@
               댓글
             </button>
           </div>
+
+          <!-- {{onMeetingBoardIdx11}} -->
           <!-- <hr> -->
           <!--!!!!댓글 출력 // getCommentsByPostId(board.onMeetingBoardIdx)!!!!-->
           <!-- <ul v-if="board.replyList.length > 0"> -->
@@ -298,24 +300,16 @@
              
               <!-- {{comments[0].replyList}} -->
              
-           {{board.onMeetingBoardIdx}}
+           <!-- {{board.onMeetingBoardIdx}} -->
             <!-- {{comments}} -->
-            {{Object.keys(comments)}}
+            
         <!-- <div v-if="comments[0].replyList != null"> -->
           <div v-for="(reply, index) in comments" :key="index" class="commentItem" style="background-color:#F5F5F5">
-            <!-- {{reply[Object.keys(comments)]}} -->
-           
-            <!-- {{index}} -->
-            <!-- {{reply}} -->
+           <!-- {{reply}} -->
+            <div v-if="board.onMeetingBoardIdx === reply.onMeetingBoardIdx && reply.replyContents != null">
 
-            <!-- for (const key in comments) {
-  if (comments.hasOwnProperty(key)) {
-    const replyContents = comments[key].replyContents;
-    console.log(replyContents);
-  }
-} -->
+             
             <!-- <div v-if="(reply, index) in obj" :key="index"> -->
-            <div v-if="board.onMeetingBoardIdx === reply.onMeetingBoardIdx">
             <ul>
             <li> 
              <hr>
@@ -355,9 +349,12 @@
             </li>
             </ul>
             </div >
-          <div v-else style="display:none">
-              ll
-          </div >
+            <!-- <div v-else style="display:none">
+                ll
+            </div > -->
+
+       
+
           <!-- </div> -->
             
           </div>
@@ -516,6 +513,7 @@ export default {
   setup() {
 
     
+    const onMeetingBoardIdx11 = ref(null);
 
     const route = useRoute();
     const router = useRouter();
@@ -523,8 +521,8 @@ export default {
     const isOpenDetail = ref(false);
   //  const onMeetingIdx = ref("");
 
-    const onMeetingIdx = route.params.id;
-    console.log(`@@@ ${onMeetingIdx}`)
+    // const onMeetingIdx = route.params.id;
+    // console.log(`@@@ ${onMeetingIdx}`)
 
     const onMeetingInfo = ref([]);
 
@@ -576,7 +574,7 @@ export default {
           onMeetingInfo.value = {...response.data[0]};
 
          // console.log(`^^^^^^^BOARD^^^^^^ ${JSON.stringify(boards.value, null, 2)}`);
-          console.log(`^^^^^^^BOARD_INFO^^^^^^ ${JSON.stringify(onMeetingInfo.value, null, 2)}`);
+         // console.log(`^^^^^^^BOARD_INFO^^^^^^ ${JSON.stringify(onMeetingInfo.value, null, 2)}`);
 
 
           boardCnt.value = onMeetingInfo.value.boardList.length;
@@ -607,7 +605,7 @@ export default {
           //console.log(`REGISTER MEM222222: ${JSON.stringify(response.data[0], null, 2)}`);
           registerMems.value = {...response.data}
 
-          console.log(`MEMBER::: ${JSON.stringify(registerMems.value, null, 2)}`);
+          //console.log(`MEMBER::: ${JSON.stringify(registerMems.value, null, 2)}`);
 
           registerMemsCnt.value = Object.keys(registerMems.value).length;
           console.log(`### ${registerMemsCnt.value}`)
@@ -670,6 +668,7 @@ export default {
 
       const replies = ref([]);
       const replyInfo = ref("");
+      // 이거 아님...
       const getReplyList = async() => {
 
         // onMeetingIdx, onMeetingBoardIdx 넣으면 됨
@@ -751,16 +750,19 @@ export default {
 
     const comments = ref([]);
     const newCommentText = ref('');
+
     
      fetchComments();
     // 댓글 가져오기 
     async function fetchComments() {
-      
       try {
         const response = await axios.get(`/onMeetings/1/board/reply`);
         comments.value = {...response.data};
         console.log(`COMMENccccTSSSSSSS : ${JSON.stringify(comments.value, null, 2)}`)
-      } catch (error) {
+        console.log(`IDX::: ${comments.value[0].onMeetingBoardIdx}`)
+        onMeetingBoardIdx11.value = comments.value[0].onMeetingBoardIdx;
+     
+     } catch (error) {
         console.error(error);
       }
     }
@@ -840,15 +842,15 @@ export default {
 
          
       
-            console.log(`KANG111: ${JSON.stringify(onMeetingInfo.value.boardList, null, 2)}`);
+         //   console.log(`KANG111: ${JSON.stringify(onMeetingInfo.value.boardList, null, 2)}`);
             console.log(typeof onMeetingInfo.value)
-            console.log(`KANG222: ${JSON.stringify(boardList.value[0].boardList, null, 2)}`);
+         //   console.log(`KANG222: ${JSON.stringify(boardList.value[0].boardList, null, 2)}`);
             console.log(typeof boardList.value)
 
 
             onMeetingInfo.value.boardList = boardList.value[0].boardList;
             //  Object.assign(onMeetingInfo.value.boardList, boardList.value[0].boardList);
-            console.log(`덮어씌워졌니0000:: ${JSON.stringify(onMeetingInfo.value.boardList, null, 2)}`)
+           // console.log(`덮어씌워졌니0000:: ${JSON.stringify(onMeetingInfo.value.boardList, null, 2)}`)
              console.log(`덮어씌워졌니:: ${JSON.stringify(onMeetingInfo.value, null, 2)}`)
            // onMeetingInfo.value = boardList.value;
    
@@ -858,7 +860,7 @@ export default {
           //         onMeetingList.value[i].introduction = res.data[i].introduction.replace(/<br>/g, ' ');
           //     } 
           // }
-         router.go()
+       //  router.go()
 
       } catch(err){
           console.log(err);
@@ -922,6 +924,9 @@ export default {
       router,
       submitSearch,
       searchKeyword,
+
+
+      onMeetingBoardIdx11
     }
   }
 };
@@ -1537,7 +1542,7 @@ header.nav-closed {
       // margin-bottom:10px;
       // padding:10px;
       cursor: pointer;
-      display: flex; 
+   //   display: flex; 
       justify-content: flex-end;
       margin:0 auto;
   .left {
