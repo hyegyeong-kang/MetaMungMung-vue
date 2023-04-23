@@ -46,14 +46,6 @@
                   <router-link :to="{ name: 'OnMeeting' }" @click="moveToPage"
                     >Meeting</router-link
                   >
-                  <router-link :to="{ name: 'OffMeeting' }" @click="moveToPage"
-                    >Map</router-link
-                  >
-                  <router-link
-                    :to="{ name: 'RegisterModal' }"
-                    @click="moveToPage"
-                    >KANG-ONMEETING</router-link
-                  >
                   <router-link :to="{ name: 'ProductPage' }" @click="moveToPage"
                     >Store</router-link
                   >

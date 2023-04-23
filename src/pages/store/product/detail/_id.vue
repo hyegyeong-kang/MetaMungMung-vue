@@ -247,19 +247,12 @@ export default {
     };
 
     /* 장바구니 페이지로 이동 */
-    const moveToCartPage = async () => {
-      try {
-        const req = await axios.post("/cart/cartAdd", {
-          p_id: pid,
-          quantity: count.value,
-        });
-        console.log("req : " + req.data);
-        router.push({
-          name: "CartList",
-        });
-      } catch (err) {
-        console.log(err);
-      }
+    const moveToCartPage = () => {
+      let resultCnt = document.getElementById("result").value;
+      router.push({
+        name: "Cart",
+        query: { id: productIdx, quantity: resultCnt },
+      });
     };
 
     /* 리뷰 페이지로 이동 */

@@ -1,5 +1,5 @@
 <template>
-  <header class="nav-closed">
+  <!-- <header class="nav-closed">
     <div class="wrapper" style="margin-left: 20px">
       <div class="top">
         <img
@@ -22,7 +22,7 @@
     </div>
   </header>
 
-  <div id="container" class="wrapper nav-closed">
+  <div id="container" class="wrapper nav-closed"> -->
         <!-- 여기부터 모임 설정 컴포넌트에 들어가면 됨 -->
         <div class="group-settings">
             <h2 class="title">모임 설정</h2>
@@ -54,7 +54,7 @@
         </div>
         <!-- 여기까지 -->
 
-        <div>
+        <!-- <div>
       <section>
         <header>
           <h3>뭉뭉뭉</h3>
@@ -80,9 +80,9 @@
           <a href="#">View All</a>
         </header>
         <main>
-          <a href="#">
+          <a href="#"> -->
             <!--여기서 카페 멤버 반복으로 돌려주면 됨 -->
-            <img
+            <!-- <img
               src="https://www.petoria.co.kr/web/product/big/202302/b2fde590335a31b868394dc90006e99f.jpg"
             />
             <div class="user">
@@ -93,7 +93,7 @@
         </main>
       </section>
     </div>
-</div>
+</div> -->
 </template>
 
 <script>

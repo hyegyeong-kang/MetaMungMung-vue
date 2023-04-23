@@ -63,11 +63,13 @@
 
 <script>
 import { ref } from "vue";
+import { useRoute } from "vue-router";
 import axios from "axios";
 export default {
   setup() {
     const myIdx = Number(sessionStorage.getItem("memberIdx"));
     const myMeetingList = ref(null);
+    const route = useRoute();
 
     /* 나의 오프모임 조회 axios 비동기 통신 */
     const myOffMeeting = async () => {
@@ -76,7 +78,7 @@ export default {
           sessionStorage.getItem("token");
 
         const res = await axios.get("/offMeetings/myOffMeetings", {
-          params: { onMeetingIdx: 14, memberIdx: myIdx },
+          params: { onMeetingIdx: route.params.id, memberIdx: myIdx },
         });
         myMeetingList.value = { ...res.data };
 

@@ -97,7 +97,7 @@ export default {
     // api 스크립트 소스 불러오기 및 지도 출력
     if (window.kakao && window.kakao.maps) {
       this.loadMap();
-      this.isOpenFunc(isOpen);
+      // this.isOpenFunc(isOpen);
     } else {
       this.loadScript();
     }

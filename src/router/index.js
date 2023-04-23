@@ -73,7 +73,7 @@ const router = createRouter({
       }
     },
     {
-      path: "/offMeetings",
+      path: "/onMeeting/:id/offMeetings",
       name: "OffMeeting",
       component: OffMeeting,
       meta: {
@@ -97,7 +97,7 @@ const router = createRouter({
       }
     },
     {
-      path: "/onMeeting/board",
+      path: "/onMeeting/:id/board",
       name: "RegisterModal",
       component: RegisterModal,
       meta: {
