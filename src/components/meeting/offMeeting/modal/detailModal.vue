@@ -168,12 +168,16 @@
     </div>
   </div>
   <!-- 모임생성 모달 end -->
-  <JoinMemberModal ref="joinMemberModal" />
+  <JoinMemberModal
+    :offMeetingIdx="offMeetingIdx"
+    v-if="showModal"
+    @close="showModal = false"
+    ref="joinMemberModal"
+  />
 </template>
 
 <script>
 import JoinMemberModal from "@/components/meeting/offMeeting/modal/JoinMemberModal.vue";
-import ModifyModal from "@/components/meeting/offMeeting/modal/modifyModal.vue";
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -206,12 +210,10 @@ export default {
     let hostMemberIdx = ref(0);
     let hostId = ref("");
     let isOpen = ref(props.isOpen);
-    // const checkJoinMember = () => {
-    //   let openIt = () => {
-    //     joinMemberModal.openJoinMemberModal();
-    //   };
-    //   console.log(openIt + "ok!!!!!!");
-    // };
+    let showModal = ref(false);
+    let isJoin = ref(false);
+
+    /* 모임 수정 모달 열기 */
     const modifyOffMeeting = () => {
       const modalId = document.getElementById("detailModal");
       modalId.style.display = "none";
@@ -222,16 +224,41 @@ export default {
       emit("board", board.value);
       console.log("board 보낸다~~~ => " + board.value);
     };
+
+    /* 모임 참여자 확인 모달 열기 */
     const checkJoinMember = () => {
-      joinMemberModal.value.openJoinMemberModal();
-      console.log(joinMemberModal.value.openJoinMemberModal());
+      showModal.value = true;
     };
-    const activeJoin = () => {
+
+    /* 참여 버튼 클릭 시 발생하는 이벤트 */
+    const activeJoin = async () => {
       likeBtn = document.getElementsByClassName("heart-button")[0];
       likeBtn.classList.toggle("active");
+
+      axios.defaults.headers.common["AUTHORIZATION"] =
+        sessionStorage.getItem("token");
+
+      axios
+        .post(`/offMeetings/${offMeetingIdx.value}/join`, {
+          offMeetingIdx: offMeetingIdx.value,
+          onMeetingIdx: 14,
+        })
+        .then(function (response) {
+          // console.log(response);
+          console.log("등록됨");
+          console.log(response);
+          isJoin.value = true;
+          // router.go();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     };
+
     const modal = document.getElementsByClassName("detailModal");
     const clickable = document.querySelectorAll(".clickable");
+
+    /* 오프 모임 상세 조회 모달 열기 이벤트 */
     const openDetailModalFunc = (selectedMarker) => {
       modal[0].style.display = "block";
       try {
@@ -271,6 +298,8 @@ export default {
         console.log("err!!!!" + err);
       }
     };
+
+    /* 오프 모임 삭제 */
     const deleteOffMeeting = async () => {
       axios.defaults.headers.common["AUTHORIZATION"] =
         sessionStorage.getItem("token");
@@ -280,18 +309,23 @@ export default {
         })
         .then(function (response) {
           console.log("response => " + JSON.stringify(response, null, 2));
+
+          router.go();
         })
         .catch(function (error) {
           console.log(error);
         });
-      router.go();
     };
+
+    /* 상세 조회 모달 닫기 */
     const closeDetailModalFunc = () => {
       modal[0].style.display = "none";
     };
+
     for (let i = 0; i < clickable.length; i++) {
       clickable[i].openModalFunc;
     }
+
     onMounted(() => {
       window.onclick = function (event) {
         if (event.target == modal[0]) {
@@ -325,6 +359,8 @@ export default {
       modifyOffMeeting,
       isOpen,
       deleteOffMeeting,
+      showModal,
+      isJoin,
     };
   },
 };

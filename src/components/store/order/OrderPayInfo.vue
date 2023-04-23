@@ -121,13 +121,14 @@ import {ref, watchEffect} from 'vue';
 
 export default {
     props: {
-        orderDetails: Object
+        orderDetails: Object,
+        member: Object
     },
     emits: ['send-payInfo'],
     setup(props, {emit}){
-        const member = ref(
-            {id: 1, name: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address: '서울', point: 0}
-        );
+        // const member = ref(
+        //     // {id: 1, name: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address: '서울', point: 0}
+        // );
         const usePoint = ref(0);
         const totalPrice = ref(0);
         const paymentAmount = ref(0);
@@ -138,7 +139,7 @@ export default {
 
         const inputPoint = () => {
             toggleDisabledPayMethod.value = false;
-            if(totalPrice.value < usePoint.value || member.value.point < usePoint.value){
+            if(totalPrice.value < usePoint.value || props.member.point < usePoint.value){
                 toggleErrorMsg.value = true;
                 usePoint.value = 0;
                 paymentAmount.value = totalPrice.value - usePoint.value;
@@ -163,6 +164,8 @@ export default {
             paymentAmount.value = totalPrice.value;
         }
 
+        console.log("포인트 줘" + props.member.point);
+
         watchEffect(() => {
             calTotalPrice();
             emit('send-payInfo', {
@@ -174,7 +177,7 @@ export default {
         });
 
         return{
-            member,
+            // member,
             usePoint,
             totalPrice,
             paymentAmount,

@@ -1,6 +1,8 @@
 <template>
   <div class="services_section layout_padding">
         <div class="container">
+
+          <h1 style="text-align:center">My Page</h1>
             
             <div class="myContent">
 
@@ -16,9 +18,8 @@
             <div class="main-content">
               <div class="menu">
                 <ul>
-                <li><router-link :to="{ name: 'Register' }">나의 반려견</router-link></li>
-                <li><router-link :to="{ name: 'Modify' }">나의 모임</router-link></li>
-                <li><router-link :to="{ name: 'Modify' }">내 주문</router-link></li>
+                <li><router-link :to="{ name: 'Register' }">반려견 등록</router-link></li>
+                <li><router-link :to="{ name: 'OrderList' }">내 주문내역</router-link></li>
                 <li><router-link :to="{ name: 'Modify' }">회원정보 수정 및 탈퇴</router-link></li>
                 </ul>
               </div>
@@ -72,6 +73,7 @@ export default {
       try {
           const res = await axios.get('/members/my');
           memberName.value = res.data.memberName;
+
           console.log(res.data);
 
       } catch (error) {
@@ -94,6 +96,7 @@ export default {
         console.error(error);
       }
     };
+
     
     getMyPets();
     
@@ -104,7 +107,7 @@ export default {
       info,
       myPetList,
       getMyPets,
-      profileImgSrc,
+      profileImgSrc
     };
   }
 }

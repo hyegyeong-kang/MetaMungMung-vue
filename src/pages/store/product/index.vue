@@ -2,11 +2,13 @@
   <div class="services_section layout_padding">
     <div class="container">
       <ProductHeader @send-type="sendType" :isMain="isMain" />
-      <ProductCategory />
+      <ProductCategory @select-cate="selectCate" @isMain="isCategoryMainFunc" />
       <ProductList
         @send-type="sendType"
         :isMain="isMain"
         :isSearch="isSearch"
+        :cate="cate"
+        :isCategoryMain="isCategoryMain"
       />
     </div>
   </div>
@@ -27,14 +29,33 @@ export default {
   setup() {
     const isMain = ref(true);
     const isSearch = ref(false);
+    const cate = ref("");
+    const isCategoryMain = ref(null);
+
+    const isCategoryMainFunc = (isTrue) => {
+      isCategoryMain.value = isTrue;
+
+      console.log("요기~~!" + isCategoryMain.value);
+      isMain.value = false;
+
+      console.log("메인페이지 => " + isCategoryMain.value);
+    };
+
+    const selectCate = (category) => {
+      cate.value = category;
+      console.log("2. 메인페이지가 카테고리 값 받음 => " + cate.value);
+    };
 
     const sendType = (type) => {
-      console.log("부모가 받암ㅆ더!");
+      console.log("product Header로부터 부모가 받았어 => ");
       console.log(type);
 
       if (type === "search") {
         isMain.value = false;
         isSearch.value = true;
+      } else {
+        isMain.value = true;
+        isSearch.value = false;
       }
     };
 
@@ -64,8 +85,12 @@ export default {
     return {
       checkFunc,
       sendType,
+      cate,
       isMain,
       isSearch,
+      selectCate,
+      isCategoryMain,
+      isCategoryMainFunc,
     };
   },
 };

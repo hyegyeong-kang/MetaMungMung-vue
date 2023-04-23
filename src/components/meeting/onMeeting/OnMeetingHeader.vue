@@ -5,7 +5,7 @@
                 모임
                 <img src="@/assets/images/offMeeting/paw-print.png" style="width: 70px"/>
             </div>
-            </router-link>
+        </router-link>
         <SearchLocationBtn :addr="addr" v-if="showLoc" @send-location="sendLocation"/>
         <OnMeetingSearchBar @send-type="sendType" :isMain="isMain"/>
     </div>

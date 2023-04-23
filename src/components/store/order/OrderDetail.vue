@@ -118,7 +118,7 @@ export default {
 
         const cancelOrder = async (oid) => {
             try{
-                const res = await axios.patch('/orders/' + oid);
+                const res = await axios.patch('/orders/' + oid + '/cancel');
                 visible.value = false;
                 cancel.value = true;
                 console.log(res);
@@ -130,7 +130,7 @@ export default {
 
         const confirmOrder = async (oid) => {
             try{
-                const res = await axios.patch('/orders/' + oid + '/confirm');
+                const res = await axios.patch('/orders/' + oid);
                 visible.value = false;
                 console.log(res);
                 router.go();
