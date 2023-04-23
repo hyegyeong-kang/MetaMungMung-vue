@@ -1,6 +1,8 @@
 <template>
   <div class="services_section layout_padding">
         <div class="container">
+
+          <h1 style="text-align:center">My Page</h1>
             
             <div class="myContent">
 
@@ -72,6 +74,7 @@ export default {
       try {
           const res = await axios.get('/members/my');
           memberName.value = res.data.memberName;
+
           console.log(res.data);
 
       } catch (error) {
@@ -94,6 +97,7 @@ export default {
         console.error(error);
       }
     };
+
     
     getMyPets();
     
@@ -104,7 +108,7 @@ export default {
       info,
       myPetList,
       getMyPets,
-      profileImgSrc,
+      profileImgSrc
     };
   }
 }
