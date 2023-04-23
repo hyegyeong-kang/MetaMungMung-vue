@@ -2,7 +2,10 @@
   <!--새로나온 친구들 리스트-->
   <div class="con prod-list hot-stuff">
     <nav class="prod-list-1">
-      <div class="prod-list-title">멍멍스토어 상품들</div>
+      <div class="prod-list-title">
+        멍멍스토어 상품들
+        <p style="font-weight">{{ categoryTitle }}</p>
+      </div>
       <ul
         style="display: inline-block; margin-right: 20px"
         class="row"
@@ -26,7 +29,7 @@
         </li>
       </ul>
     </nav>
-    <span
+    <!-- <span
       id="spanId"
       @click="removeHideFunc"
       style="margin-top: 50px"
@@ -130,7 +133,7 @@
         <div class="title">띵커바우츄 오리 딩고껌</div>
         <div class="price"><span>9,870원</span></div>
       </li>
-    </ul>
+    </ul> -->
   </div>
 
   <!--카드-->
@@ -238,6 +241,7 @@ export default {
     const productList = ref([]);
     const searchResultCnt = ref(0);
     let category = ref(null);
+    let categoryTitle = ref(null);
 
     /* 전체 상품 목록 가져오기 */
     const productListPage = async () => {
@@ -260,10 +264,11 @@ export default {
       );
       // let keyword = route.query.keyword;
       category = props.cate;
+      categoryTitle.value = props.cate;
 
       try {
-        const res = await axios.get("/offMeeting/", {
-          params: { category: category },
+        const res = await axios.get("/products/category", {
+          params: { keyword: category },
         });
 
         productList.value = { ...res.data };
@@ -319,6 +324,7 @@ export default {
       route,
       router,
       category,
+      categoryTitle,
     };
   },
 };

@@ -81,6 +81,7 @@ export default {
     return {
       checkFunc,
       sendType,
+      cate,
       isMain,
       isSearch,
       selectCate,
