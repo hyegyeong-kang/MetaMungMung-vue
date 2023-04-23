@@ -129,7 +129,7 @@
 <script>
 import axios from "axios";
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 export default {
   name: "OffMeetingModal",
   props: ["currentLocation", "currentLat", "currentLng"],
@@ -140,6 +140,7 @@ export default {
     let startTime = ref("");
     let content = ref("");
     let limit = ref("2");
+    const route = useRoute();
     const router = useRouter();
     const modal = document.getElementsByClassName("modal");
     const clickable = document.querySelectorAll(".clickable");
@@ -163,7 +164,7 @@ export default {
           locationAddress: props.currentLocation,
           startTime: startTime.value,
           memberIdx: myIdx,
-          onMeetingIdx: 14,
+          onMeetingIdx: route.params.id,
         })
         .then(function (response) {
           console.log("response => " + JSON.stringify(response, null, 2));

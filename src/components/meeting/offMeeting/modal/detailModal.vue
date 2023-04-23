@@ -181,6 +181,8 @@ import JoinMemberModal from "@/components/meeting/offMeeting/modal/JoinMemberMod
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import Swal from "sweetalert2";
+
 export default {
   name: "OffMeetingModal",
   props: ["selectedMarker", "boardDetails", "isOpen"],
@@ -301,20 +303,39 @@ export default {
 
     /* 오프 모임 삭제 */
     const deleteOffMeeting = async () => {
-      axios.defaults.headers.common["AUTHORIZATION"] =
-        sessionStorage.getItem("token");
-      axios
-        .post(`/offMeetings/${offMeetingIdx.value}`, {
-          offMeetingIdx: offMeetingIdx.value,
-        })
-        .then(function (response) {
-          console.log("response => " + JSON.stringify(response, null, 2));
-
+      Swal.fire({
+        title: "정말 삭제하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        confirmButtonText: "삭제",
+        cancelButtonText: "취소",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios.defaults.headers.common["AUTHORIZATION"] =
+            sessionStorage.getItem("token");
+          axios
+            .post(`/offMeetings/${offMeetingIdx.value}`, {
+              offMeetingIdx: offMeetingIdx.value,
+            })
+            .then(function (response) {
+              console.log("response => " + JSON.stringify(response, null, 2));
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          // 모임 삭제
+          Swal.fire(
+            "삭제 완료",
+            "모임이 성공적으로 삭제되었습니다.",
+            "success"
+          );
+        }
+        setTimeout(() => {
           router.go();
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+        }, 500);
+      });
     };
 
     /* 상세 조회 모달 닫기 */

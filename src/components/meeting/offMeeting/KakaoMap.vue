@@ -51,6 +51,7 @@
       @isOpen="isOpenFunc"
       @board="getBoard"
     />
+    <br />
     <ModifyModal
       v-if="isOpen === true"
       ref="modifyModal"
@@ -66,6 +67,7 @@ import CreateModal from "@/components/meeting/offMeeting/modal/createModal.vue";
 import DetailModal from "@/components/meeting/offMeeting/modal/detailModal.vue";
 import ModifyModal from "@/components/meeting/offMeeting/modal/modifyModal.vue";
 import MyOffMeeting from "@/components/meeting/offMeeting/MyOffMeeting.vue";
+import { useRoute } from "vue-router";
 import { ref, watchEffect } from "vue";
 import axios from "axios";
 export default {
@@ -91,6 +93,7 @@ export default {
       offMeetingPage: null,
       isOpen: false,
       board: null,
+      route: useRoute(),
     };
   },
   mounted() {
@@ -208,7 +211,9 @@ export default {
         try {
           axios.defaults.headers.common["AUTHORIZATION"] =
             sessionStorage.getItem("token");
-          const res = await axios.get("/offMeetings");
+          const res = await axios.get("/offMeetings", {
+            params: { onMeetingIdx: base.route.params.id },
+          });
           base.boardDetails = { ...res.data };
           base.boardDetailsLength = Object.keys(base.boardDetails).length;
           addBoardMarker();
