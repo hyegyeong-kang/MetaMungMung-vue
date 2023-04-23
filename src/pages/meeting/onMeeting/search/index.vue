@@ -71,6 +71,7 @@ export default {
             isSearch,
             categoryKey,
             cate,
+            addr,
             sendType,
             forceRender,
             selectCate,
