@@ -139,7 +139,7 @@ export default {
 
         const inputPoint = () => {
             toggleDisabledPayMethod.value = false;
-            if(totalPrice.value < usePoint.value || member.value.point < usePoint.value){
+            if(totalPrice.value < usePoint.value || props.member.point < usePoint.value){
                 toggleErrorMsg.value = true;
                 usePoint.value = 0;
                 paymentAmount.value = totalPrice.value - usePoint.value;

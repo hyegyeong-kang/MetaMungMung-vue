@@ -211,9 +211,12 @@ export default {
             router.go(-1);
         }
 
+        // 온미팅 생성
         const registerOnMeeting = async () => {
-            introduction.value = introduction.value.split('\n').join('<br>');
+            const myIdx = Number(sessionStorage.getItem("memberIdx"));
+            console.log(`MEMBERIDX::::: ${myIdx}`);
 
+            introduction.value = introduction.value.split('\n').join('<br>');
             meetingInfo.value = {
                 onMeetName: name.value,
                 category: category.value,
@@ -241,10 +244,26 @@ export default {
                 try{
                     console.log(meetingInfo.value);
                     const res = await axios.post('/onMeetings', meetingInfo.value);
-                    console.log("생성된 온모임 : " + res.data);
+
                     router.push({
                         name: "OnMeeting"
                     });
+
+                     axios.post(`/onMeetings/${res.data.onMeetingIdx}/board`,
+                        {
+                            onMeetingIdx: res.data.onMeetingIdx,
+                            boardContents: "환영합니다!! 게시물을 올려보세요!",
+                            boardWriter: res.data.hostName,
+                            memberIdx: myIdx,
+                            onMeetingBoardAddr: "주소를 등록해주세요."
+                        }
+                        )
+                        .then((response) => {
+                            console.log("입력됐나요~~~")
+                        })
+                        .catch((error) => {
+                            console.log("게시 에러 입니다.")
+                        })
                 } catch(err){
                     console.log(err);
                 }
