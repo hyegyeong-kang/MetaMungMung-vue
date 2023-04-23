@@ -844,7 +844,7 @@ export default {
       console.log(`Searching for ${searchKeyword.value}`);
 
       try{
-          const res = await axios.get('/onMeetings/${onMeetingIdx}/board/search', {params: {keyword: searchKeyword.value}});
+          const res = await axios.get(`/onMeetings/${onMeetingIdx}/board/search`, {params: {keyword: searchKeyword.value}});
           boardList.value = res.data;
 
           console.log(`SEARCH:::: ${JSON.stringify(boardList.value, null, 2)}`);
@@ -889,6 +889,7 @@ export default {
     };
 
           const deleteBoard = (boardIdx) => {
+            console.log(`$$$$$ ${boardIdx}`)
         Swal.fire({
             title: '게시물을 삭제하시겠습니까?',
             icon: 'warning',
@@ -902,17 +903,20 @@ export default {
 
               axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
               const memberIdx = sessionStorage.getItem('memberIdx');
+              console.log("onMeetingIdx => " + onMeetingIdx);
+              console.log("boardIdx => " + boardIdx);
 
                axios.delete(`/onMeetings/${onMeetingIdx}/board`,
-               {
+               {params: {
                   onMeetingBoardIdx: boardIdx
-               }
+               }}
                ).then(res => {
                  console.log(`deleteBoard:: ${res.data}`);
                   Swal.fire(
                       '삭제되었습니다.',
                       'success'
                   )
+                  router.go();
 
                })
                .catch ((error) => {
