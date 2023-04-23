@@ -18,9 +18,8 @@
             <div class="main-content">
               <div class="menu">
                 <ul>
-                <li><router-link :to="{ name: 'Register' }">나의 반려견</router-link></li>
-                <li><router-link :to="{ name: 'Modify' }">나의 모임</router-link></li>
-                <li><router-link :to="{ name: 'Modify' }">내 주문</router-link></li>
+                <li><router-link :to="{ name: 'Register' }">반려견 등록</router-link></li>
+                <li><router-link :to="{ name: 'OrderList' }">내 주문내역</router-link></li>
                 <li><router-link :to="{ name: 'Modify' }">회원정보 수정 및 탈퇴</router-link></li>
                 </ul>
               </div>
