@@ -28,7 +28,7 @@
 
           <OrderMemInfo :member="memberInfo" @send-msg="sendMsg"/>
           <OrderProductInfo :orderDetails="orderDetails"/>
-          <OrderPayInfo :orderDetails="orderDetails" @send-payInfo="sendPayInfo"/>
+          <OrderPayInfo :orderDetails="orderDetails" @send-payInfo="sendPayInfo" :member="memberInfo" />
           
           <div class="btnFooter">
             <button type="button" class="_btnCancel uButton -sizeXL -cancel" @click="cancel">취소</button>

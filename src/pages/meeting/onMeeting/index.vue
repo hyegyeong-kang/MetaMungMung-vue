@@ -53,12 +53,12 @@ export default {
                 isMain.value = false;
                 isSearch.value = true;
                 isViewAll.value = false;
-            }
-            // } else{
-            //     isMain.value = true;
-            //     isSearch.value = false;
-            //     isViewAll.value = false;
             // }
+            } else{
+                isMain.value = true;
+                isSearch.value = false;
+                isViewAll.value = false;
+            }
             forceRender();
         }
 

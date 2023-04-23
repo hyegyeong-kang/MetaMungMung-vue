@@ -21,7 +21,7 @@
         </div>
         <div class="col-md-9">
           <div class="menu_text">
-            <ul>
+            <ul style="float: right; margin-right: 40px;">
               <div class="togle_3">
                 <div class="menu_main">
                   <div class="padding_left0">
@@ -31,9 +31,9 @@
                     <span class="padding_left0"><router-link v-if="loggedIn" :to="{ name: 'Home' }" @click="logout">Logout</router-link></span>
                   </div>
                 </div>
-                <div class="shoping_bag">
+                <!-- <div class="shoping_bag">
                   <img src="@/assets/images/common/search-icon.png" />
-                </div>
+                </div> -->
               </div>
               <div id="myNav" class="overlay">
                 <a href="javascript:void(0)" class="closebtn" @click="closeNav"
