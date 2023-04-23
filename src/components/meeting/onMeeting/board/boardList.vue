@@ -298,7 +298,7 @@
             </button>
           </div>
 
-          <!-- {{onMeetingBoardIdx11}} -->
+    
           <!-- <hr> -->
           <!--!!!!댓글 출력 // getCommentsByPostId(board.onMeetingBoardIdx)!!!!-->
           <!-- <ul v-if="board.replyList.length > 0"> -->
@@ -523,7 +523,6 @@ export default {
 
   },
   setup() {
-    const onMeetingBoardIdx11 = ref(null);
 
     const route = useRoute();
     const router = useRouter();
@@ -655,7 +654,7 @@ export default {
       // onMeetingIdx = 1
       axios.post(`/onMeetings/${onMeetingIdx}/board`,
       {
-        onMeetingIdx: 1,
+        onMeetingIdx: onMeetingIdx,
         boardContents: newPost.value,
         boardWriter: member.value.memberName, // memberIdx 로 회원 이름 알려주기
         memberIdx: member.value.memberIdx,
@@ -769,8 +768,8 @@ export default {
         const response = await axios.get(`/onMeetings/${onMeetingIdx}/board/reply`);
         comments.value = {...response.data};
         console.log(`COMMENccccTSSSSSSS : ${JSON.stringify(comments.value, null, 2)}`)
-        console.log(`IDX::: ${comments.value[0].onMeetingBoardIdx}`)
-        onMeetingBoardIdx11.value = comments.value[0].onMeetingBoardIdx;
+      //  console.log(`IDX::: ${comments.value[0].onMeetingBoardIdx}`)
+
      
      } catch (error) {
         console.error(error);
@@ -803,7 +802,7 @@ export default {
           {
             onMeetingBoardIdx: id,
             //onMeetingMemIdx: 1,
-            onMeetingIdx: 1,
+            onMeetingIdx: onMeetingIdx,
             memberIdx: member.value.memberIdx,
             replyContents: currComment,
             replyWriter: member.value.memberName, // memberIdx 로 회원 이름 알려주기
@@ -975,8 +974,6 @@ export default {
       submitSearch,
       searchKeyword,
 
-
-      onMeetingBoardIdx11,
 
       deleteBoard
     }
