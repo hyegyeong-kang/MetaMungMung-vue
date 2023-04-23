@@ -178,7 +178,7 @@
            <!-- {{ boards[0].boardList.length }} Object.keys(onMeetingInfo.replyList).lengt -->
           <!-- {{boards[0].lengt}} -->
         
-          <h3 style="color: white;text-align:center;">22</h3>
+          <h3 style="color: white;text-align:center;">{{ boardCnt }}</h3>
         </a>
         <a href="#">
           <p><strong>멤버</strong></p>
@@ -224,7 +224,7 @@
           </div>
         </div>
          </form>
-
+      <!-- {{comments}} -->
 
 
       </div>
@@ -295,13 +295,29 @@
           <!--!!!!댓글 출력 // getCommentsByPostId(board.onMeetingBoardIdx)!!!!-->
           <!-- <ul v-if="board.replyList.length > 0"> -->
             <!-- <ul v-if="board.replyList.length"> -->
-              
+             
               <!-- {{comments[0].replyList}} -->
-                       <!-- {{board.onMeetingBoardIdx}} -->
-          <div v-for="(reply, index) in comments[0].replyList" :key="reply.onMeetingReplyIdx" class="commentItem" style="background-color:#F5F5F5">
-            <div v-if="board.onMeetingBoardIdx == reply.onMeetingBoardIdx">
+             
+           {{board.onMeetingBoardIdx}}
+            <!-- {{comments}} -->
+            {{Object.keys(comments)}}
+        <!-- <div v-if="comments[0].replyList != null"> -->
+          <div v-for="(reply, index) in comments" :key="index" class="commentItem" style="background-color:#F5F5F5">
+            <!-- {{reply[Object.keys(comments)]}} -->
+           
+            <!-- {{index}} -->
+            <!-- {{reply}} -->
+
+            <!-- for (const key in comments) {
+  if (comments.hasOwnProperty(key)) {
+    const replyContents = comments[key].replyContents;
+    console.log(replyContents);
+  }
+} -->
+            <!-- <div v-if="(reply, index) in obj" :key="index"> -->
+            <div v-if="board.onMeetingBoardIdx === reply.onMeetingBoardIdx">
             <ul>
-            <!-- <li>  -->
+            <li> 
              <hr>
               <div >
               
@@ -336,18 +352,15 @@
                   <b-button style="text-align:right;width:100%" class="btn" @click="deleteReply()">삭제</b-button>        
                   </div>
                   </div>
-            <!-- </li> -->
+            </li>
             </ul>
-
-
-            </div>
-
-
-            <div v-else style="display:none">
-            </div>
-
+            </div >
+          <div v-else style="display:none">
+              ll
+          </div >
+          <!-- </div> -->
             
-            </div>
+          </div>
           <!-- </ul> -->
 
           <!-- <hr> -->
@@ -387,60 +400,9 @@
       <div class="search-container" style="border: 1px solid;border-radius: 2em;color:	#C0C0C0">
         <div class="search-input">
                 <img src="@/assets/images/onMeeting/search-icon.png">
-				<input id="search" type="search" placeholder="글 내용 검색" autocomplete="off">
-				<!-- <i class="fas fa-search"></i> -->
-		</div>
-        <div class="search-results">
-          <div class="result">
-            <p>youtube</p>
-          </div>
-          <div class="result">
-            <p>youtuber dog</p>
-          </div>
-          <div class="result">
-            <p>youtube music</p>
-          </div>
-          <hr />
-          <div class="result">
-
-            <div class="right">
-              <p>YouTube Gaming</p>
-              <span>@YouTubeGaming</span>
-            </div>
-          </div>
-          <div class="result">
-
-            <div class="right">
-              <p>YouTube</p>
-              <span>@YouTube</span>
-            </div>
-          </div>
-          <div class="result">
-
-            <div class="right">
-              <p>YouTube Creators</p>
-              <span>@YTCreators</span>
-            </div>
-          </div>
-          <div class="result">
-
-            <div class="right">
-              <p>YouTube TV</p>
-              <span>@youtubemusic</span>
-            </div>
-          </div>
-          <div class="result">
- 
-            <div class="right">
-              <p>YouTube Music</p>
-              <span>@youtubemusic</span>
-            </div>
-          </div>
-          <hr />
-          <div class="result">
-            <p>Go to @YouTube</p>
-          </div>
+				        <input id="search" type="text" placeholder="글 내용 검색" autocomplete="off" v-model="searchKeyword" @keyup.enter="submitSearch">
         </div>
+
       </div>
       <section>
         <header>
@@ -543,6 +505,7 @@ export default {
   },
   mounted() {
       let base = this;
+
      // getBoardList();
     //  base.openBoardModal = this.$refs.boardDetail.openBoardModalFunc;
      // base.openMapModal = this.$refs.map.openMapModalFunc;
@@ -558,9 +521,10 @@ export default {
     const router = useRouter();
     const isOpen = ref(false);
     const isOpenDetail = ref(false);
-    const onMeetingIdx = ref("");
+  //  const onMeetingIdx = ref("");
 
-    onMeetingIdx.value = route.params.onMeetingIdx;
+    const onMeetingIdx = route.params.id;
+    console.log(`@@@ ${onMeetingIdx}`)
 
     const onMeetingInfo = ref([]);
 
@@ -584,6 +548,15 @@ export default {
         }
 
 
+    //  onMounted(() => {
+    //    console.log(`kkkk ${comments.value}`)
+    //   for (const key of Object.keys(comments.value)) {
+    //     const replyContents = comments.value[key].replyContents;
+    //     console.log(`MOUNT::: ${replyContents}`);
+    //   }
+    // });   
+
+
 
     const boards = ref("");
     const boardCnt = ref(0);
@@ -605,7 +578,9 @@ export default {
          // console.log(`^^^^^^^BOARD^^^^^^ ${JSON.stringify(boards.value, null, 2)}`);
           console.log(`^^^^^^^BOARD_INFO^^^^^^ ${JSON.stringify(onMeetingInfo.value, null, 2)}`);
 
-         // boardCnt.value = Object.keys(boards.value).length;
+
+          boardCnt.value = onMeetingInfo.value.boardList.length;
+          console.log(`CNT:: ${boardCnt.value}`)
 
         })
         .catch ((error) => {
@@ -663,9 +638,11 @@ export default {
     const newPost = ref('');
     // 게시물 등록
     const addPost = () => {
-      axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
-
+      //axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+      console.log("Click!!");
       console.log("###NEWWWW###" + newPost.value);
+
+      //console.log(`ONMEETINGIDX::: ${onMeetingIdx}`)
 
       // onMeetingIdx = 1
       axios.post('/onMeetings/1/board',
@@ -768,9 +745,6 @@ export default {
             (contents.value = "");
 
             console.log(`LIST: ${JSON.stringify(replies.value)}`)
-
-
-        // axios.post 
             
     };
 
@@ -784,7 +758,7 @@ export default {
       
       try {
         const response = await axios.get(`/onMeetings/1/board/reply`);
-        comments.value = response.data;
+        comments.value = {...response.data};
         console.log(`COMMENccccTSSSSSSS : ${JSON.stringify(comments.value, null, 2)}`)
       } catch (error) {
         console.error(error);
@@ -816,7 +790,7 @@ export default {
         axios.post('/onMeetings/1/board/reply',
           {
             onMeetingBoardIdx: id,
-            onMeetingMemIdx: 1,
+            //onMeetingMemIdx: 1,
             onMeetingIdx: 1,
             memberIdx: member.value.memberIdx,
             replyContents: currComment,
@@ -834,6 +808,7 @@ export default {
             console.log(error);
           })
 
+          router.go();
 
 
 
@@ -850,7 +825,56 @@ export default {
     // 게시물 아이디가 변경될 때
     //watch(() => props.postId, fetchComments);
 
+    let searchKeyword = ref("");
+    const boardList = ref({});
+    const submitSearch = async () => {
+      // 검색어를 이용한 검색 로직 구현
+      console.log(`Searching for ${searchKeyword.value}`);
 
+      try{
+          const res = await axios.get('/onMeetings/1/board/search', {params: {keyword: searchKeyword.value}});
+          boardList.value = res.data;
+
+          console.log(`SEARCH:::: ${JSON.stringify(boardList.value, null, 2)}`);
+          console.log(`원래:: ${JSON.stringify(onMeetingInfo.value, null, 2)}`);
+
+         
+      
+            console.log(`KANG111: ${JSON.stringify(onMeetingInfo.value.boardList, null, 2)}`);
+            console.log(typeof onMeetingInfo.value)
+            console.log(`KANG222: ${JSON.stringify(boardList.value[0].boardList, null, 2)}`);
+            console.log(typeof boardList.value)
+
+
+            onMeetingInfo.value.boardList = boardList.value[0].boardList;
+            //  Object.assign(onMeetingInfo.value.boardList, boardList.value[0].boardList);
+            console.log(`덮어씌워졌니0000:: ${JSON.stringify(onMeetingInfo.value.boardList, null, 2)}`)
+             console.log(`덮어씌워졌니:: ${JSON.stringify(onMeetingInfo.value, null, 2)}`)
+           // onMeetingInfo.value = boardList.value;
+   
+
+          // for(let i in res.data){
+          //     if(res.data[i].introduction != null){
+          //         onMeetingList.value[i].introduction = res.data[i].introduction.replace(/<br>/g, ' ');
+          //     } 
+          // }
+         router.go()
+
+      } catch(err){
+          console.log(err);
+      }
+    //  router.go();
+
+      // if (searchKeyword.value !== "") {
+      //   emit("send-type", "search");
+      //   router.push({
+      //     name: "ProductPage",
+      //     query: { keywords: searchKeyword.value },
+      //   });
+      // }
+
+      searchKeyword.value = "";
+    };
 
 
 
@@ -878,7 +902,6 @@ export default {
       boardDetailModal,
       isOpenDetail,
 
-      onMeetingIdx,
       
       //getCommentsByPostId,
 
@@ -896,7 +919,9 @@ export default {
       addPost,
 
       member,
-      router
+      router,
+      submitSearch,
+      searchKeyword,
     }
   }
 };
