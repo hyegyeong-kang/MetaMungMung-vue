@@ -153,14 +153,13 @@ export default {
         .then(function (response) {
           // console.log(response);
           console.log("등록됨");
+          router.go();
         })
         .catch(function (error) {
           console.log(error);
         }),
         (title.value = ""),
         (content.value = "");
-
-      router.go();
     };
 
     /* 리뷰 상세 조회 (모달 열기)*/

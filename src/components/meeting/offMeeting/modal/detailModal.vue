@@ -211,6 +211,7 @@ export default {
     let hostId = ref("");
     let isOpen = ref(props.isOpen);
     let showModal = ref(false);
+    let isJoin = ref(false);
 
     /* 모임 수정 모달 열기 */
     const modifyOffMeeting = () => {
@@ -229,10 +230,29 @@ export default {
       showModal.value = true;
     };
 
-    /* 참여 여부 버튼 클릭 시 발생하는 이벤트 */
-    const activeJoin = () => {
+    /* 참여 버튼 클릭 시 발생하는 이벤트 */
+    const activeJoin = async () => {
       likeBtn = document.getElementsByClassName("heart-button")[0];
       likeBtn.classList.toggle("active");
+
+      axios.defaults.headers.common["AUTHORIZATION"] =
+        sessionStorage.getItem("token");
+
+      axios
+        .post(`/offMeetings/${offMeetingIdx.value}/join`, {
+          offMeetingIdx: offMeetingIdx.value,
+          onMeetingIdx: 14,
+        })
+        .then(function (response) {
+          // console.log(response);
+          console.log("등록됨");
+          console.log(response);
+          isJoin.value = true;
+          // router.go();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     };
 
     const modal = document.getElementsByClassName("detailModal");
@@ -339,6 +359,7 @@ export default {
       isOpen,
       deleteOffMeeting,
       showModal,
+      isJoin,
     };
   },
 };
