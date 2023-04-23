@@ -65,7 +65,7 @@
                                     <li v-for="image in images" :key="image.id" class="_coverSet_0" style="">
                                         
                                         <button type="button" :data-cover="image.src" aria-selected="false" class="_defaultCovers cover " @click="selectImg(image.id)">
-                                            <img class="coverImg" :src="image.src" width="120" height="90" alt="">
+                                            <img class="coverImg" id="coverImg" :src="image.src" width="120" height="90" alt="">
                                             <span class="mask"></span>
                                         </button>
                                         
@@ -124,22 +124,22 @@ export default {
         const status = ref('');
         const name = ref('');
         const introduction = ref('');
-        const coverImg = ref('https://coresos-phinf.pstatic.net/a/2ih08a/c_b6hUd018adm1pd8bo8s7zqln_paxnin.jpg?type=cover_a640');
+        const coverImg = ref(require(`@/assets/images/onMeeting/cream.jpg`));
         const images = reactive([{
             id: 1,
-            src: 'https://coresos-phinf.pstatic.net/a/2ih08a/c_b6hUd018adm1pd8bo8s7zqln_paxnin.jpg?type=cover_a640'
+            src: require(`@/assets/images/onMeeting/cream.jpg`)
         },
         {
             id: 2,
-            src: 'https://coresos-phinf.pstatic.net/a/34g092/3_4a2Ud018admiqcybenasyfp_5ksoqj.png?type=cover_a264'
+            src: require(`@/assets/images/onMeeting/maru.jpg`)
         },
         {
             id: 3,
-            src: 'https://coresos-phinf.pstatic.net/a/34g02i/a_fa1Ud018adm1pbar0p6egwuz_5ksoqj.png?type=cover_a264'
+            src: require(`@/assets/images/onMeeting/ocho.jpg`)
         },
         {
             id: 4,
-            src: 'https://coresos-phinf.pstatic.net/a/34g01h/8_6a2Ud018adm1bhn9k9y349hq_5ksoqj.png?type=cover_a264'
+            src: require(`@/assets/images/onMeeting/babpul.jpg`)
         }]);
         let imgValidation = true;
         const imgMessage = ref('');
@@ -159,7 +159,7 @@ export default {
                 console.log(introduction.value);
 
                 coverImg.value = meetingInfo.value.thumbnail;
-                address.value = meetingInfo.value.onMeetingAddr;
+                address.value = meetingInfo.value.onMeetingAddr === null ? '주소를 등록해주세요.' : meetingInfo.value.onMeetingAddr;
                 category.value = meetingInfo.value.category;
                 isPublic.value = meetingInfo.value.isPublic;
             }
@@ -211,7 +211,11 @@ export default {
             router.go(-1);
         }
 
+        // 온미팅 생성
         const registerOnMeeting = async () => {
+            const myIdx = Number(sessionStorage.getItem("memberIdx"));
+            console.log(`MEMBERIDX::::: ${myIdx}`);
+
             introduction.value = introduction.value.split('\n').join('<br>');
             meetingInfo.value = {
                 onMeetName: name.value,
@@ -219,7 +223,7 @@ export default {
                 introduction: introduction.value,
                 thumbnail: coverImg.value,
                 isPublic: isPublic.value,
-                onMeetingAddr: address.value
+                onMeetingAddr: address.value === '주소를 등록해주세요.' ? '' : address.value
             };
             // 수정
             if(status.value === 'modify'){
@@ -240,10 +244,26 @@ export default {
                 try{
                     console.log(meetingInfo.value);
                     const res = await axios.post('/onMeetings', meetingInfo.value);
-                    console.log("생성된 온모임 : " + res.data);
+
                     router.push({
                         name: "OnMeeting"
                     });
+
+                     axios.post(`/onMeetings/${res.data.onMeetingIdx}/board`,
+                        {
+                            onMeetingIdx: res.data.onMeetingIdx,
+                            boardContents: "환영합니다!! 게시물을 올려보세요!",
+                            boardWriter: res.data.hostName,
+                            memberIdx: myIdx,
+                            onMeetingBoardAddr: "주소를 등록해주세요."
+                        }
+                        )
+                        .then((response) => {
+                            console.log("입력됐나요~~~")
+                        })
+                        .catch((error) => {
+                            console.log("게시 에러 입니다.")
+                        })
                 } catch(err){
                     console.log(err);
                 }
@@ -815,5 +835,11 @@ button {
     background-color: transparent;
     border-radius: 0;
     cursor: pointer;
+}
+
+#coverImg {
+    width: 120px;
+    height: 90px;
+    object-fit: cover;
 }
 </style>

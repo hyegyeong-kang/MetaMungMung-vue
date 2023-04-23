@@ -1,6 +1,6 @@
 <template>
     <div
-        style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; word-spacing: -2px; margin: 0 20px; padding: 25px 0 9px; border-bottom: 2px solid #666; color: #333; font-size: 16px; font-weight: bold;">
+        style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; word-spacing: -2px; margin: 0 20px; padding: 25px 0 9px; border-bottom: 2px solid #666; color: #333; font-size: 20px; font-weight: bold;">
         주문상품
     </div>
         
@@ -17,7 +17,7 @@
         <div
             style="float: left; width: 68%; margin: 0 0 0 15px; padding: 17px 0 15px;">
             <router-link
-                style="color: #333; font-size: 15px; line-: 18px; display: block; text-decoration: none; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; :36 px; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-family: '맑은고딕', 'malgun gothic', 'dotum', sans-serif;"
+                style="color: #333; font-size: 17px; line-: 18px; display: block; text-decoration: none; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; :36 px; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-family: '맑은고딕', 'malgun gothic', 'dotum', sans-serif;"
                 :to="`/products/` + detail.productIdx">
                 <span style="font-weight: bolder;">[ {{detail.brand}} ]</span><br>{{detail.productName}}
             </router-link>
@@ -25,7 +25,7 @@
                 style="color: #999; font-size: 12px; line-height: 16px; font-weight: bold;">
             </div>
             <div
-                style="color: #999; font-size: 12px; line-height: 16px; font-weight: bold;">
+                style="color: #999; font-size: 15px; line-height: 16px; font-weight: bold;">
                 구매수량 : {{detail.orderQuantity}} 개
             </div>
             <div style="padding: 4px 0 0;">
@@ -33,7 +33,7 @@
                 style="color: #333; font-size: 20px; font-weight: bold; padding: 0 0 0 7px;">
                 {{detail.orderPrice}}
                 <em
-                    style="display: inline-block; color: #b0b0b0; font-style: normal; font-size: 12px; vertical-align: 1px; color: #333 !important; padding: 0 0 0 2px; vertical-align: 2px !important;">
+                    style="display: inline-block; color: #b0b0b0; font-style: normal; font-size: 15px; vertical-align: 1px; color: #333 !important; padding: 0 0 0 2px; vertical-align: 2px !important;">
                     원
                 </em>
             </span>
@@ -65,6 +65,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+h4{
+    font-size: 24px;
+}
+h6{
+    font-size: 16px;
+}
 
 </style>

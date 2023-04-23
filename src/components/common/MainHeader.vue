@@ -21,7 +21,7 @@
         </div>
         <div class="col-md-9">
           <div class="menu_text">
-            <ul>
+            <ul style="float: right; margin-right: 40px;">
               <div class="togle_3">
                 <div class="menu_main">
                   <div class="padding_left0">
@@ -31,9 +31,9 @@
                     <span class="padding_left0"><router-link v-if="loggedIn" :to="{ name: 'Home' }" @click="logout">Logout</router-link></span>
                   </div>
                 </div>
-                <div class="shoping_bag">
+                <!-- <div class="shoping_bag">
                   <img src="@/assets/images/common/search-icon.png" />
-                </div>
+                </div> -->
               </div>
               <div id="myNav" class="overlay">
                 <a href="javascript:void(0)" class="closebtn" @click="closeNav"
@@ -45,14 +45,6 @@
                   >
                   <router-link :to="{ name: 'OnMeeting' }" @click="moveToPage"
                     >Meeting</router-link
-                  >
-                  <router-link :to="{ name: 'OffMeeting' }" @click="moveToPage"
-                    >Map</router-link
-                  >
-                  <router-link
-                    :to="{ name: 'RegisterModal' }"
-                    @click="moveToPage"
-                    >KANG-ONMEETING</router-link
                   >
                   <router-link :to="{ name: 'ProductPage' }" @click="moveToPage"
                     >Store</router-link
@@ -80,14 +72,14 @@
               <!-- <img src="@/assets/images/common/paw.png" class="image-small"> -->
             </h1>
             <p class="banner_text">
-              Adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim
+              메타멍멍은 온/오프 모임을 생성하고 참여할 수 있습니다.
+              또한 멍멍스토어에서 필요한 물품을 살 수 있습니다.
             </p>
             <div class="contact_bt">
-              <a href="contact.html"
+              <!-- <a href="contact.html"
                 >CONTACT US<span class="contact_padding"
                   ><img src="@/assets/images/common/contact-icon.png" /></span
-              ></a>
+              ></a> -->
             </div>
           </div>
           <div class="col-sm-2">

@@ -589,7 +589,7 @@ export default {
   border: 1px solid hsl(0, 0%, 90%);
   padding: 0.4rem 0.4rem;
   max-width: 100%;
-  background: white;
+  background-color: white;
 }
 .topInputSearch {
   width: 10%;
@@ -778,7 +778,7 @@ export default {
   display: none;
   /* Hidden by default */
   position: absolute;
-  /* Stay in ㄹㅊ place */
+  /* Stay in place */
   z-index: 3;
   /* Sit on top */
   left: 0;
@@ -904,16 +904,7 @@ export default {
   flex-basis: 50%;
 }
 
-.form-row input,
-.form-row select {
-  flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: 50%;
-  border: 1px solid hsl(0, 0%, 90%);
-  padding: 0.2rem 0.2rem;
-  max-width: 50%;
-  background: transparent;
-}
+
 
 .slideDown {
   animation-name: slideDown;
@@ -945,7 +936,7 @@ export default {
   }
 }
 
-.input-group-text {
+/* .input-group-text {
   background: #9fd6cd;
   border-color: rgba(224, 224, 224, 0.531);
 
@@ -960,5 +951,5 @@ export default {
 
 .custom-file-input .custom-file {
   border-color: rgba(224, 224, 224, 0.531);
-}
+} */
 </style>

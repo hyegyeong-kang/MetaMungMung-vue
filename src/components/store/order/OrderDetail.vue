@@ -5,54 +5,52 @@
 
             <div class="widget-box">
                 <h4 class="widget-title">주문상세</h4>
-                <h6 class="post-title">주문번호 {{oid}}</h6>
-                <div>결제날짜 {{payment.createDate}} <span style="font-weight: bold;">{{order.status}}</span></div>
+                <h6 class="post-title" style="font-size: 20px">주문번호 {{oid}}</h6>
+                <div style="font-size: 17px">결제날짜 {{payment.createDate}} <span style="font-weight: bold;">{{order.status}}</span></div>
                 <div class="divider"></div>
                 
-                <div class="blog-item"
+                <div style="border: none" class="blog-item"
                     v-for="detail in order.orderDetailList" :key="detail.productDTO.productIdx">
                     <router-link class="post-thumb" :to="{path: '/products/' + detail.productDTO.productIdx}">
                         <img :src="`${detail.productDTO.productImg}`" alt="">
                     </router-link>
-                    <div class="content">
+                    <div class="content" style="font-size: 17px">
                         <router-link
-                            style="color: #333; font-size: 15px; line-: 18px; display: block; text-decoration: none; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; :36 px; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-family: '맑은고딕', 'malgun gothic', 'dotum', sans-serif;"
+                            style="color: #333; font-size: 17px; line-: 18px; display: block; text-decoration: none; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; :36 px; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-family: '맑은고딕', 'malgun gothic', 'dotum', sans-serif;"
                             :to="`/products/` + detail.productDTO.productIdx">
                             {{detail.productDTO.brand}} {{detail.productDTO.productName}}
                         </router-link>
                         {{detail.quantity}}개<br>
-                        <strong>{{order.orderPrice}}</strong>
+                        <strong>{{(order.orderPrice).toLocaleString()}}</strong>
                         <em
-                            style="display: inline-block; color: #b0b0b0; font-style: normal; font-size: 12px; vertical-align: 1px; color: #333 !important; padding: 0 0 0 2px; vertical-align: 2px !important;">
+                            style="display: inline-block; color: #b0b0b0; font-style: normal; font-size: 15px; vertical-align: 1px; color: #333 !important; padding: 0 0 0 2px; vertical-align: 2px !important;">
                             원
                         </em>
+                        <button id="writeReviewBtn" v-if="order.status === '구매확정'" class="_btnConfirm uButton -sizeXL" @click="registerReview(detail.productDTO.productIdx)">리뷰작성</button>
+                        <button id="readReviewBtn" v-if="order.status === '구매확정' && 0" class="_btnCancel uButton -sizeXL -cancel" @click="readReview(detail.productDTO.productIdx)">리뷰조회</button>
                     </div>
                 </div>
                 <div class="divider"></div>
                 
                 <h4 class="widget-title">주문자정보</h4>
-                <h6 class="post-title">{{member.memberName}} | {{member.phone}}</h6>
-                <h6 class="post-title">배송지 {{member.address1}} {{member.address2}}</h6>
+                <h6 class="post-title" style="font-size: 20px">{{member.memberName}} | {{member.phone}}</h6>
+                <h6 class="post-title" style="font-size: 17px">배송지 {{member.address1}} {{member.address2}}</h6>
                 <div class="divider"></div>
                 
-                <h4 class="widget-title">{{subTitle}}</h4>
-                <h6 class="post-title" style="margin:0">{{payment.paymentPrice}}원</h6>
-                    {{payment.method}}
-                    <p v-if="payment.method === '카드'" style="margin: 0;">
-                        일시불({{payment.createDate.split('T')[0]}})
+                <h4 class="widget-title">결제정보</h4>
+                <h6 class="post-title" style="margin:0; font-size: 20px">{{payment.paymentPrice}}원</h6>
+                    <span style="font-size: 17px">{{payment.method}}</span>
+                    <p v-if="payment.method === '카드'" style="margin: 0; font-size: 17px">
+                        일시불({{payment.createDate}})
                     </p>
-                    <p v-else-if="payment.method === '계좌이체'" style="margin: 0;">
-                        입금 완료({{payment.createDate.split('T')[0]}})
+                    <p v-else-if="payment.method === '계좌이체'" style="margin: 0; font-size: 17px">
+                        입금 완료({{payment.createDate}})
                     </p>
-                    <p v-else-if="cancel" style="margin: 0;">
-                        환불 완료({{payment.createDate.split('T')[0]}})
-                    </p>
-                <h6 class="post-title" style="margin-top:10px">적립 포인트 <span style="font-weight: bolder;">{{ payment.accPoint }}</span>원</h6>
-                <div class="btn">
-                    <button id="cancelBtn" v-if="visible()" @click="cancelOrder(oid)">주문취소</button>
-                    <button id="confirmBtn" v-if="visible()" @click="confirmOrder(oid)">구매확정</button>
-                    <button id="confirmBtn" v-if="order.status === '구매확정'" @click="registerReview">리뷰 작성</button>
-                    <button id="listBtn" @click="moveToList">주문목록</button>
+                <h6 class="post-title" style="margin-top:10px; font-size: 17px">적립 포인트 <span style="font-weight: bolder;">{{ payment.accPoint }}</span>원</h6>
+                <div class="btnFooter">
+                    <button id="cancelBtn" v-if="visible()" class="_btnCancel uButton -sizeXL -cancel" @click="cancelOrder(oid)">주문취소</button>
+                    <button id="confirmBtn" v-if="visible()" class="_btnConfirm uButton -sizeXL" @click="confirmOrder(oid)">구매확정</button>
+                    <button id="listBtn" class="_btnCancel uButton -sizeXL -disabled -cancel" @click="moveToList">주문목록</button>
                 </div>
             </div>
         </div>
@@ -73,6 +71,7 @@ export default {
         const router = useRouter();
         const oid = route.params.id;
         const cancel = ref(false);
+        const productIdx = ref(0);
 
         const member = ref({}
             // {id: 1, memberName: '홍길동', email: 'kosa@metanet.com', phone: '010-1234-5678', address: '서울', point: 0}
@@ -98,10 +97,11 @@ export default {
         }
 
         // 리뷰 작성 페이지로 이동
-        const registerReview = () => {
-            // router.push({
-
-            // });
+        const registerReview = (productIdx) => {
+            router.push({
+                name: "ProductReviews",
+                params: {id: productIdx}
+            });
         }
 
         //회원 정보
@@ -118,7 +118,7 @@ export default {
 
         const cancelOrder = async (oid) => {
             try{
-                const res = await axios.patch('/orders/' + oid);
+                const res = await axios.patch('/orders/' + oid + '/cancel');
                 visible.value = false;
                 cancel.value = true;
                 console.log(res);
@@ -130,7 +130,7 @@ export default {
 
         const confirmOrder = async (oid) => {
             try{
-                const res = await axios.patch('/orders/' + oid + '/confirm');
+                const res = await axios.patch('/orders/' + oid);
                 visible.value = false;
                 console.log(res);
                 router.go();
@@ -177,6 +177,12 @@ export default {
 </script>
 
 <style scoped>
+h4{
+    font-size: 24px;
+}
+h6{
+    font-size: 16px;
+}
 button {
   padding: 20px 50px;
   border: none;
@@ -187,16 +193,46 @@ button {
   cursor: pointer;
   margin-left: auto;
 }
-div.btn{
+/* div.btn{
   display: flex
+} */
+
+#writeReviewBtn{
+    float: right;
+    margin: 0;
+    padding: 10px 20px;
+    margin-top: -6%;
+}
+#readReviewBtn{
+    float: right;
+    margin: 0;
+    padding: 10px 20px;
+    margin-top: -6%;
+    background-color: rgb(243, 241, 241);
+}
+
+.btnFooter {
+    margin: 40px 0 58px;
+    text-align: center;
+}
+.btnFooter .-cancel {
+    background: 0 0;
+}
+.btnFooter button {
+    margin: 0 15px;
+}
+.uButton.-cancel {
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #666;
 }
 
 .page-section {
     position: relative;
-    padding-top: 80px;
+    /* padding-top: 110px; */
     padding-bottom: 80px;
     background-color: #fff;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 .blog-item {
     position: relative;
@@ -257,7 +293,7 @@ div.btn{
 }
   
 .widget-title {
-    color: #007bff;
+    color: #55b9eb;
     font-weight: 800;
 }
 
