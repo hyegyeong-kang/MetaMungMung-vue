@@ -298,7 +298,7 @@
             </button>
           </div>
 
-          <!-- {{onMeetingBoardIdx11}} -->
+    
           <!-- <hr> -->
           <!--!!!!댓글 출력 // getCommentsByPostId(board.onMeetingBoardIdx)!!!!-->
           <!-- <ul v-if="board.replyList.length > 0"> -->
@@ -523,7 +523,6 @@ export default {
 
   },
   setup() {
-    const onMeetingBoardIdx11 = ref(null);
 
     const route = useRoute();
     const router = useRouter();
@@ -769,8 +768,8 @@ export default {
         const response = await axios.get(`/onMeetings/${onMeetingIdx}/board/reply`);
         comments.value = {...response.data};
         console.log(`COMMENccccTSSSSSSS : ${JSON.stringify(comments.value, null, 2)}`)
-        console.log(`IDX::: ${comments.value[0].onMeetingBoardIdx}`)
-        onMeetingBoardIdx11.value = comments.value[0].onMeetingBoardIdx;
+      //  console.log(`IDX::: ${comments.value[0].onMeetingBoardIdx}`)
+
      
      } catch (error) {
         console.error(error);
@@ -975,8 +974,6 @@ export default {
       submitSearch,
       searchKeyword,
 
-
-      onMeetingBoardIdx11,
 
       deleteBoard
     }
