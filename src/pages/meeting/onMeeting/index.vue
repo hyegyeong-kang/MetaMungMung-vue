@@ -3,7 +3,7 @@
         <div class="container">
             <OnMeetingHeader @send-type="sendType" :isMain="isMain" :showLocation="true" @send-location="sendLocation"/>
             <hr>
-            <MyOnMeetingList v-if="isMain"/>
+            <MyOnMeetingList v-if="isMain" />
             <OnMeetingCategory v-else :key="categoryKey" :isViewAll="isViewAll"  @select-cate="selectCate"/>
             <hr>
             <OnMeetingList @send-type="sendType" :isMain="isMain" :isSearch="isSearch" :addr="addr" :cate="cate"/>

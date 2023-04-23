@@ -30,13 +30,21 @@ export default {
       try{
           const res = await axios.get('/onMeetings');
           // myOnMeetings.value = {...res.data.myList};
+          let onMeetings = res.data.recommendList;
           let myOnMeetings = res.data.myList;
-          console.log(res.data.myList);
           for(let i = 0; i < Object.keys(myOnMeetings).length; i++){
-            console.log("meet.onMeetingIdx : "+ myOnMeetings[i].onMeetingIdx);
+            onMeetings.push(myOnMeetings[i]);
+          }
+          console.log(onMeetings);
+          for(let i = 0; i < Object.keys(onMeetings).length; i++){
+            console.log("meet.onMeetingIdx : "+ onMeetings[i].onMeetingIdx);
             console.log("route.params.id: "+ route.params.id);
-            if(route.params.id == myOnMeetings[i].onMeetingIdx){
-              isPublic.value = true;
+            if(route.params.id == onMeetings[i].onMeetingIdx){
+              if(onMeetings[i].isPublic === "1")
+                isPublic.value = true;
+              else
+                isPublic.value = false;
+              console.log("공개여부" + onMeetings[i].isPublic);
               break;
             }
           }

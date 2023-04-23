@@ -80,14 +80,14 @@
               <!-- <img src="@/assets/images/common/paw.png" class="image-small"> -->
             </h1>
             <p class="banner_text">
-              Adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim
+              메타멍멍은 온/오프 모임을 생성하고 참여할 수 있습니다.
+              또한 멍멍스토어에서 필요한 물품을 살 수 있습니다.
             </p>
             <div class="contact_bt">
-              <a href="contact.html"
+              <!-- <a href="contact.html"
                 >CONTACT US<span class="contact_padding"
                   ><img src="@/assets/images/common/contact-icon.png" /></span
-              ></a>
+              ></a> -->
             </div>
           </div>
           <div class="col-sm-2">
