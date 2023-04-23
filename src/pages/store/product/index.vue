@@ -34,7 +34,11 @@ export default {
 
     const isCategoryMainFunc = (isTrue) => {
       isCategoryMain.value = isTrue;
+
+      console.log("요기~~!" + isCategoryMain.value);
       isMain.value = false;
+
+      console.log("메인페이지 => " + isCategoryMain.value);
     };
 
     const selectCate = (category) => {
@@ -85,6 +89,7 @@ export default {
       isMain,
       isSearch,
       selectCate,
+      isCategoryMain,
       isCategoryMainFunc,
     };
   },

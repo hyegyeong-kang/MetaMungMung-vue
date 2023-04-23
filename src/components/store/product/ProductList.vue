@@ -286,15 +286,16 @@ export default {
     /* 메인이면 전체 상품을 출력하고, 메인이 아니면 카테고리 상품이나 입력한 상품을 출력한다. */
     watchEffect(() => {
       console.log("productList isMain? => " + props.isMain);
-      if (props.isMain) {
+      if (props.isMain && !props.isCategoryMain) {
         console.log("메인입니다.");
         productListPage();
-      } else {
+      } else if (!props.isMain && props.isCategoryMain) {
         console.log("카테고리별 상품 찾기입니다.");
         console.log(
           "3-1. 카테고리 검색 : 마지막 자식 컴포넌트가 받았어 => " + props.cate
         );
         getSearchCategoryResultList();
+        console.log("isCategoryMain ==> " + props.isCategoryMain);
       }
     });
 
