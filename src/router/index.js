@@ -21,6 +21,7 @@ import Order from "../pages/store/order/index.vue";
 import OrderSuccess from "../pages/store/order/success/index.vue";
 import OrderList from "../pages/store/order/list/index.vue";
 import OrderDetail from "../pages/store/order/_id.vue";
+import Cart from "../pages/store/cart/index.vue";
 import Error from "../pages/error.vue";
 
 const router = createRouter({
@@ -187,6 +188,11 @@ const router = createRouter({
       path: "/404",
       name: "Error",
       component: Error,
+    },
+    {
+      path: "/cart",
+      name: "Cart",
+      component: Cart,
     },
   ],
   scrollBehavior() {
