@@ -167,7 +167,7 @@ export default {
 
     const modifyAllowMemberWithdrawal = () => {
       // 멤버 목록 + 탈퇴 버튼 컴포넌트
-      emit('member-withdrawal', true);
+      emit('member-withdrawal');
     }
 
     const leaveConfirm = async (result) => {
