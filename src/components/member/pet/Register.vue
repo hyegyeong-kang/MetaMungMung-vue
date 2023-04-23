@@ -111,16 +111,11 @@ export default {
           birth: pet.value.birth
         });
 
-        const result = await axios.patch(`/members/pets/register/${memberIdx}`, {
-          authority: 'ROLE_DOGOWNER'
-        });
-
         //const update = await axios.patch('members/update')
         console.log(res.data);
-        console.log(result.data);
 
-        alert(' 님의 반려견 정보가 등록 되었습니다!')
-        //router.push({ name: 'MyPage' });
+        alert('반려견 정보가 등록 되었습니다.')
+        router.push({ name: 'MyPage' });
 
         } catch (error) {
             console.log(error);
