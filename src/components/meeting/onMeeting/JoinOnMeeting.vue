@@ -9,7 +9,6 @@
         </div>
         <p class="group-description" v-html="onMeeting.introduction"></p>
         <button v-if="!isApply && !isFull" @click="joinGroup">가입 신청</button>
-        <button v-else-if="isApply" @click="joinGroup" class="cancel">가입 신청 취소</button>
     </div>
 </template>
 
@@ -20,8 +19,11 @@ import { useRoute, useRouter } from 'vue-router';
 
 export default {
     setup(){
-      const route = useRoute();
-      const router = useRouter();
+        axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+        const memberIdx = sessionStorage.getItem('memberIdx');
+        
+        const route = useRoute();
+        const router = useRouter();
         const onMeeting = ref({}
           // {
           //   onMeetingIdx: 2, onMeetName: '말티쥬 모임 [말모]', category: '일상', introduction: 
@@ -30,6 +32,7 @@ export default {
           //   onMeetingAddr: '가락동', memberCnt: 1716, hostName: '부 끄', maximum: 5000
           // }
         );
+        const myOnMeetings = ref({});
         const postCount = ref(406);
         // const memberCount = ref(0);
         const isApply = ref(false);
@@ -54,24 +57,21 @@ export default {
             }
         });
 
-        const joinGroup = async () => {
+        
+        const joinGroup = () => {
             isApply.value = !isApply.value;
             try{
-              axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
-              const memberIdx = sessionStorage.getItem('memberIdx');
-
-              const res = await axios.post('/onMeetings/' + route.params.id + '/join');
-              console.log(res.data);
-              onMeeting.value = {...res.data};
-              console.log(onMeeting.value);
-
-              setTimeout(() => {
+              setTimeout(async () => {
+                const res = await axios.post('/onMeetings/' + route.params.id + '/join');
+                console.log(res.data);
+                onMeeting.value = {...res.data};
+                console.log(onMeeting.value);
                 router.push({
                   name: "RegisterModal",
                   params: {id: onMeeting.onMeetingIdx}
                 })
               }, 3000);
-              
+
             } catch(err){
               console.log(err);
             }
@@ -79,6 +79,7 @@ export default {
 
         return{
             onMeeting,
+            myOnMeetings,
             postCount,
             isApply,
             isFull,

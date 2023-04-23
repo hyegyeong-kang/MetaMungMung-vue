@@ -37,13 +37,13 @@ export default {
         const isActive = ref(false);
         let prevIdx = 0;
 
-        const getCate = () => {
-            for(let item in document.getElementsByClassName("searchedSortBand")){
-                console.log(item);
-            }
-        }
+        // const getCate = () => {
+        //     for(let item in document.getElementsByClassName("searchedSortBand")){
+        //         console.log(item);
+        //     }
+        // }
 
-        getCate();
+        // getCate();
 
         const cateToggle = (idx) => {
             const parent = document.getElementsByClassName("searchedSortBand")[0];

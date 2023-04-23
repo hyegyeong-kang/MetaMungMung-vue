@@ -58,12 +58,14 @@
       :board="board"
     />
   </div>
+  <MyOffMeeting />
 </template>
 
 <script>
 import CreateModal from "@/components/meeting/offMeeting/modal/createModal.vue";
 import DetailModal from "@/components/meeting/offMeeting/modal/detailModal.vue";
 import ModifyModal from "@/components/meeting/offMeeting/modal/modifyModal.vue";
+import MyOffMeeting from "@/components/meeting/offMeeting/MyOffMeeting.vue";
 import { ref, watchEffect } from "vue";
 import axios from "axios";
 export default {
@@ -72,6 +74,7 @@ export default {
     CreateModal,
     DetailModal,
     ModifyModal,
+    MyOffMeeting,
   },
   data() {
     return {
@@ -94,7 +97,7 @@ export default {
     // api 스크립트 소스 불러오기 및 지도 출력
     if (window.kakao && window.kakao.maps) {
       this.loadMap();
-      this.isOpenFunc(isOpen);
+      // this.isOpenFunc(isOpen);
     } else {
       this.loadScript();
     }

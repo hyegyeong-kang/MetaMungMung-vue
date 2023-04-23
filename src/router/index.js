@@ -21,6 +21,7 @@ import Order from "../pages/store/order/index.vue";
 import OrderSuccess from "../pages/store/order/success/index.vue";
 import OrderList from "../pages/store/order/list/index.vue";
 import OrderDetail from "../pages/store/order/_id.vue";
+import Cart from "../pages/store/cart/index.vue";
 import Error from "../pages/error.vue";
 
 const router = createRouter({
@@ -72,7 +73,7 @@ const router = createRouter({
       }
     },
     {
-      path: "/offMeetings",
+      path: "/onMeeting/:id/offMeetings",
       name: "OffMeeting",
       component: OffMeeting,
       meta: {
@@ -91,9 +92,12 @@ const router = createRouter({
       path: "/onMeeting/create",
       name: "OnMeetingCreate",
       component: OnMeetingCreate,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
-      path: "/onMeeting/board",
+      path: "/onMeeting/:id/board",
       name: "RegisterModal",
       component: RegisterModal,
       meta: {
@@ -119,47 +123,76 @@ const router = createRouter({
       path: "/onMeeting/:id",
       name: "OnMeetingDetail",
       component: OnMeetingDetail,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: "/onMeeting/search",
       name: "OnMeetingSearch",
       component: OnMeetingSearch,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: "/onMeeting/:id/setting",
       name: "OnMeetingDetailSetting",
       component: OnMeetingDetailSetting,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: "/onMeeting/:id/modify",
       name: "OnMeetingModify",
       component: OnMeetingModify,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: "/store/order",
       name: "Order",
       component: Order,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: "/store/order/success/:id",
       name: "OrderSuccess",
       component: OrderSuccess,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: "/store/order/list",
       name: "OrderList",
       component: OrderList,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: "/store/order/:id",
       name: "OrderDetail",
       component: OrderDetail,
+      meta: {
+        requiresAuth: true
+      }
     },
 
     {
       path: "/404",
       name: "Error",
       component: Error,
+    },
+    {
+      path: "/cart",
+      name: "Cart",
+      component: Cart,
     },
   ],
   scrollBehavior() {

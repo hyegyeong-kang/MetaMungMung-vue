@@ -189,7 +189,7 @@
   </header>
 
   <div id="container" class="wrapper nav-closed">
-    <div id="timeline">
+    <div id="timeline" v-if="!settingOpen">
       <!-- 게시물 글 작성하는 곳  -->
       <div class="new-tweet" style="border: 2px solid;border-radius: 2em;color:	#C0C0C0;margin-bottom:20px">
         
@@ -404,6 +404,7 @@
             <button>Load More!!!</button> -->
         </footer>
     </div>
+    <OnMeetingSetting v-if="settingOpen"/>
     <div id="right">
       <div class="search-container" style="border: 1px solid;border-radius: 2em;color:	#C0C0C0">
         <div class="search-input">
@@ -423,19 +424,21 @@
             </div>
           </a>
           <!-- <hr> -->
-          <p align="right" style="font-size:13px">
+          <p align="right" style="font-size:13px" @click="clickSetting">
             <img src="@/assets/images/onMeeting/setting.png" style="width:15px;height:15px;margin-right:10px;">
             모임 설정
-            </p>
+          </p>
           
           <button class="blue" type="button" style="margin-left:10px;width:100%;height:40px;border-radius:2em">
-              <img
-                src="@/assets/images/offMeeting/paw-print.png"
-                height="20"
-                width="20"
-                style="margin-right: 10px;margin-bottom:5px"
-              />
-              OFF 미팅
+              <router-link :to="{name: 'OffMeeting', params: {id: onMeetingIdx}}">
+                <img
+                  src="@/assets/images/offMeeting/paw-print.png"
+                  height="20"
+                  width="20"
+                  style="margin-right: 10px;margin-bottom:5px"
+                />
+                OFF 미팅
+              </router-link>
           </button>
 
         </main>
@@ -462,6 +465,7 @@
 </template>
 
 <script>
+import OnMeetingSetting from "../OnMeetingSetting.vue";
 //import RegisterModal from '@/components/meeting/onMeeting/board/registerModal/registerModal.vue';
 import MapModal from "@/components/meeting/onMeeting/board/modal/mapModal.vue";
 import ReplyList from "@/components/meeting/onMeeting/board/reply/replyList.vue";
@@ -476,6 +480,7 @@ import Swal from "sweetalert2";
 export default {
   name: "RegisterModal",
   components: {
+    OnMeetingSetting,
     //RegisterModal,
     MapModal,
     ReplyList,
@@ -927,10 +932,18 @@ export default {
 
       }
 
+      const settingOpen = ref(false);
 
+      const clickSetting = () => {
+        settingOpen.value = true;
+      }
 
 
     return {
+      settingOpen,
+      clickSetting,
+
+      onMeetingIdx,
       isOpen,
       toggleMap,
       sendAddr,

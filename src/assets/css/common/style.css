@@ -27,7 +27,7 @@
 
 * {
   /* box-sizing: border-box !important; */
-  transition: ease all 0.5s;
+  /* transition: ease all 0.5s; */
 }
 
 html {
@@ -422,7 +422,7 @@ button {
   color: #ffffff;
 }
 .box_section:hover .tiles_img_1 {
-  background-image: url(@/assets/images/common/carpet-img2.png);
+  background-image: url(@/assets/images/common/store2.png);
 }
 .box_section.active {
   background-color: #89cbeb;
@@ -442,7 +442,7 @@ button {
   margin: 0 auto;
   text-align: center;
   min-height: 90px;
-  background-image: url(@/assets/images/common/carpet-img.png);
+  background-image: url(@/assets/images/common/store.png);
   background-repeat: no-repeat;
 }
 .tile_text {

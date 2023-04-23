@@ -3,7 +3,7 @@
     <div class="container">
 
       <router-link :to="{ name: 'ProductPage' }">
-        <h1 class="services_taital">
+        <h1 class="services_taital" style="margin-left: 10px; margin-bottom: 30px;">
           <span>스토어</span>
           <img
             src="@/assets/images/offMeeting/paw-print.png"
@@ -16,7 +16,7 @@
       <div class="page-section">
         <div class="container">
           <!--중단 상품리스트 -->
-          <div style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; padding: 11px 0 0; color: #89cbeb; font-size: 32px; line-height: 41px; letter-spacing: -2px;">
+          <div style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; padding: 11px 0 0; color: #55b9eb; font-size: 32px; line-height: 41px; letter-spacing: -2px; font-weight: bold">
             주문하기
           </div>
         </div>
@@ -28,10 +28,8 @@
 
           <OrderMemInfo :member="memberInfo" @send-msg="sendMsg"/>
           <OrderProductInfo :orderDetails="orderDetails"/>
-          <OrderPayInfo :orderDetails="orderDetails" @send-payInfo="sendPayInfo"/>
+          <OrderPayInfo :orderDetails="orderDetails" @send-payInfo="sendPayInfo" :member="memberInfo" />
           
-          <!-- <input type="hidden" name="payment_amount" id="paymentAmountInput" v-model="paymentAmount"/>
-          <input type="hidden" name="usePoint" id="usePointInput" v-model="usePoint"/> -->
           <div class="btnFooter">
             <button type="button" class="_btnCancel uButton -sizeXL -cancel" @click="cancel">취소</button>
             <button type="submit" class="_btnConfirm uButton -sizeXL -disabled" id="paymentBtn" @click="check">결제</button>

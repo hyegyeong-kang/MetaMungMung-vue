@@ -1,5 +1,5 @@
 <template>
-  <header class="nav-closed">
+  <!-- <header class="nav-closed">
     <div class="wrapper" style="margin-left: 20px">
       <div class="top">
         <img
@@ -22,22 +22,22 @@
     </div>
   </header>
 
-  <div id="container" class="wrapper nav-closed">
+  <div id="container" class="wrapper nav-closed"> -->
         <!-- 여기부터 모임 설정 컴포넌트에 들어가면 됨 -->
         <div class="group-settings">
             <h2 class="title">모임 설정</h2>
             <hr>
             <table class="table table-hover table-mc-light-blue">
                 <tbody>
-                    <tr>
+                    <tr v-if="isHost">
                         <td data-title="td"><label for="allow-member-removal">모임 정보 관리</label></td>
                         <td data-title="btn" style="text-align: right"><button @click="modifyOnMeetingInfo">변경</button></td>
                     </tr>
-                    <tr>
+                    <tr v-if="isHost">
                         <td data-title="td"><label for="max-members">최대 멤버수<br><span class="smallText">{{maxMemberCnt}}명까지</span></label></td>
                         <td data-title="btn" style="text-align: right"><button @click="modifyMaxMembers">변경</button></td>
                     </tr>
-                    <tr>
+                    <tr v-if="isHost">
                         <td data-title="td"><label for="allow-member-removal">멤버 탈퇴 설정</label></td>
                         <td data-title="btn" style="text-align: right"><button @click="modifyAllowMemberWithdrawal">변경</button></td>
                     </tr>
@@ -45,7 +45,7 @@
                         <td data-title="td"><label for="max-members">모임 탈퇴</label></td>
                         <td data-title="btn" style="text-align: right"><button @click="leaveGroup">탈퇴하기</button></td>
                     </tr>
-                    <tr>
+                    <tr v-if="isHost">
                         <td data-title="td"><label for="max-members">모임 삭제</label></td>
                         <td data-title="btn" style="text-align: right"><button @click="deleteGroup">삭제하기</button></td>
                     </tr>
@@ -54,7 +54,7 @@
         </div>
         <!-- 여기까지 -->
 
-        <div>
+        <!-- <div>
       <section>
         <header>
           <h3>뭉뭉뭉</h3>
@@ -80,9 +80,9 @@
           <a href="#">View All</a>
         </header>
         <main>
-          <a href="#">
+          <a href="#"> -->
             <!--여기서 카페 멤버 반복으로 돌려주면 됨 -->
-            <img
+            <!-- <img
               src="https://www.petoria.co.kr/web/product/big/202302/b2fde590335a31b868394dc90006e99f.jpg"
             />
             <div class="user">
@@ -93,7 +93,7 @@
         </main>
       </section>
     </div>
-</div>
+</div> -->
 </template>
 
 <script>
@@ -110,9 +110,33 @@ export default {
   },
   emits: ['member-withdrawal'],
   setup(props, {emit}){
+    axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+    const memberIdx = sessionStorage.getItem('memberIdx');
+
     const route = useRoute();
     const router = useRouter();
     const maxMemberCnt = ref(50);
+    const isHost = ref(false);
+    
+    const isHostFun = async () => {
+      try{
+          const res = await axios.get('/onMeetings/' + route.params.id);
+          
+          console.log(res.data);
+          const hostIdx = res.data.hostIdx;
+
+          if(memberIdx != hostIdx){
+            isHost.value = false;
+          }else{
+            isHost.value = true;
+          }
+          maxMemberCnt.value = res.data.personnel;
+
+        } catch(err){
+            console.log(err);
+        }
+    }
+    isHostFun();
 
     const modifyOnMeetingInfo = () => {
       router.push({
@@ -147,23 +171,22 @@ export default {
     }
 
     const leaveConfirm = async (result) => {
-      if(result.isConfirmed){
-        try{
-          axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
-          const memberIdx = sessionStorage.getItem('memberIdx');
-
-          const res = await axios.delete('/onMeetings/' + route.params.id + '/withdraw');
+      try{
+        const res = await axios.delete('/onMeetings/' + route.params.id + '/withdraw');
+        console.log(res);
+        
+        if(res.data === 1){
+          Swal.fire('탈퇴 완료', '탈퇴가 성공적으로 완료되었습니다.', 'success').then(() => {
+            router.push({
+              name: 'OnMeeting'
+            });
+          });
           
-          // 삭제 성공
-          if(res === 1){
-            Swal.fire('탈퇴 완료', '탈퇴가 성공적으로 완료되었습니다.', 'success');
-          }
-          else{
-            Swal.fire('탈퇴 불가능', '탈퇴를 원하면 모임을 삭제하시길 바랍니다.', 'error');
-          }
-        } catch(err){
-            console.log(err);
+        } else{
+          Swal.fire('탈퇴 불가능', '탈퇴를 원하면 모임을 삭제하시길 바랍니다.', 'error');
         }
+      } catch(err){
+          console.log(err);
       }
     }
 
@@ -178,21 +201,24 @@ export default {
         cancelButtonText : '취소',
         reverseButtons: true
       }).then((result) => {
-        leaveConfirm(result);
+        if(result.isConfirmed){
+          leaveConfirm();
+        }
       });
     }
 
     const deleteConfirm = async (result) => {
       if(result.isConfirmed){
         try{
-          axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
-          const memberIdx = sessionStorage.getItem('memberIdx');
-
           const res = await axios.delete('/onMeetings/' + route.params.id);
           
           // 삭제 성공
-          if(res === 1){
-            Swal.fire('모임 삭제 완료', '삭제가 성공적으로 완료되었습니다.', 'success');
+          if(res.data === 1){
+            Swal.fire('모임 삭제 완료', '삭제가 성공적으로 완료되었습니다.', 'success').then(() => {
+              router.push({
+                name: 'OnMeeting'
+              });
+            });
           }
           else{
             Swal.fire('모임 삭제 불가능', '멤버가 존재합니다.', 'error');
@@ -220,6 +246,8 @@ export default {
 
     return{
       maxMemberCnt,
+      isHost,
+      isHostFun,
       modifyOnMeetingInfo,
       modifyMaxMembers,
       modifyAllowMemberWithdrawal,

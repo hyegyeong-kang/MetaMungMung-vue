@@ -46,28 +46,6 @@
                         </div>
                     </div>
                 </li>
-
-                <!-- <li class="bandCardItem">
-                    <div class="uCover -main">
-                        <div class="bandInner">
-                            <a href="/band/86246851" class="bandCover _adBandCover _link">
-                                <div class="cover">
-                                    <div class="uCoverImage -border -w186 ">
-                                        <span class="coverInner">
-                                            <img src="https://partnercenter-phinf.pstatic.net//MjAyMzAyMTNfMjE4/MDAxNjc2MjUzOTAxMjc1.zwF_DKvoVwxU9DGIydEQ419o76wOlzeH90XUadekfGgg.fp7sebXYmcB1hJbc7B-7hWz3zXzbctJy_Ty5Xgso_swg.PNG/image.png" height="135" class="coverImg _advertisement_image" alt="">
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="bandName">
-                                    <p class="uriText">국내산 들기름 가격보고 놀라요</p>
-                                    <span class="preview">
-                                        AD<em class="dot"></em>밴드 미리보기
-                                    </span>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </li> -->
             </ul>
         </div>
     </div>
@@ -95,6 +73,7 @@ export default {
         //     memberCnt: 2400
         // }
         ]);
+        
 
         const getOnMeetingList = async () => {
             try{
@@ -108,11 +87,10 @@ export default {
                 console.log(err);
             }
         }
-
         getOnMeetingList();
 
         return{
-            myOnMeetings
+            myOnMeetings,
         }
     }
 }
