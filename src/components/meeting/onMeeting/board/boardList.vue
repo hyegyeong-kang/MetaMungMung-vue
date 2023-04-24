@@ -162,7 +162,7 @@
 	</button>
 </nav> -->
 
-  <header class="nav-closed" style="background:#afd9ee">
+  <header class="nav-closed" :src="onMeetingInfo.thumbnail">
     <div class="wrapper" style="margin-left: 20px">
       <div class="top">
         <img
@@ -196,26 +196,25 @@
         
         
         <form @submit.prevent="addPost">
-        <textarea placeholder="새로운 소식을 남겨보세요." v-model="newPost"></textarea>
+        <textarea placeholder="새로운 소식을 남겨보세요." v-model="newPost" style="color:black"></textarea>
         <div class="btns">
           <div class="btn">
-            <button>
-              <!-- <input type="file" class="imageUpload" id="addPhoto" accept="image/*" name="attachment" @change="upload"> -->
+            <!-- <button>
               <img
                 src="@/assets/images/onMeeting/upload-file-icon.png"
                 alt=""
               />
-            </button>
+            </button> -->
           </div>
           <div class="btn">
-            <button @click="toggleMap">
+            <!-- <button @click="toggleMap">
               <img
                 src="@/assets/images/onMeeting/map-icon2.png"
                 alt=""
                 width="25"
                 height="25"
               />
-            </button>
+            </button> -->
             <!-- <MapModal ref="map" @close="closeMapModal" /> -->
             <MapModal v-if="isOpen" @close-req="toggleMap" @send-addr="sendAddr" />
           </div>
@@ -433,9 +432,9 @@
               <router-link :to="{name: 'OffMeeting', params: {id: onMeetingIdx}}">
                 <img
                   src="@/assets/images/offMeeting/paw-print.png"
-                  height="20"
-                  width="20"
-                  style="margin-right: 10px;margin-bottom:5px"
+                  height="10"
+                  width="10"
+                  style="margin-right: 10px;margin-left:15px"
                 />
                 OFF 미팅
               </router-link>
@@ -615,11 +614,7 @@ export default {
       // onMeetingIdx 넣어주면 됨
       await axios.get(`/onMeetings/${onMeetingIdx}/board/members`, {})
         .then((response) => {
-        //  console.log(`REGISTER MEM: ${JSON.stringify(response.data, null, 2)}`);
-          //console.log(`REGISTER MEM222222: ${JSON.stringify(response.data[0], null, 2)}`);
           registerMems.value = {...response.data}
-
-          //console.log(`MEMBER::: ${JSON.stringify(registerMems.value, null, 2)}`);
 
           registerMemsCnt.value = Object.keys(registerMems.value).length;
           console.log(`### ${registerMemsCnt.value}`)
@@ -654,9 +649,6 @@ export default {
       console.log("Click!!");
       console.log("###NEWWWW###" + newPost.value);
 
-      //console.log(`ONMEETINGIDX::: ${onMeetingIdx}`)
-
-      // onMeetingIdx = 1
       axios.post(`/onMeetings/${onMeetingIdx}/board`,
       {
         onMeetingIdx: onMeetingIdx,
