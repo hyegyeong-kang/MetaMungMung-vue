@@ -299,6 +299,7 @@ export default {
 
     const order = () => {
       let resultCnt = document.getElementById("result").value;
+      console.log("productIdx: " + productIdx + "quantity: " + resultCnt);
       router.push({
         name: "Order",
         query: { id: productIdx, quantity: resultCnt },

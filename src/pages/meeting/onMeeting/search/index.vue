@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import {ref, watchEffect} from 'vue';
+import {ref, watchEffect, onMounted} from 'vue';
 import {useRoute} from 'vue-router';
 import MyOnMeetingList from '../../../../components/meeting/onMeeting/MyOnMeetingList.vue'
 import OnMeetingList from '../../../../components/meeting/onMeeting/OnMeetingList.vue'
@@ -66,6 +66,29 @@ export default {
             addr.value = location;
         }
 
+        onMounted(() => {
+            checkFunc();
+        });
+
+        const checkFunc = () => {
+            let overlay = null;
+            let headerSection = null;
+
+            check();
+
+            function check() {
+                if (overlay == null) {
+                    overlay = document.getElementsByClassName("overlay")[0];
+                }
+                if (headerSection == null) {
+                    headerSection = document.getElementsByClassName("header_section")[0];
+                }
+            }
+
+            headerSection.classList.add("background_bg");
+            document.getElementById("bannerDiv").style.display = "none";
+        };
+
         return{
             isMain,
             isSearch,
@@ -75,7 +98,8 @@ export default {
             sendType,
             forceRender,
             selectCate,
-            sendLocation
+            sendLocation,
+            checkFunc
         }
     }
 }

@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import {ref} from 'vue';
+import {ref, onMounted} from 'vue';
 import OnMeetingHeader from '../../../components/meeting/onMeeting/OnMeetingHeader.vue';
 import MyOnMeetingList from '../../../components/meeting/onMeeting/MyOnMeetingList.vue'
 import OnMeetingList from '../../../components/meeting/onMeeting/OnMeetingList.vue'
@@ -66,6 +66,29 @@ export default {
             categoryKey.value += 1;
         }
 
+        onMounted(() => {
+            checkFunc();
+        });
+
+        const checkFunc = () => {
+            let overlay = null;
+            let headerSection = null;
+
+            check();
+
+            function check() {
+                if (overlay == null) {
+                    overlay = document.getElementsByClassName("overlay")[0];
+                }
+                if (headerSection == null) {
+                    headerSection = document.getElementsByClassName("header_section")[0];
+                }
+            }
+
+            headerSection.classList.add("background_bg");
+            document.getElementById("bannerDiv").style.display = "none";
+        };
+
         return{
             isMain,
             isSearch,
@@ -76,7 +99,8 @@ export default {
             sendLocation,
             selectCate,
             sendType,
-            forceRender
+            forceRender,
+            checkFunc
         }
     }
 }

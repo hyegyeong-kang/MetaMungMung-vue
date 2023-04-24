@@ -19,7 +19,8 @@
   
   <script>
   import {ref, watchEffect} from 'vue';
-  import {useRouter} from 'vue-router';
+  import {useRouter, useRoute} from 'vue-router';
+  import axios from 'axios';
   
   export default {
     props:{
@@ -32,6 +33,10 @@
       document.head.appendChild(script);*/
     },
     setup(props){
+      axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+      const memberIdx = sessionStorage.getItem('memberIdx');
+
+      const route = useRoute();
       const router = useRouter();
       const maxMemberCnt = ref(50);
       const members = ref([{}
@@ -45,7 +50,9 @@
       const getMemberList = () => {
         let arr = [];
         for(let i = 0; i < Object.keys(props.memberList).length; i++){
-          arr.push(props.memberList[i]);
+          if(props.memberList[i].memberIdx != memberIdx){
+            arr.push(props.memberList[i]);
+          } 
         }
         let arr2 = [];
         for(let i = 0; i < arr.length; i++){
@@ -79,7 +86,15 @@
               console.log(res);
               
               if(res.data === 1){
-                Swal.fire('강제 탈퇴 완료', '강제 탈퇴가 성공적으로 완료되었습니다.', 'success');
+                Swal.fire('강제 탈퇴 완료', '강제 탈퇴가 성공적으로 완료되었습니다.', 'success').then((result) => {
+                  if(result.isConfirmed){
+                    // router.push({
+                    //   name: "RegisterModal",
+                    //   params: {id: route.params.id}
+                    // });
+                    router.go(0);
+                  }
+                });
                 
               } else{
                 Swal.fire('강제 탈퇴 불가능', '다시 시도해주세요.', 'error');

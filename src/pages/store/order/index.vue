@@ -42,7 +42,7 @@
 
 <script>
 import {useRoute, useRouter} from 'vue-router';
-import {ref} from 'vue';
+import {ref, watchEffect, onMounted} from 'vue';
 import axios from 'axios';
 import OrderMemInfo from '../../../components/store/order/OrderMemInfo.vue';
 import OrderProductInfo from '../../../components/store/order/OrderProductInfo.vue';
@@ -99,6 +99,7 @@ export default {
     // 주문서 페이지
     const getOrderPage = async () => {
       let arr = [];
+      console.log("길이" + route.query.id.length);
       for(let i = 0; i < route.query.id.length; i++){
         console.log(i);
         arr.push({
@@ -181,6 +182,30 @@ export default {
       router.go(-1);
     }
 
+    onMounted(() => {
+      checkFunc();
+    });
+
+    const checkFunc = () => {
+      let overlay = null;
+      let headerSection = null;
+
+      check();
+
+      function check() {
+        if (overlay == null) {
+          overlay = document.getElementsByClassName("overlay")[0];
+        }
+        if (headerSection == null) {
+          headerSection = document.getElementsByClassName("header_section")[0];
+        }
+      }
+
+      headerSection.classList.add("background_bg");
+      document.getElementById("bannerDiv").style.display = "none";
+    };
+
+
     return {
       usePoint,
       memberInfo,
@@ -192,6 +217,7 @@ export default {
       sendMsg,
       sendPayInfo,
       cancel,
+      checkFunc,
     }
   }
 }
