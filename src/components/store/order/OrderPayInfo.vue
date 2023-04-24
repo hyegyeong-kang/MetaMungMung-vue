@@ -104,7 +104,7 @@
                 </strong>
                 <span
                     style="margin: 0; padding: 0; border: 0; box-sizing: border-box; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; float: right; color: #ff2828; font-weight: bold; font-size: 28px; line-height: 38px; letter-spacing: 0;">
-                    <p id="finalPrice" style="display: inline; color: #ff2828; margin-right: 5px; font-weight: bold;">{{paymentAmount}}</p>
+                    <p id="finalPrice" style="display: inline; color: #ff2828; margin-right: 5px; font-weight: bold;" >{{paymentAmount}}</p>
                     <em
                         style="margin: 0; padding: 0; border: 0; box-sizing: border-box; font-size: 17px; line-height: 22px; font-family: '맑은고딕', 'Malgun Gothic', 'dotum', sans-serif; letter-spacing: -1px; display: inline-block; margin-left: 3px; font-style: normal; font-weight: bold; vertical-align: 2px; letter-spacing: -1px;">
                         원
@@ -137,6 +137,13 @@ export default {
         const toggleDisabledPayMethod = ref(false);
         const accPoint = ref(0);
 
+
+        // watchEffect(() => {
+        //     paymentAmount.value = paymentAmount.value - usePoint.value;
+        //     console.log(paymentAmount.value);
+        //     console.log(usePoint.value);
+        // });
+
         const inputPoint = () => {
             toggleDisabledPayMethod.value = false;
             if(totalPrice.value < usePoint.value || props.member.point < usePoint.value){
@@ -147,6 +154,8 @@ export default {
             else{
                 toggleErrorMsg.value = false;
                 paymentAmount.value = totalPrice.value - usePoint.value;
+                console.log("결제금액" + paymentAmount.value);
+                console.log("사용 포인트" + usePoint.value);
                 if(paymentAmount.value == 0){
                     selected.value = '적립금';
                     toggleDisabledPayMethod.value = true;
@@ -165,6 +174,7 @@ export default {
         }
 
         console.log("포인트 줘" + props.member.point);
+        
 
         watchEffect(() => {
             calTotalPrice();
