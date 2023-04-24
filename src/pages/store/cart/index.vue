@@ -266,7 +266,7 @@
                
             let productIdxArr = [];
             let quantityArr = [];
-            for(let item in selectedProducts.value){
+            for(let item in cartList.value){
                 console.log(cartList.value[item]);
                 productIdxArr.push(cartList.value[item].productList[0].productIdx);
                 quantityArr.push(cartList.value[item].quantity);
