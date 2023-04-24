@@ -219,7 +219,7 @@
             <MapModal v-if="isOpen" @close-req="toggleMap" @send-addr="sendAddr" />
           </div>
           <div class="btn">
-            <button type="submit">게시</button>
+            <button type="submit" style="font-weight: bold">게시</button>
           </div>
         </div>
          </form>
@@ -252,7 +252,7 @@
             </div>
             
           <div class="message">
-            <p>{{board.boardContents}}</p>
+            <p style="color:black">{{board.boardContents}}</p>
             <!-- <img
               src="https://img.dogpre.com/web/dogpre/event/popular_keyword_theme/43_pc_main_page_banner_0036.jpg"
             /> -->
@@ -383,7 +383,7 @@
                     ></textarea>
                   </span>
                   <span>
-                    <button type="submit" style="border: 1px solid;border-radius: 2em;color:#fff">보내기</button>
+                    <button type="submit" style="border: 1px solid;border-radius: 2em;color:#fff;font-weight: bold">보내기</button>
                   </span>
                 </form>
             </div>
@@ -435,9 +435,9 @@
                   src="@/assets/images/offMeeting/paw-print.png"
                   height="10"
                   width="10"
-                  style="margin-right: 10px;margin-left:15px"
+                  style="margin-right: 10px;margin-left:15px;height:20px;width:20px"
                 />
-                OFF 미팅
+                <a style="color:white; font-weight: bold;text-align:center">OFF 미팅</a>
               </router-link>
           </button>
 
