@@ -33,7 +33,7 @@ export default {
           // }
         );
         const myOnMeetings = ref({});
-        const postCount = ref(406);
+        const postCount = ref(5);
         // const memberCount = ref(0);
         const isApply = ref(false);
         const isFull = ref(false);
@@ -58,24 +58,39 @@ export default {
         });
 
         
-        const joinGroup = () => {
+        const joinGroup = async () => {
             isApply.value = !isApply.value;
             try{
-              setTimeout(async () => {
-                const res = await axios.post('/onMeetings/' + route.params.id + '/join');
-                console.log(res.data);
-                onMeeting.value = {...res.data};
-                console.log(onMeeting.value);
-                router.push({
-                  name: "RegisterModal",
-                  params: {id: route.params.id}
-                })
-              }, 3000);
+              
+              const res = await axios.post('/onMeetings/' + route.params.id + '/join');
+              console.log(res.data);
+              onMeeting.value = {...res.data};
+              console.log(onMeeting.value);
+
+              router.push({
+                name: "RegisterModal",
+                params: {id: route.params.id}
+              });
 
             } catch(err){
               console.log(err);
             }
         }
+
+        // 게시물 출력
+        const getBoardList = async() => {
+          try{
+            // onMeetingIdx 넣어주면 됨
+            const res = await axios.get(`/onMeetings/${route.params.id}/board`);
+            console.log(res.data[0].boardList.length);
+            postCount.value = res.data[0].boardList.length;
+            console.log("게시글 개수 : " + postCount.value);
+          }catch(err) {
+              console.log(err);
+          }
+        }
+        getBoardList();
+
 
         return{
             onMeeting,
