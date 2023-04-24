@@ -240,7 +240,8 @@
           
 
         <div class="kang" style="margin-left:20px;width:100%;">
-          <p class="deleteButton" style="margin-right:-430px;float:right;font-size:15px" @click="deleteBoard(board.onMeetingBoardIdx)"><strong>X</strong></p>
+          <!-- <p class="deleteButton" style="margin-right:-430px;float:right;font-size:15px" @click="deleteBoard(board.onMeetingBoardIdx)"><strong>X</strong></p> -->
+         
           <!-- <button class="deleteButton" style="margin-right:-430px;float:right">ddd</button> -->
             <div class="info">
               <img
@@ -248,7 +249,7 @@
               />
               <p><strong style="margin-left:10px;color:black">{{ board.boardWriter }}</strong></p>
               <time>{{ board.boardCreateDate.split('T')[0] }}</time>
-              
+               <p class="deleteButton" style="margin-left:430px;" @click="deleteBoard(board.onMeetingBoardIdx)"><strong>X</strong></p>
             </div>
             
           <div class="message">
