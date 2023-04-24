@@ -6,13 +6,13 @@
           >👉🏻 나의 오프모임 조회
         </label>
         <input
-          v-model="search"
-          type="search"
+          v-model="searchKeyword"
+          type="text"
           placeholder="참여한 모임을 확인해보세요!"
           class="form-control focus:outline-none"
-          id="search-element"
-          @input="searchGroup($event)"
-          required
+          id="search"
+          autocomplete="off"
+          @keyup.enter="submitSearch"
         />
       </div>
     </div>
@@ -65,12 +65,20 @@ import { useRoute } from "vue-router";
 import axios from "axios";
 import { onMounted } from "@vue/runtime-core";
 export default {
-  setup() {
+  props: ["onMeetingIdx"],
+  setup(props) {
     const myIdx = Number(sessionStorage.getItem("memberIdx"));
-    const myMeetingList = ref(null);
+    /* 기존의 오프 미팅 리스트 */
+    const myMeetingList = ref([]);
+
+    /* 검색용 오프 미팅 리스트 */
+    const searchMyMeetingList = ref(null);
+
     const route = useRoute();
-    const search = "";
-    let searchGroup = function () {};
+    let searchKeyword = ref("");
+
+    let onMeetingIdx = ref(0);
+
     /* 나의 오프모임 조회 axios 비동기 통신 */
     const myOffMeeting = async () => {
       try {
@@ -90,35 +98,63 @@ export default {
 
     myOffMeeting();
 
-    // console.log(myMeetingList.value.length);
     /* 키워드 조회 */
+    const submitSearch = async () => {
+      onMeetingIdx = props.onMeetingIdx;
+      console.log("이히히히 => " + onMeetingIdx);
+      console.log("여기는 내 모임 컴포넌트 onMeetingIdx : " + onMeetingIdx);
 
-    onMounted(() => {
-      window.onload = () => {
-        searchGroup = (event) => {
-          const len = Object.keys(myMeetingList.value).length;
-          console.log("len => " + len);
+      axios.defaults.headers.common["AUTHORIZATION"] =
+        sessionStorage.getItem("token");
 
-          for (let i = 0; i < len; i++) {
-            if (
-              myMeetingList.value[i].title.includes(event.target.value) ===
-              false
-            ) {
-              document.querySelector(".group-item")[i].style.display = "none";
-            } else {
-              document.querySelector(".group-item")[i].style.display = "flex";
-            }
-          }
-        };
-      };
-    });
+      // 검색어를 이용한 검색 로직 구현
+      console.log(`Searching for ${searchKeyword.value}`);
+
+      try {
+        console.log(
+          "try문 안으로 들어왔다  => " +
+            onMeetingIdx +
+            " " +
+            searchKeyword.value
+        );
+
+        const res = await axios.get("/offMeetings/search/" + onMeetingIdx, {
+          params: {
+            keyword: searchKeyword.value,
+          },
+        });
+
+        console.log("여기까지 들어 왔니?");
+        // console.log(JSON.stringify(res));
+        searchMyMeetingList.value = res.data;
+
+        console.log(
+          `SEARCH:::: ${JSON.stringify(searchMyMeetingList.value, null, 2)}`
+        );
+        console.log(`원래:: ${JSON.stringify(myMeetingList.value, null, 2)}`);
+
+        // console.log(typeof myMeetingList.value);
+
+        myMeetingList.value = searchMyMeetingList.value;
+
+        console.log(
+          `덮어씌워졌니:: ${JSON.stringify(myMeetingList.value, null, 2)}`
+        );
+      } catch (err) {
+        console.log(err);
+      }
+
+      searchKeyword.value = "";
+    };
 
     return {
       myOffMeeting,
       myIdx,
       myMeetingList,
-      search,
-      searchGroup,
+      submitSearch,
+      searchKeyword,
+      searchMyMeetingList,
+      onMeetingIdx,
     };
   },
 };

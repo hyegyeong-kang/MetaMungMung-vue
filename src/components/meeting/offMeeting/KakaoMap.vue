@@ -59,7 +59,7 @@
       :board="board"
     />
   </div>
-  <MyOffMeeting />
+  <MyOffMeeting :onMeetingIdx="onMeetingIdx" />
 </template>
 
 <script>
@@ -94,9 +94,12 @@ export default {
       isOpen: false,
       board: null,
       route: useRoute(),
+      onMeetingIdx: 0,
     };
   },
   mounted() {
+    this.onMeetingIdx = this.route.params.id;
+    console.log("여기는 카카오 onMeetingIdx =>" + this.onMeetingIdx);
     // api 스크립트 소스 불러오기 및 지도 출력
     if (window.kakao && window.kakao.maps) {
       this.loadMap();
@@ -134,7 +137,7 @@ export default {
       let locationAddress = "";
       let base = this;
       const option = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667),
+        center: new kakao.maps.LatLng(37.49498901830771, 127.1223378077649),
         level: 3,
       };
       /* 지도 생성 코드 */
@@ -191,6 +194,9 @@ export default {
         const longitude = latlng.getLng();
         base.currentLat = latitude;
         base.currentLng = longitude;
+
+        // console.log("lng" + base.currentLat),
+        // console.log("lat : " + base.currentLng);
         /* 주소 얻어오기(주소-좌표 변환) */
         getAddr(latitude, longitude);
         function getAddr(lat, lon) {
