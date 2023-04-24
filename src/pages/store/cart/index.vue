@@ -77,7 +77,7 @@
                 <!--밑에 계속 쇼핑하기, 결제하기 버튼-->
                 <div class="btn_box">
                     <button type="button" onclick="history.go(-1);return false;" class="btn wh-btn" style="border-color:#87cefa;background:white">계속 쇼핑하기</button>
-                    <button type="button" @click="order()" class="btn black-btn" style="background-color:#87cefa">구매하기</button>
+                    <button type="button" @click="order" class="btn black-btn" style="background-color:#87cefa">구매하기</button>
                 </div>
               </div>
             </div>
@@ -86,10 +86,12 @@
       <div class="agree"></div> <!-- 이거 지우지 마세요! -->
   </template>
   <script>
+  import {useRouter} from "vue-router";
   import { computed, watch, ref } from "vue";
   import axios from 'axios';
   export default {
         setup() {
+            const router = useRouter();
             const selectedProducts = ref([]);
             const allSelected = ref(false);
 
@@ -259,7 +261,7 @@
         const order = () => {
             console.log(`@@@ ${JSON.stringify(cartList.value, null, 2)}`)
 
-            axios.post('/orders/', 
+            /*axios.post('/orders/', 
                 {
                     cartList: cartList.value,
                     
@@ -268,7 +270,24 @@
                 })
                 .catch((error) => {
                 console.log(error);
-                });
+                });*/
+
+               
+            let productIdxArr = [];
+            let quantityArr = [];
+            for(let item in selectedProducts.value){
+                console.log(cartList.value[item]);
+                productIdxArr.push(cartList.value[item].productList[0].productIdx);
+                quantityArr.push(cartList.value[item].quantity);
+            }
+            console.log(productIdxArr);
+            console.log(quantityArr);
+
+             /*배열로 보내기*/
+            router.push({
+                name: "Order",
+                query: { id: productIdxArr, quantity: quantityArr },
+            });
         };
 
     
