@@ -247,11 +247,25 @@ export default {
     };
 
     /* 장바구니 페이지로 이동 */
-    const moveToCartPage = () => {
-      let resultCnt = document.getElementById("result").value;
+
+      const moveToCartPage = async() => {
+       let resultCnt = document.getElementById("result").value;
+
+      console.log(`resultCnt@@@ ${resultCnt}`);
+
+      await axios.post(`/cart`, {
+        productIdx: productIdx,
+        quantity: resultCnt
+      })
+      .then((response) => {
+        console.log(`장바구니 추가`);
+      }).catch((err) => {
+        console.log(`장바구니 추가 에러: ${err}`)
+      })
+
       router.push({
         name: "Cart",
-        query: { id: productIdx, quantity: resultCnt },
+      //  query: { id: productIdx, quantity: resultCnt },
       });
     };
 

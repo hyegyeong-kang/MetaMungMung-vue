@@ -6,12 +6,12 @@
                 <ul class="cart_list">
                   <!--맨 위 전체선태그 삭제 버튼-->
                   <li> 
-                        <div class="checkbox">
+                        <!-- <div class="checkbox"> -->
                             <!-- <input type="checkbox" name="all_chk" id="all_chk"  @click="checkAll($event.target.checked)"> -->
-                            <input type="checkbox" v-model="allSelected" @change="selectAll">
+                            <!-- <input type="checkbox" v-model="allSelected" @change="selectAll">
                             <label for="all_chk" style="margin-left:5px" >전체선택</label>
-                        </div>
-                        <div class="del_btn">삭제 (<span class="num">0</span>)</div>
+                        </div> -->
+                        <!-- <div class="del_btn">삭제 (<span class="num">0</span>)</div> -->
                   </li>
                     
   
@@ -21,11 +21,10 @@
 
                   <div v-for="(cart, index) in cartList" :key="index" >
                       <li class="cell">
-                          <!--상품 체크박스 부분-->
-                          <div class="checkbox">
-                              <input type="checkbox" v-model="selectedProducts" :value="index">
-                              <!-- <label :for="cart" :key="index + '1'"></label> -->
-                          </div>
+                          <!-- 상품 체크박스 부분--> 
+                            <div class="checkbox">
+                              <input type="checkbox" v-model="selectedProducts" :value="index"> 
+                            </div>
                     
                           <div class="item_detail">
                               <tr>
@@ -55,7 +54,7 @@
                                   <input type="button" class="plus_btn" style="margin-left:5px" @click="plusBtn(index)">
                                 <span class="total_p">
                                   <strong class="price_amount" style="margin-left:10px" ><span>{{ cart.productList[0].price * cart.quantity }}</span></strong><span style="margin-left:10px">원</span>
-                                  <span type="button" @click="deleteBtn(index)" class="del_li_btn"><img src="https://tictoc-web.s3.ap-northeast-2.amazonaws.com/web/img/icon/btn_del_circle.svg"></span>
+                                  <span type="button" @click="removeItem(index, cart.productIdx)" class="del_li_btn"><img src="https://tictoc-web.s3.ap-northeast-2.amazonaws.com/web/img/icon/btn_del_circle.svg"></span>
                                 </span>
                               </div>
                           </div>
@@ -69,8 +68,10 @@
                     <p><strong>결제 정보</strong></p>
     
                     <div class="cart_total_price" style="white-space : nowrap;text-align: center">
+                        <div style="margin-left:200px">
                         <p>총 상품금액 <strong class="item_price" style="color:#87cefa"><span>{{ totalPrice }}</span></strong>원<span class="plus_ic"></span></p>
                         <p><strong class="total_price color-red" style="color:#87cefa">무료배송<img src="@/assets/images/offMeeting/paw-print.png" style="width:8%;height:8%"/></strong></p>
+                        </div>
                     </div>
                 </div>
     
@@ -86,14 +87,45 @@
       <div class="agree"></div> <!-- 이거 지우지 마세요! -->
   </template>
   <script>
-  import {useRouter} from "vue-router";
-  import { computed, watch, ref } from "vue";
+  import { computed, ref, onMounted } from "vue";
   import axios from 'axios';
+  import { useRouter } from "vue-router";
   export default {
         setup() {
+
             const router = useRouter();
+                
             const selectedProducts = ref([]);
             const allSelected = ref(false);
+
+            const cartList = ref([]);
+            let allChecked = false;
+
+            let total = ref(0);
+
+            const removeItem = (index, productID) => {
+                 console.log("삭제 버튼 눌렸음");
+                 cartList.value.splice(index, 1);
+
+                 axios.delete('/cart/' + productID, {})
+                .then(res => {
+                    console.log(res.data)
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            };
+
+
+            onMounted(async () => {
+                
+                    const response = await axios.get('/cart');
+                    cartList.value = response.data;
+
+                    console.log(`!!!!! :: ${JSON.stringify(cartList.value, null)}`)
+
+            })
+
 
             const totalPrice = computed(() => {
             //    console.log(`"000000!!!" ${JSON.stringify(cartList.value[0].productList[0].price, null, 2)}`)
@@ -116,16 +148,7 @@
                     selectedProducts.value = [];
                 }
             };
-
-
-            function deleteProduct(index) {
-                cartList.splice(index, 1);
-            }
-
-        const cartList = ref([]);
-        let allChecked = false;
-
-        let total = ref(0);
+        
 
         const minusBtn = (index) => {
             if (cartList.value[index].quantity > 1) {
@@ -137,7 +160,8 @@
                 axios.patch('/cart/' + cartIdx, 
                     {
                         quantity: cnt,
-                        productIdx: productIdx
+                        productIdx: productIdx,
+                       // memberIdx: member.value.memberIdx
                     }).then(res => {
                         console.log(`HYE!! :     ${res.data}`)
                     })
@@ -159,7 +183,8 @@
             axios.patch('/cart/' + cartIdx , 
             {
                 quantity: cnt,
-                productIdx: productIdx
+                productIdx: productIdx,
+              //  memberIdx: member.value.memberIdx,
             }
             ).then(res => {
                 console.log(`!! ${res.data}`)
@@ -170,74 +195,42 @@
 
             return cnt;
         };
-    
-        const deleteBtn = (index) => {
+        // i : index / index : productId
+        const deleteBtn = (i, index) => {
+            // index => cart.productIdx
 
             console.log("삭제 버튼 눌렸음");
-            console.log(`INDEX: #{index}`)
+            console.log(`INDEX: ${index}`)
             console.log(`$$$$$tt삭제될 카드 인덱스99999 ${JSON.stringify(cartList.value[index], null, 2)}`);
 
          //   const cnt = cartList.value[index].quantity
          //   const cartIdx = cartList.value[index].cartIdx;
-            const productIdx = cartList.value[index].productIdx;
+           // const productIdx = cartList.value[index].productIdx;
 
-            console.log(`####### ${productIdx}`);
+         //   console.log(`####### ${productIdx}`);
+                console.log(`CART!!!!: ${JSON.stringify(cartList.value[i].productIdx, null, 2)}`);
+                console.log(`cartList@@@ ${JSON.stringify(cartList.value, null, 2)}`);
+                console.log(`cartLiiiiiiiii ${i}`);
+            
+            delete cartList.value[i];
+ 
 
-            delete cartList.value[index];
-
-       //     cartList.value.splice(index, 1)
-       console.log(`$$$$$tt삭제될 카드 인덱스111 ${productIdx}`);
+              //  cartList.value.splice(index, 1);
+           // cartList.value.splice(index, 1);
+        
+     //  console.log(`$$$$$tt삭제될 카드 인덱스111 ${productIdx}`);
        console.log(`$$$$$tt삭제될 카드 인덱스222 ${index}`);
 
-               axios.delete('/cart/' + productIdx, {})
-                .then(res => {
-                    console.log(res.data)
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        };
-    
-        const getCartProductList = async() => {
-            
-            await axios.get('/cart', {})
-                .then((response) => {
-                    console.log(`KANG!!!!!! ${JSON.stringify(response.data, null, 2)}`);
-                    cartList.value = {...response.data}
-
-                    console.log(`HGHG!!!!!! ${JSON.stringify(cartList.value, null, 2)}`);
-                    console.log(`dd!!!!!! ${JSON.stringify(cartList.value[0], null, 2)}`);
 
 
-                //   getTotalPrice(cartList.value);
+                // router.go();
+
                 
-                // for (let i = 0 ; i < Object.keys(cartList.value).length; i++) {
-                //     console.log(`%%3%%  ${JSON.stringify(cartList.value[i].productList[0].price, null, 2)}`);
-                //     const cart = cartList.value[i];
-                //     console.log(`*************** ${cart.productList[0].price}`)
-                //     total += cart.productList[0].price; // 장바구니에 담긴 제품들 모두 합친 가격.
-                // }
-
-                // console.log(`TOTAL!!!!: ${total}` )
-                // console.log(`TOTAL9999999999999: ${this.total}` )
-                // this.total.value = total;
-
-                // list.forEach((cart) => {
-                //     console.log(`TOTAL: ${cart}`)
-                //     total += cart.value[0].productList[0].price; // 장바구니에 담긴 제품들 모두 합친 가격
-                // });
-                // this.total = total.value;
-
-                })
-                .finally(() => {
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
         };
 
-        getCartProductList();
-
+            function deleteProduct(index) {
+                cartList.splice(index, 1);
+            }
 
         const checkedAll = (checked) => {
             this.allChecked = checked
@@ -257,10 +250,9 @@
                 }
         };
 
-        // !!!!!!현주 구매하기 버튼!!!!!! cartList 보내주기
+       // !!!!!!현주 구매하기 버튼!!!!!! cartList 보내주기
         const order = () => {
             console.log(`@@@ ${JSON.stringify(cartList.value, null, 2)}`)
-
             /*axios.post('/orders/', 
                 {
                     cartList: cartList.value,
@@ -271,7 +263,6 @@
                 .catch((error) => {
                 console.log(error);
                 });*/
-
                
             let productIdxArr = [];
             let quantityArr = [];
@@ -282,7 +273,6 @@
             }
             console.log(productIdxArr);
             console.log(quantityArr);
-
              /*배열로 보내기*/
             router.push({
                 name: "Order",
@@ -294,7 +284,7 @@
 
         return {
             cartList,
-            getCartProductList,
+            //getCartProductList,
             minusBtn,
             plusBtn,
             deleteBtn,
@@ -310,6 +300,9 @@
             allSelected,
 
             order,
+            router,
+           // member,
+           removeItem,
         
         };
         }
