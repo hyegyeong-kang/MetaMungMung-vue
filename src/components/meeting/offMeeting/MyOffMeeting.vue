@@ -39,7 +39,7 @@
             <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
           </td>
           <td>
-            {{ list.meetingDate }}
+            {{ list.meetingDate.split("T")[0] }}
             <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
           </td>
           <td>
