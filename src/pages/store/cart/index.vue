@@ -22,9 +22,9 @@
                   <div v-for="(cart, index) in cartList" :key="index" >
                       <li class="cell">
                           <!-- 상품 체크박스 부분--> 
-                            <div class="checkbox">
+                            <!-- <div class="checkbox">
                               <input type="checkbox" v-model="selectedProducts" :value="index"> 
-                            </div>
+                            </div> -->
                     
                           <div class="item_detail">
                               <tr>
