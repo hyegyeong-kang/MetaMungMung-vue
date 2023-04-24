@@ -404,7 +404,8 @@
             <button>Load More!!!</button> -->
         </footer>
     </div>
-    <OnMeetingSetting v-if="settingOpen"/>
+    <OnMeetingSetting v-if="settingOpen && !withdrawal" @member-withdrawal="clickMemberWithdrawal"/>
+    <OnMeetingMemWithdrawal v-if="withdrawal" :memberList="registerMems" />
     <div id="right">
       <div class="search-container" style="border: 1px solid;border-radius: 2em;color:	#C0C0C0">
         <div class="search-input">
@@ -466,12 +467,13 @@
 
 <script>
 import OnMeetingSetting from "../OnMeetingSetting.vue";
+import OnMeetingMemWithdrawal from "../OnMeetingMemWithdrawal.vue";
 //import RegisterModal from '@/components/meeting/onMeeting/board/registerModal/registerModal.vue';
 import MapModal from "@/components/meeting/onMeeting/board/modal/mapModal.vue";
 import ReplyList from "@/components/meeting/onMeeting/board/reply/replyList.vue";
 import CreateReply from "@/components/meeting/onMeeting/board/reply/createReply.vue";
 //import BoardDetail from "@/components/meeting/onMeeting/board/boardDetailModal.vue";
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from "vue-router";
 import Swal from "sweetalert2";
@@ -481,6 +483,7 @@ export default {
   name: "RegisterModal",
   components: {
     OnMeetingSetting,
+    OnMeetingMemWithdrawal,
     //RegisterModal,
     MapModal,
     ReplyList,
@@ -938,10 +941,17 @@ export default {
         settingOpen.value = true;
       }
 
+      const withdrawal = ref(false);
+      const clickMemberWithdrawal = () => {
+        withdrawal.value = true;
+      }
+
 
     return {
       settingOpen,
       clickSetting,
+      withdrawal,
+      clickMemberWithdrawal,
 
       onMeetingIdx,
       isOpen,

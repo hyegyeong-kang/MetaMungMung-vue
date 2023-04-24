@@ -39,14 +39,14 @@ export default {
           for(let i = 0; i < Object.keys(onMeetings).length; i++){
             console.log("meet.onMeetingIdx : "+ onMeetings[i].onMeetingIdx);
             console.log("route.params.id: "+ route.params.id);
-            if(route.params.id == onMeetings[i].onMeetingIdx){
-              if(onMeetings[i].isPublic === "1")
-                isPublic.value = true;
-              else
-                isPublic.value = false;
-              console.log("공개여부" + onMeetings[i].isPublic);
-              break;
-            }
+            // if(route.params.id == onMeetings[i].onMeetingIdx){
+            //   if(onMeetings[i].isPublic === "1")
+            //     isPublic.value = true;
+            //   else
+            //     isPublic.value = false;
+            //   console.log("공개여부" + onMeetings[i].isPublic);
+            //   break;
+            // }
           }
       } catch(err){
           console.log(err);

@@ -98,14 +98,17 @@ export default {
 
     // 주문서 페이지
     const getOrderPage = async () => {
+      let arr = [];
+      for(let i = 0; i < route.query.id.length; i++){
+        console.log(i);
+        arr.push({
+          productIdx: route.query.id[i],
+          orderQuantity: route.query.quantity[i]
+        });
+      }
       try{
         const res = await axios.post('/orders', {
-            orderProductList: [
-                {
-                  productIdx: productIdx,
-                  orderQuantity: orderQuantity
-                }
-            ]
+            orderProductList: arr
         });
         console.log(res.data.length);
         orderDetails.value = {...res.data};

@@ -68,7 +68,7 @@ export default {
                 console.log(onMeeting.value);
                 router.push({
                   name: "RegisterModal",
-                  params: {id: onMeeting.onMeetingIdx}
+                  params: {id: route.params.id}
                 })
               }, 3000);
 
