@@ -353,8 +353,8 @@
 
 
                   <div class="btns" style="margin-top:auto"> 
-                  <b-button style="text-align:right;width:100%" class="btn" @click="updateReply()">수정</b-button>
-                  <b-button style="text-align:right" class="btn" @click="deleteReply()">삭제</b-button>        
+                  <b-button style="text-align:right;width:100%" class="btn" @click="updateReply(reply.onMeetingBoardIdx)">수정</b-button>
+                  <b-button style="text-align:right" class="btn" @click="deleteReply(reply.onMeetingBoardIdx, reply.onMeetingReplyIdx)">삭제</b-button>        
                   </div>
                   </div>
             </li>
@@ -539,7 +539,7 @@ export default {
   //  const onMeetingIdx = ref("");
 
     const onMeetingIdx = route.params.id;
-    console.log(`@@@KANG ${onMeetingIdx}`)
+   // console.log(`@@@KANG ${onMeetingIdx}`)
 
     const onMeetingInfo = ref([]);
 
@@ -587,7 +587,7 @@ export default {
         .then((response) => {
 
           boards.value = response.data
-          console.log(`KANG_BOARd: ${JSON.stringify(boards.value, null, 2)}`)
+      //    console.log(`KANG_BOARd: ${JSON.stringify(boards.value, null, 2)}`)
           onMeetingInfo.value = {...response.data[0]};
 
          // console.log(`^^^^^^^BOARD^^^^^^ ${JSON.stringify(boards.value, null, 2)}`);
@@ -888,8 +888,8 @@ export default {
       searchKeyword.value = "";
     };
 
-          const deleteBoard = (boardIdx) => {
-            console.log(`$$$$$ ${boardIdx}`)
+    const deleteBoard = (boardIdx) => {
+        console.log(`$$$$$ ${boardIdx}`)
         Swal.fire({
             title: '게시물을 삭제하시겠습니까?',
             icon: 'warning',
@@ -923,8 +923,7 @@ export default {
                  console.log(`DELETE BOARD ERR::: ${error}`);
                });
             }
-        })
-        ;
+        });
 
       }
 
@@ -938,6 +937,53 @@ export default {
       const clickMemberWithdrawal = () => {
         withdrawal.value = true;
       }
+
+
+
+      // 댓글 삭제
+      const deleteReply = (boardIdx, replyIdx) => {
+
+        console.log(`댓글 인덱스:::  ${boardIdx} ///replyIdx:: ${replyIdx} /// onMeetingIdx`);
+
+
+
+
+        Swal.fire({
+            title: '댓글을 삭제하시겠습니까?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '삭제',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+              axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
+              const memberIdx = sessionStorage.getItem('memberIdx');
+            
+               axios.delete(`/onMeetings/${onMeetingIdx}/board/reply/${replyIdx}`,
+               {params: {
+                  onMeetingBoardIdx: boardIdx
+               }}
+               ).then(res => {
+                 console.log(`deleteReply:: ${res.data}`);
+                  Swal.fire(
+                      '삭제되었습니다.',
+                      'success'
+                  )
+                  router.go();
+
+               })
+               .catch ((error) => {
+                 console.log(`DELETE BOARD ERR::: ${error}`);
+               });
+            }
+        });
+
+
+
+      };
 
 
     return {
@@ -991,7 +1037,8 @@ export default {
       searchKeyword,
 
 
-      deleteBoard
+      deleteBoard,
+      deleteReply,
     }
   }
 };
