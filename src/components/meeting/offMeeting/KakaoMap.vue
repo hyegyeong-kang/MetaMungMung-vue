@@ -137,7 +137,7 @@ export default {
       let locationAddress = "";
       let base = this;
       const option = {
-        center: new kakao.maps.LatLng(37.49498901830771, 127.1223378077649),
+        center: new kakao.maps.LatLng(37.571853683578546, 127.00099048407722),
         level: 3,
       };
       /* 지도 생성 코드 */
@@ -170,7 +170,8 @@ export default {
             lat = position.coords.latitude; // 위도
             lon = position.coords.longitude; // 경도
             const locPosition = new kakao.maps.LatLng(lat, lon);
-            const message = '<div style="padding:5px;">여기에 계신가요?</div>'; // 인포윈도우에 표시될 내용
+            const message =
+              '<div style="padding:5px;">🙋🏻 여기에 있어요! </div>'; // 인포윈도우에 표시될 내용
             // 마커와 인포윈도우를 표시한다.
             displayMarker(locPosition, message);
           });
@@ -195,8 +196,8 @@ export default {
         base.currentLat = latitude;
         base.currentLng = longitude;
 
-        // console.log("lng" + base.currentLat),
-        // console.log("lat : " + base.currentLng);
+        // console.log("lng ===> " + base.currentLat),
+        // console.log("lat ===>  " + base.currentLng);
         /* 주소 얻어오기(주소-좌표 변환) */
         getAddr(latitude, longitude);
         function getAddr(lat, lon) {

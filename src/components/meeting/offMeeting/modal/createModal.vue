@@ -167,7 +167,12 @@ export default {
           onMeetingIdx: route.params.id,
         })
         .then(function (response) {
-          console.log("response => " + JSON.stringify(response, null, 2));
+          // localStorage.setItem("lastLatitude", latitude);
+          // localStorage.setItem("lastLongitude", longitude);
+          // sessionStorage.setItem("lastLatitude", lastLatitude);
+          // sessionStorage.setItem("lastLongitude", longitude);
+          // console.log("lastLatitude => " + lastLatitude);
+          // console.log("response => " + JSON.stringify(response, null, 2));
         })
         .catch(function (error) {
           console.log(error);

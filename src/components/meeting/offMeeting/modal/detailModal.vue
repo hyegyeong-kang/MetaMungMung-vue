@@ -243,7 +243,7 @@ export default {
       axios
         .post(`/offMeetings/${offMeetingIdx.value}/join`, {
           offMeetingIdx: offMeetingIdx.value,
-          onMeetingIdx: 14,
+          onMeetingIdx: 9,
         })
         .then(function (response) {
           // console.log(response);
