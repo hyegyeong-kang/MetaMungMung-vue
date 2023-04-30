@@ -354,7 +354,7 @@
 
                   <div class="btns" style="margin-top:auto"> 
                   <b-button style="text-align:right;width:100%" class="btn" @click="updateReply(reply.onMeetingBoardIdx)">수정</b-button>
-                  <b-button style="text-align:right" class="btn" @click="deleteReply(reply.onMeetingBoardIdx, reply.onMeetingReplyIdx)">삭제</b-button>        
+                  <b-button style="text-align:right" class="btn" @click="deleteReply(reply.onMeetingBoardIdx, reply.onMeetingReplyIdx)" >삭제</b-button>        
                   </div>
                   </div>
             </li>
@@ -536,17 +536,15 @@ export default {
     const router = useRouter();
     const isOpen = ref(false);
     const isOpenDetail = ref(false);
-  //  const onMeetingIdx = ref("");
 
     const onMeetingIdx = route.params.id;
-   // console.log(`@@@KANG ${onMeetingIdx}`)
+
 
     const onMeetingInfo = ref([]);
 
     const toggleMap = () => {
       console.log("KANG!!!")
             isOpen.value = !isOpen.value;
-            // emit('toggle-modal', isOpen.value);
     }
 
      const boardDetailModal = () => {
@@ -561,15 +559,6 @@ export default {
     const sendAddr = (addr) => {
             address.value = addr;
         }
-
-
-    //  onMounted(() => {
-    //    console.log(`kkkk ${comments.value}`)
-    //   for (const key of Object.keys(comments.value)) {
-    //     const replyContents = comments.value[key].replyContents;
-    //     console.log(`MOUNT::: ${replyContents}`);
-    //   }
-    // });   
 
 
 
@@ -587,12 +576,7 @@ export default {
         .then((response) => {
 
           boards.value = response.data
-      //    console.log(`KANG_BOARd: ${JSON.stringify(boards.value, null, 2)}`)
           onMeetingInfo.value = {...response.data[0]};
-
-         // console.log(`^^^^^^^BOARD^^^^^^ ${JSON.stringify(boards.value, null, 2)}`);
-         // console.log(`^^^^^^^BOARD_INFO^^^^^^ ${JSON.stringify(onMeetingInfo.value, null, 2)}`);
-
 
           boardCnt.value = onMeetingInfo.value.boardList.length;
           console.log(`CNT:: ${boardCnt.value}`)
@@ -605,9 +589,6 @@ export default {
     };
 
     getBoardList();
-    //onMounted(getBoardList());
-
-//console.log(`^^^^^^^BㅌㅌOARD^^^^^^ ${JSON.stringify(boards.value, null, 2)}`);
 
     const registerMems = ref([]);
     const registerMemsCnt = ref(0); 
@@ -649,9 +630,6 @@ export default {
     const newPost = ref('');
     // 게시물 등록
     const addPost = () => {
-      //axios.defaults.headers.common['AUTHORIZATION'] = sessionStorage.getItem('token');
-      console.log("Click!!");
-      console.log("###NEWWWW###" + newPost.value);
 
       axios.post(`/onMeetings/${onMeetingIdx}/board`,
       {
@@ -678,25 +656,6 @@ export default {
 
       const replies = ref([]);
       const replyInfo = ref("");
-      // 이거 아님...
-      const getReplyList = async() => {
-
-        // onMeetingIdx, onMeetingBoardIdx 넣으면 됨
-        await axios.get(`/onMeetings/${onMeetingIdx}/board/4/reply`, {})
-            .then((response) => {
-                replies.value = {...response.data};
-                replyInfo.value = {...response.data};
-
-                console.log(`###REPLY ${JSON.stringify(replies.value, null, 2)}`)
-                console.log("$ㅇㅇㅇ$")
-               // console.log(`###REPLY_INFO ${JSON.stringify(replyInfo.value, null, 2)}`);
-            })
-            .catch ((error) => {
-                console.log(`REPLY ERR: ${error}`);
-            });
-      };
-     // getReplyList();
-
 
     // 게시물 갯수
      const boardCNT = computed(() => {
@@ -709,40 +668,15 @@ export default {
     const replyCnt = computed((index) => {
       // let cnt = Object.keys(boards.replyList).length;
       let cnt = 0;
-     // let boardCNT = onMeetingInfo.value.boardList.length;
-     // console.log(`@@@@CNT:: ${JSON.stringify(boardCNT, null, 2)}`)
-     console.log(`@@@@CNT:: ${JSON.stringify(onMeetingInfo.value.boardList[index], null, 2)}`)
 
-      // for (let reply in onMeetingInfo.value.boardList[index].replyList) {
-      //     cnt++;
-      // }
       console.log(`CNT@@@ ${cnt}`);
       return cnt;
      });
 
-
-
-
-    //  const getCommentsByPostId = (onMeetingBoardIdx) => {
-    //    console.log(`JSON_IDX; ${onMeetingBoardIdx}`)
-    //    console.log(`JSON_REPLIES; ${JSON.stringify(replies.value, null, 2)}`)
-    //    console.log(`JSON_REPLY; ${JSON.stringify(replies.value[0], null, 2)}`)
-    //  //  console.log(`JSON_REPLY; ${JSON.stringify(replies.value[0].onMeetingReplyIdx, null, 2)}`)
-    //   return computed(() => {
-    //     return replies.value.filter((reply) => reply.onMeetingBoardIdx === onMeetingBoardIdx);
-    //   });
-    // };
-
-
-
-    
+  
     
      // 댓글 작성 
     const addReply = () => {
-
-        console.log("버튼 눌림");
-        console.log(`onMEETING@@@ ${JSON.stringify(onMeetingInfo.value, null, 2)}`)
-        
 
         replies.value.push({
             contents: contents.value,
@@ -768,9 +702,6 @@ export default {
       try {
         const response = await axios.get(`/onMeetings/${onMeetingIdx}/board/reply`);
         comments.value = {...response.data};
-        console.log(`COMMENccccTSSSSSSS : ${JSON.stringify(comments.value, null, 2)}`)
-      //  console.log(`IDX::: ${comments.value[0].onMeetingBoardIdx}`)
-
      
      } catch (error) {
         console.error(error);
@@ -780,16 +711,6 @@ export default {
     // 댓글 작성 함수 - 진짜
     const submitComment = (index, id) => {
 
-      // (onMeetingBoard_seq.nextval,
-      //           #{onMeetingMemIdx},
-      //           #{onMeetingIdx},
-      //           #{memberIdx},
-      //           #{writer},
-      //           #{contents},
-      //           #{onMeetingBoardAddr},
-      //           sysdate,
-      //           sysdate
-      //   )
       try {
         console.log('board id: ' + id) 
         const commentId = 'comment' + index
@@ -822,20 +743,11 @@ export default {
 
           router.go();
 
-
-
-        // console.log(`NEW COMMENTS: ${newCommentText.value}`)
-        // const response = await axios.post(`/onMeetings/1/board`, {
-        //   replyContents: newCommentText.value
-        // });
-        // newCommentText.value = '';
       } catch (error) {
         console.error(error);
       }
     }
 
-    // 게시물 아이디가 변경될 때
-    //watch(() => props.postId, fetchComments);
 
     let searchKeyword = ref("");
     const boardList = ref({});
@@ -850,46 +762,16 @@ export default {
           console.log(`SEARCH:::: ${JSON.stringify(boardList.value, null, 2)}`);
           console.log(`원래:: ${JSON.stringify(onMeetingInfo.value, null, 2)}`);
 
-         
-      
-         //   console.log(`KANG111: ${JSON.stringify(onMeetingInfo.value.boardList, null, 2)}`);
-            console.log(typeof onMeetingInfo.value)
-         //   console.log(`KANG222: ${JSON.stringify(boardList.value[0].boardList, null, 2)}`);
-            console.log(typeof boardList.value)
-
-
-            onMeetingInfo.value.boardList = boardList.value[0].boardList;
-            //  Object.assign(onMeetingInfo.value.boardList, boardList.value[0].boardList);
-           // console.log(`덮어씌워졌니0000:: ${JSON.stringify(onMeetingInfo.value.boardList, null, 2)}`)
-             console.log(`덮어씌워졌니:: ${JSON.stringify(onMeetingInfo.value, null, 2)}`)
-           // onMeetingInfo.value = boardList.value;
-   
-
-          // for(let i in res.data){
-          //     if(res.data[i].introduction != null){
-          //         onMeetingList.value[i].introduction = res.data[i].introduction.replace(/<br>/g, ' ');
-          //     } 
-          // }
-       //  router.go()
+          onMeetingInfo.value.boardList = boardList.value[0].boardList;
 
       } catch(err){
           console.log(err);
       }
-    //  router.go();
-
-      // if (searchKeyword.value !== "") {
-      //   emit("send-type", "search");
-      //   router.push({
-      //     name: "ProductPage",
-      //     query: { keywords: searchKeyword.value },
-      //   });
-      // }
 
       searchKeyword.value = "";
     };
 
     const deleteBoard = (boardIdx) => {
-        console.log(`$$$$$ ${boardIdx}`)
         Swal.fire({
             title: '게시물을 삭제하시겠습니까?',
             icon: 'warning',
