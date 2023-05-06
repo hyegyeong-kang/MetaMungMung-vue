@@ -104,7 +104,6 @@
             let total = ref(0);
 
             const removeItem = (index, productID) => {
-                 console.log("삭제 버튼 눌렸음");
                  cartList.value.splice(index, 1);
 
                  axios.delete('/cart/' + productID, {})
@@ -127,9 +126,7 @@
             })
 
 
-            const totalPrice = computed(() => {
-            //    console.log(`"000000!!!" ${JSON.stringify(cartList.value[0].productList[0].price, null, 2)}`)
-                
+            const totalPrice = computed(() => {                
                 let total = 0;
                 for (let i = 0; i < Object.keys(cartList.value).length; i++) {
                     total += cartList.value[i].productList[0].price * cartList.value[i].quantity;
@@ -138,12 +135,10 @@
             });
 
             function selectAll() {
-                console.log(`"SELECT ALL" ${allSelected.value}`)
                 allSelected.value = !allSelected.value;
 
                 if (allSelected.value) {
                     selectedProducts.value = [...Object.keys(cartList.value)];
-                    console.log(`#### ${JSON.stringify(selectedProducts.value, null, 2)}`)
                 } else {
                     selectedProducts.value = [];
                 }
@@ -187,7 +182,7 @@
               //  memberIdx: member.value.memberIdx,
             }
             ).then(res => {
-                console.log(`!! ${res.data}`)
+                console.log(`RESPONSE DATA::  ${res.data}`)
             })
             .catch((error) => {
             console.log(error);
@@ -196,36 +191,8 @@
             return cnt;
         };
         // i : index / index : productId
-        const deleteBtn = (i, index) => {
-            // index => cart.productIdx
-
-            console.log("삭제 버튼 눌렸음");
-            console.log(`INDEX: ${index}`)
-            console.log(`$$$$$tt삭제될 카드 인덱스99999 ${JSON.stringify(cartList.value[index], null, 2)}`);
-
-         //   const cnt = cartList.value[index].quantity
-         //   const cartIdx = cartList.value[index].cartIdx;
-           // const productIdx = cartList.value[index].productIdx;
-
-         //   console.log(`####### ${productIdx}`);
-                console.log(`CART!!!!: ${JSON.stringify(cartList.value[i].productIdx, null, 2)}`);
-                console.log(`cartList@@@ ${JSON.stringify(cartList.value, null, 2)}`);
-                console.log(`cartLiiiiiiiii ${i}`);
-            
+        const deleteBtn = (i, index) => { 
             delete cartList.value[i];
- 
-
-              //  cartList.value.splice(index, 1);
-           // cartList.value.splice(index, 1);
-        
-     //  console.log(`$$$$$tt삭제될 카드 인덱스111 ${productIdx}`);
-       console.log(`$$$$$tt삭제될 카드 인덱스222 ${index}`);
-
-
-
-                // router.go();
-
-                
         };
 
             function deleteProduct(index) {
@@ -250,20 +217,7 @@
                 }
         };
 
-       // !!!!!!현주 구매하기 버튼!!!!!! cartList 보내주기
-        const order = () => {
-            console.log(`@@@ ${JSON.stringify(cartList.value, null, 2)}`)
-            /*axios.post('/orders/', 
-                {
-                    cartList: cartList.value,
-                    
-                }).then(res => {
-                    console.log(`order ERR!! : ${res.data}`)
-                })
-                .catch((error) => {
-                console.log(error);
-                });*/
-               
+        const order = () => {               
             let productIdxArr = [];
             let quantityArr = [];
             for(let item in cartList.value){
@@ -284,7 +238,6 @@
 
         return {
             cartList,
-            //getCartProductList,
             minusBtn,
             plusBtn,
             deleteBtn,
